@@ -1,0 +1,1391 @@
+/* line 3, app/assets/stylesheets/eu-added.scss */
+.flash-it {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-s);
+  max-width: 100%;
+  width: max-content;
+  padding: 0 var(--space-m);
+  animation: appear-then-fade 4s both;
+  font-size: var(--font-size-s);
+  color: var(--color-white);
+  padding: var(--space-xs) var(--space-m);
+  background-color: var(--color-dark);
+}
+
+@keyframes appear-then-fade {
+  0%, 100% {
+    opacity: 0;
+  }
+  50%, 60% {
+    opacity: 1;
+  }
+}
+
+/* line 38, app/assets/stylesheets/eu-added.scss */
+.white {
+  color: #fff;
+}
+
+/* line 41, app/assets/stylesheets/eu-added.scss */
+.gray-100 {
+  color: #f8f9fa;
+}
+
+/* line 44, app/assets/stylesheets/eu-added.scss */
+.gray-200 {
+  color: #e9ecef;
+}
+
+/* line 47, app/assets/stylesheets/eu-added.scss */
+.gray-300 {
+  color: #dee2e6;
+}
+
+/* line 50, app/assets/stylesheets/eu-added.scss */
+.gray-400 {
+  color: #ced4da;
+}
+
+/* line 53, app/assets/stylesheets/eu-added.scss */
+.gray-500 {
+  color: #adb5bd;
+}
+
+/* line 56, app/assets/stylesheets/eu-added.scss */
+.gray-600 {
+  color: #6c757d;
+}
+
+/* line 59, app/assets/stylesheets/eu-added.scss */
+.gray-700 {
+  color: #495057;
+}
+
+/* line 62, app/assets/stylesheets/eu-added.scss */
+.gray-800 {
+  color: #343a40;
+}
+
+/* line 65, app/assets/stylesheets/eu-added.scss */
+.gray-900 {
+  color: #212529;
+}
+
+/* line 68, app/assets/stylesheets/eu-added.scss */
+.black {
+  color: #000;
+}
+
+/* line 72, app/assets/stylesheets/eu-added.scss */
+#hero {
+  width: 100%;
+  height: 100vh;
+  /* background: image-url(/makeover-sm.jpg), #75908d; */
+  background: url(/makeover-sm.jpg) #75908d;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #333;
+  filter: saturate(78%) sepia(0%);
+}
+
+@media (min-width: 768px) {
+  /* line 88, app/assets/stylesheets/eu-added.scss */
+  #hero {
+    /* background: image-url(/makeover-black.jpg) center / cover no-repeat, #75908d; */
+    background: url(/images/makeover-black.jpg) center/cover no-repeat, #75908d;
+    filter: saturate(100%);
+  }
+}
+
+/* line 99, app/assets/stylesheets/eu-added.scss */
+.btn.btn-link.btn-block.arrow-button {
+  color: white;
+  font-size: 32px;
+}
+
+/* Custom CSS for the orange switch */
+/* line 106, app/assets/stylesheets/eu-added.scss */
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #2e81e5;
+}
+
+/* line 111, app/assets/stylesheets/eu-added.scss */
+select.form-control {
+  background-image: linear-gradient(45deg, transparent 50%, #aaa 60%), linear-gradient(135deg, #aaa 40%, transparent 50%) !important;
+  background-position: calc(98% - 16px) 22px, calc(98% - 8px) 22px, 100% 0;
+  background-size: 8px 8px, 8px 8px;
+  background-repeat: no-repeat;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* line 130, app/assets/stylesheets/eu-added.scss */
+#subtitle {
+  font-family: azr;
+  margin-top: 20px;
+  font-size: 40px;
+  padding: 5px;
+}
+
+@media (min-width: 700px) {
+  /* line 139, app/assets/stylesheets/eu-added.scss */
+  #subtitle {
+    color: var(--danger);
+    transform: scale(1);
+    font-family: azr;
+    margin-top: 40px;
+    font-size: 52px;
+    text-shadow: 1px 1px 3px #666;
+  }
+}
+
+/* line 155, app/assets/stylesheets/eu-added.scss */
+#searchText {
+  font-family: eufont;
+  font-weight: 500;
+  border-radius: 36px;
+  height: 57px;
+  padding-right: 0px;
+  padding-left: 30px;
+  margin-right: 2px;
+  font-size: 17px;
+  border-style: none;
+  outline: none;
+  -webkit-appearance: none;
+  -webkit-box-shadow: 0px 4px 12px 1px #4e4e4e;
+  box-shadow: 0px 4px 12px 1px #4e4e4e;
+}
+
+@media (min-width: 600px) {
+  /* line 172, app/assets/stylesheets/eu-added.scss */
+  #searchText {
+    font-size: 17px;
+    padding-right: 40px;
+    padding-left: 40px;
+    margin-right: 25px;
+    width: 46%;
+    border-radius: 50px;
+    outline: none;
+  }
+}
+
+/* line 183, app/assets/stylesheets/eu-added.scss */
+::placeholder {
+  color: #919191;
+  opacity: 1;
+}
+
+/* line 197, app/assets/stylesheets/eu-added.scss */
+.navbar-nav .nav-link.active::before {
+  background-color: currentcolor !important;
+  border-radius: 1px !important;
+  bottom: 0px !important;
+  content: "" !important;
+  height: 2px !important;
+  left: 50% !important;
+  margin-left: -9px !important;
+  position: absolute !important;
+  -webkit-transition: 0.2s -webkit-transform cubic-bezier(0, 0, 0.1, 1), 0.2s transform cubic-bezier(0, 0, 0.1, 1) !important;
+  -moz-transition: 0.2s transform cubic-bezier(0, 0, 0.1, 1) !important;
+  transition: 0.2s -ms-transform cubic-bezier(0, 0, 0.1, 1), 0.2s -webkit-transform cubic-bezier(0, 0, 0.1, 1), 0.2s transform cubic-bezier(0, 0, 0.1, 1) !important;
+  width: 18px !important;
+  -webkit-transform: scaleX(1) !important;
+  -ms-transform: scaleX(1) !important;
+  transform: scaleX(1) !important;
+}
+
+@media (max-width: 992px) {
+  /* line 216, app/assets/stylesheets/eu-added.scss */
+  .navbar-nav .nav-link.active::before {
+    height: 0px !important;
+  }
+}
+
+/* line 221, app/assets/stylesheets/eu-added.scss */
+.list_title_text {
+  font-size: 24px;
+  font-family: eufont;
+  font-weight: 500;
+  color: #000;
+  line-height: 22px;
+}
+
+/* line 231, app/assets/stylesheets/eu-added.scss */
+.list_about_text {
+  font-size: 16px;
+  font-family: eufont;
+  font-weight: 400;
+  color: #000;
+}
+
+/* line 238, app/assets/stylesheets/eu-added.scss */
+.eufont {
+  font-family: eufont;
+}
+
+/* line 242, app/assets/stylesheets/eu-added.scss */
+.azr {
+  font-family: azr;
+}
+
+/* line 246, app/assets/stylesheets/eu-added.scss */
+.glyph {
+  position: relative;
+  right: 35px;
+  pointer-events: none;
+}
+
+/* line 253, app/assets/stylesheets/eu-added.scss */
+.maxw40 {
+  max-width: 40px;
+}
+
+/* line 257, app/assets/stylesheets/eu-added.scss */
+.w42 {
+  width: 42px;
+}
+
+/* line 261, app/assets/stylesheets/eu-added.scss */
+.price {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  min-width: 130px;
+  height: 45px;
+  background: rgba(47, 44, 45, 0.87);
+  text-align: center;
+  color: white;
+}
+
+/* line 272, app/assets/stylesheets/eu-added.scss */
+.myid-checked {
+  color: #ff8100;
+  transform: scale(1.2);
+}
+
+/* line 277, app/assets/stylesheets/eu-added.scss */
+.myid-checked-detail {
+  color: #ff8100;
+}
+
+/* line 281, app/assets/stylesheets/eu-added.scss */
+.myid-unchecked {
+  color: #aaa;
+  transform: scale(1.2);
+}
+
+/* line 286, app/assets/stylesheets/eu-added.scss */
+.mojeid {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+/* line 295, app/assets/stylesheets/eu-added.scss */
+.verified-badges {
+  margin-bottom: 25px;
+  list-style: none;
+  padding-left: 0px;
+  color: #333333;
+}
+
+/* line 302, app/assets/stylesheets/eu-added.scss */
+.covid,
+.personal {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #5cc000;
+  margin-right: 25px !important;
+}
+
+/* line 312, app/assets/stylesheets/eu-added.scss */
+.myidinfo {
+  margin-right: 22px !important;
+}
+
+/* line 316, app/assets/stylesheets/eu-added.scss */
+i.covid,
+i.personal {
+  transform: scale(1.2);
+}
+
+/* line 322, app/assets/stylesheets/eu-added.scss */
+.tooltip-info-icon {
+  color: #cacdd0;
+  vertical-align: middle;
+}
+
+/* line 327, app/assets/stylesheets/eu-added.scss */
+.review-text u {
+  font-size: 15px;
+  color: #ddd;
+}
+
+/* line 333, app/assets/stylesheets/eu-added.scss */
+.menubutton {
+  background: transparent !important;
+  border: 1px solid #DDDDDD !important;
+  color: #222222 !important;
+  cursor: pointer !important;
+  display: -webkit-inline-box !important;
+  display: -moz-inline-box !important;
+  display: -ms-inline-flexbox !important;
+  display: -webkit-inline-flex !important;
+  display: inline-flex !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  margin: 0px !important;
+  outline: none !important;
+  overflow: visible !important;
+  text-align: inherit !important;
+  text-decoration: none !important;
+  -webkit-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  user-select: auto !important;
+  -webkit-align-items: center !important;
+  align-items: center !important;
+  background-color: #FFFFFF !important;
+  border-radius: 21px !important;
+  position: relative !important;
+  vertical-align: middle !important;
+  -webkit-transition: box-shadow 0.2s ease !important;
+  -moz-transition: box-shadow 0.2s ease !important;
+  transition: box-shadow 0.2s ease !important;
+}
+
+/* line 370, app/assets/stylesheets/eu-added.scss */
+.svg-menu-button {
+  display: block;
+  fill: none;
+  height: 16px;
+  width: 16px;
+  stroke: currentcolor;
+  stroke-width: 3;
+  overflow: visible;
+  margin-left: 3px;
+  margin-right: 7px;
+  margin-top: 12px;
+}
+
+/* line 388, app/assets/stylesheets/eu-added.scss */
+button:focus:not(:focus-visible) {
+  outline: 0;
+}
+
+/* line 392, app/assets/stylesheets/eu-added.scss */
+.navbar-light .navbar-toggler {
+  color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* line 397, app/assets/stylesheets/eu-added.scss */
+.navbar-toggler:focus,
+.navbar-toggler:hover {
+  text-decoration: none;
+}
+
+/* line 402, app/assets/stylesheets/eu-added.scss */
+[type=button]:not(:disabled),
+[type=reset]:not(:disabled),
+[type=submit]:not(:disabled),
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* line 409, app/assets/stylesheets/eu-added.scss */
+.navbar-toggler {
+  padding: .25rem .75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+
+/* line 418, app/assets/stylesheets/eu-added.scss */
+.navbar-light .navbar-toggler-icon {
+  background-image: url(/[svg]);
+}
+
+/* line 422, app/assets/stylesheets/eu-added.scss */
+.navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  content: "";
+  background: 50%/100% 100% no-repeat;
+}
+
+/* line 431, app/assets/stylesheets/eu-added.scss */
+.navbar-light .navbar-toggler {
+  color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* line 436, app/assets/stylesheets/eu-added.scss */
+[type=button]:not(:disabled),
+[type=reset]:not(:disabled),
+[type=submit]:not(:disabled),
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* line 443, app/assets/stylesheets/eu-added.scss */
+.navbar-toggler {
+  padding: .25rem .75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+
+/* line 453, app/assets/stylesheets/eu-added.scss */
+.navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  content: "";
+  background: 50%/100% 100% no-repeat;
+}
+
+/* line 462, app/assets/stylesheets/eu-added.scss */
+.navbar-light .navbar-toggler {
+  color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* line 467, app/assets/stylesheets/eu-added.scss */
+[type=button]:not(:disabled),
+[type=reset]:not(:disabled),
+[type=submit]:not(:disabled),
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* line 474, app/assets/stylesheets/eu-added.scss */
+.navbar-toggler {
+  padding: .25rem .75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+
+/* line 484, app/assets/stylesheets/eu-added.scss */
+dropdown-menu[data-bs-popper] {
+  left: auto !important;
+}
+
+/* line 490, app/assets/stylesheets/eu-added.scss */
+.white-popup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+/* overlay at start */
+/* line 502, app/assets/stylesheets/eu-added.scss */
+.mfp-fade.mfp-bg {
+  opacity: 0;
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
+}
+
+/* overlay animate in */
+/* line 513, app/assets/stylesheets/eu-added.scss */
+.mfp-fade.mfp-bg.mfp-ready {
+  opacity: 0.3;
+}
+
+/* overlay animate out */
+/* line 518, app/assets/stylesheets/eu-added.scss */
+.mfp-fade.mfp-bg.mfp-removing {
+  opacity: 0;
+}
+
+/* content at start */
+/* line 524, app/assets/stylesheets/eu-added.scss */
+.mfp-fade.mfp-wrap .mfp-content {
+  opacity: 0;
+  -webkit-transition: all 0.01s ease-out;
+  -moz-transition: all 0.01s ease-out;
+  transition: all 0.01s ease-out;
+  transform: scale(0.1);
+}
+
+/* content animate it */
+/* line 534, app/assets/stylesheets/eu-added.scss */
+.mfp-fade.mfp-wrap.mfp-ready .mfp-content {
+  opacity: 1;
+  transition: width 0.1s, height 0.1s, background-color 0.1s, transform 0.1s;
+  transform: scale(1);
+}
+
+/* content animate out */
+/* line 545, app/assets/stylesheets/eu-added.scss */
+.mfp-fade.mfp-wrap.mfp-removing .mfp-content {
+  opacity: 0;
+}
+
+/* line 551, app/assets/stylesheets/eu-added.scss */
+div.line {
+  position: relative;
+  text-align: center;
+}
+
+/* line 556, app/assets/stylesheets/eu-added.scss */
+p.line {
+  background-color: white;
+  display: inline-block;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* line 564, app/assets/stylesheets/eu-added.scss */
+hr.line {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 80%;
+  margin: 0;
+  z-index: -1000;
+}
+
+/* line 577, app/assets/stylesheets/eu-added.scss */
+.input-div {
+  border: 1px solid #aaa !important;
+  font-size: 12px;
+  text-align: left;
+  border-radius: 10px;
+}
+
+/* line 585, app/assets/stylesheets/eu-added.scss */
+.d1input {
+  padding-top: 8px;
+  padding-left: 20px;
+  height: 17px;
+  font-weight: 300;
+  color: #4e4e4e;
+}
+
+/* line 593, app/assets/stylesheets/eu-added.scss */
+.input-div .form-control:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* line 598, app/assets/stylesheets/eu-added.scss */
+.input-div .form-control {
+  border: #fff 1px solid !important;
+  border: none !important;
+  margin: 0px;
+  padding: 0;
+  height: 28px;
+  font-size: 17px;
+  padding-left: 0px;
+  margin-left: 20px;
+  padding-bottom: 10px;
+  width: 92%;
+  text-align: left;
+}
+
+/* line 613, app/assets/stylesheets/eu-added.scss */
+.d1user:hover {
+  border: 1px solid #333 !important;
+}
+
+/* line 617, app/assets/stylesheets/eu-added.scss */
+.d1pass {
+  border-top: 0px #333 solid !important;
+}
+
+/* line 621, app/assets/stylesheets/eu-added.scss */
+.d1pass:hover {
+  border: 1px solid #333 !important;
+  border-top: 0px none !important;
+}
+
+/* line 627, app/assets/stylesheets/eu-added.scss */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+/* line 633, app/assets/stylesheets/eu-added.scss */
+#previewImage {
+  display: block;
+}
+
+/* line 638, app/assets/stylesheets/eu-added.scss */
+.fa-camera {
+  position: absolute;
+  bottom: 0;
+  right: 0%;
+  color: black;
+  background-color: #ddd;
+  padding: 8px;
+  border-radius: 20px;
+  font-size: 20px;
+}
+
+/* line 649, app/assets/stylesheets/eu-added.scss */
+.bg-profile {
+  padding-top: 27px;
+  background: #8bb4f6;
+  background: linear-gradient(90deg, #8bb4f6 0%, #c9afff 100%);
+}
+
+/* line 659, app/assets/stylesheets/eu-added.scss */
+p.notice {
+  margin: 0;
+}
+
+/* line 663, app/assets/stylesheets/eu-added.scss */
+.notification {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  /* Center both horizontally and vertically */
+  transform: translateX(-50%) !important;
+  z-index: 999;
+  background: #fff;
+  color: #111;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 15px;
+  text-align: center;
+  letter-spacing: 0.3px;
+  border-radius: 10px;
+  border: #fae3ac 1px solid;
+  /* Add border radius for the rounded box effect */
+}
+
+/* line 683, app/assets/stylesheets/eu-added.scss */
+.footer {
+  padding-top: 50px;
+}
+
+/* line 686, app/assets/stylesheets/eu-added.scss */
+.footer .row {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: eufont;
+  line-height: 18px;
+  color: #222222 !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* line 695, app/assets/stylesheets/eu-added.scss */
+.footer .row a {
+  color: #222222 !important;
+}
+
+/* line 698, app/assets/stylesheets/eu-added.scss */
+.footer .row a:hover {
+  text-decoration: underline;
+}
+
+/* line 702, app/assets/stylesheets/eu-added.scss */
+.footer .toprow {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: eufont;
+  color: #222222 !important;
+}
+
+/* line 708, app/assets/stylesheets/eu-added.scss */
+.toprow .col {
+  text-transform: uppercase;
+}
+
+/* line 712, app/assets/stylesheets/eu-added.scss */
+.lh-15 {
+  line-height: 1.5;
+}
+
+/* line 716, app/assets/stylesheets/eu-added.scss */
+.green {
+  color: #1ab61a;
+}
+
+/* line 720, app/assets/stylesheets/eu-added.scss */
+.btn-light, .btn-light:hover {
+  background-color: #f2f2ff;
+  color: black;
+  border: 3px solid #a4c4ff;
+  font-weight: 500;
+}
+
+/* line 728, app/assets/stylesheets/eu-added.scss */
+.btn-border {
+  border: 3px solid #ee2a96 !important;
+}
+
+/* line 731, app/assets/stylesheets/eu-added.scss */
+.btn-rounded {
+  border-radius: 15px !important;
+}
+
+/* line 734, app/assets/stylesheets/eu-added.scss */
+.mw-md-130 {
+  max-height: 420px !important;
+}
+
+/* line 737, app/assets/stylesheets/eu-added.scss */
+.vh-95 {
+  min-height: 95vh !important;
+}
+
+/* line 740, app/assets/stylesheets/eu-added.scss */
+.vh-93 {
+  min-height: 93vh !important;
+}
+
+/* line 743, app/assets/stylesheets/eu-added.scss */
+.vh-92 {
+  min-height: 92vh !important;
+}
+
+/* line 746, app/assets/stylesheets/eu-added.scss */
+.vh-90 {
+  min-height: 90vh !important;
+}
+
+/* line 749, app/assets/stylesheets/eu-added.scss */
+.vh-80 {
+  min-height: 80vh !important;
+}
+
+/* line 752, app/assets/stylesheets/eu-added.scss */
+u {
+  background-image: linear-gradient(to right, #fdfccb 0%, #fdfccb 100%);
+  background-repeat: repeat-x;
+  background-position: 0 95%;
+  background-size: 100% 24px;
+  text-decoration: none;
+}
+
+/* line 759, app/assets/stylesheets/eu-added.scss */
+u.big {
+  background-size: 100% 104px;
+}
+
+/* line 763, app/assets/stylesheets/eu-added.scss */
+.prewrap {
+  white-space: pre-wrap;
+}
+
+/* line 767, app/assets/stylesheets/eu-added.scss */
+.no-decorations {
+  text-decoration: none;
+}
+
+/* line 771, app/assets/stylesheets/eu-added.scss */
+.no-wrap {
+  white-space: nowrap;
+}
+
+/* line 775, app/assets/stylesheets/eu-added.scss */
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* line 780, app/assets/stylesheets/eu-added.scss */
+html {
+  height: -webkit-fill-available;
+}
+
+/* line 784, app/assets/stylesheets/eu-added.scss */
+main {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* line 794, app/assets/stylesheets/eu-added.scss */
+.b-example-divider {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: solid rgba(0, 0, 0, 0.15);
+  border-width: 1px 0;
+  box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1), inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+}
+
+/* line 804, app/assets/stylesheets/eu-added.scss */
+.bi {
+  vertical-align: -.125em;
+  pointer-events: none;
+  fill: currentColor;
+}
+
+/* line 810, app/assets/stylesheets/eu-added.scss */
+.dropdown-toggle {
+  outline: 0;
+}
+
+/* line 814, app/assets/stylesheets/eu-added.scss */
+.nav-flush .nav-link {
+  border-radius: 0;
+}
+
+/* line 818, app/assets/stylesheets/eu-added.scss */
+.btn-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: .25rem .5rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.65);
+  background-color: transparent;
+  border: 0;
+  display: block !important;
+  width: 100%;
+  text-align: left;
+}
+
+/* line 832, app/assets/stylesheets/eu-added.scss */
+.btn-toggle:hover,
+.btn-toggle:focus {
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #d2f4ea;
+  display: block !important;
+}
+
+/* line 841, app/assets/stylesheets/eu-added.scss */
+.btn-toggle::after {
+  width: 1.25em;
+  line-height: 0;
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  transition: transform .35s ease;
+  transform-origin: .5em 50%;
+  position: relative;
+  top: 3px;
+}
+
+/* line 852, app/assets/stylesheets/eu-added.scss */
+.btn-toggle[aria-expanded="true"] {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* line 856, app/assets/stylesheets/eu-added.scss */
+.btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+/* line 860, app/assets/stylesheets/eu-added.scss */
+.btn-toggle-nav a {
+  display: inline-flex;
+  padding: .1875rem .5rem;
+  margin-left: 1.25rem;
+  text-decoration: none;
+}
+
+/* line 868, app/assets/stylesheets/eu-added.scss */
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  background-color: #d2f4ea;
+  display: block !important;
+}
+
+/* line 878, app/assets/stylesheets/eu-added.scss */
+.scrollarea {
+  overflow-y: auto;
+}
+
+/* line 882, app/assets/stylesheets/eu-added.scss */
+.fw-semibold {
+  font-weight: 600;
+}
+
+/* line 886, app/assets/stylesheets/eu-added.scss */
+.lh-tight {
+  line-height: 1.25;
+}
+
+/* line 889, app/assets/stylesheets/eu-added.scss */
+#sidebar-wrapper {
+  font-size: 14px;
+}
+
+/* line 892, app/assets/stylesheets/eu-added.scss */
+#sidebar-wrapper button {
+  font-size: 14px;
+}
+
+/* line 896, app/assets/stylesheets/eu-added.scss */
+#sidebar-wrapper li > a {
+  font-size: 14px;
+}
+
+/* line 901, app/assets/stylesheets/eu-added.scss */
+.bg-lightblue {
+  background-color: #e7f3fe;
+}
+
+/* line 905, app/assets/stylesheets/eu-added.scss */
+.item {
+  display: flex;
+  /* Use flexbox for alignment */
+  align-items: center;
+  /* Vertically center the items */
+  margin-bottom: 10px;
+  /* Add some spacing between items */
+}
+
+/* line 914, app/assets/stylesheets/eu-added.scss */
+.circle {
+  width: 40px;
+  height: 40px;
+  background-color: #ffe7aa;
+  /* Adjust background color as needed */
+  border-radius: 50%;
+  /* Make it a circle */
+  display: flex;
+  /* Use flexbox to center icon */
+  align-items: center;
+  /* Vertically center the icon */
+  justify-content: center;
+  /* Horizontally center the icon */
+  margin-right: 10px;
+  /* Add some spacing between the icon and text */
+}
+
+/* line 931, app/assets/stylesheets/eu-added.scss */
+.circle i {
+  color: brown;
+  /* Brown color for the checkmark icon */
+  font-size: 20px;
+  /* Adjust icon size as needed */
+}
+
+/* line 938, app/assets/stylesheets/eu-added.scss */
+.launch-checklist {
+  display: inline-block;
+  /* Set to inline-block for inline placement */
+  vertical-align: middle;
+  /* Align text vertically with the icon */
+}
+
+/* line 945, app/assets/stylesheets/eu-added.scss */
+.list-group-item.active .left-block {
+  border-bottom: 0;
+  position: relative;
+}
+
+/* line 949, app/assets/stylesheets/eu-added.scss */
+.list-group-item.active .left-block::after {
+  content: "";
+  position: absolute  !important;
+  bottom: -15px !important;
+  /* Move the arrow 15px below the bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 13px solid #FFCB53;
+  z-index: 100 !important;
+  /* Add this line to adjust the stacking context */
+}
+
+/* line 970, app/assets/stylesheets/eu-added.scss */
+.left-block {
+  display: flex;
+  width: 70px;
+  height: 60px;
+  text-align: center;
+  position: relative;
+  color: #188bf6;
+  background-color: #d2e8fe;
+  padding: 15px 20px;
+  border-bottom: 2px solid #7dafe1;
+}
+
+/* line 986, app/assets/stylesheets/eu-added.scss */
+.right-block {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0px 15px;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  /* Adjust the number of lines as needed */
+  overflow: hidden;
+  max-height: 80px;
+}
+
+/* line 1005, app/assets/stylesheets/eu-added.scss */
+.cross-icon {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: red;
+  cursor: pointer;
+}
+
+/* line 1015, app/assets/stylesheets/eu-added.scss */
+.right-block:hover .cross-icon {
+  display: inline-block;
+  /* Show the cross icon on hover */
+}
+
+/* Center the content vertically within list items */
+/* line 1023, app/assets/stylesheets/eu-added.scss */
+.list-group-item {
+  display: flex;
+  align-items: center;
+  /* Vertically center the content */
+  background-color: transparent;
+  border: 0px;
+  margin: 0;
+  padding: 0;
+  max-height: 64px;
+  position: relative;
+  /* Add relative positioning for pseudo-element */
+}
+
+/* line 1038, app/assets/stylesheets/eu-added.scss */
+.list-group-item.active {
+  color: #000;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #FFCB53;
+}
+
+/* line 1046, app/assets/stylesheets/eu-added.scss */
+.list-group-item.active .left-block {
+  background-color: #fae3ac;
+  color: orange;
+  /* Change the background for the active item */
+}
+
+/* line 1052, app/assets/stylesheets/eu-added.scss */
+ul.list-group li {
+  cursor: pointer;
+}
+
+/* line 1056, app/assets/stylesheets/eu-added.scss */
+ul.list-group li a {
+  text-decoration: none;
+  color: black;
+}
+
+/* line 1061, app/assets/stylesheets/eu-added.scss */
+ul.list-group li a:hover {
+  color: #0055ff;
+}
+
+/* line 1067, app/assets/stylesheets/eu-added.scss */
+h5,
+h6 {
+  margin-bottom: 0 !important;
+}
+
+/* line 1071, app/assets/stylesheets/eu-added.scss */
+.text-red {
+  color: red;
+}
+
+/* line 1075, app/assets/stylesheets/eu-added.scss */
+.bg-red-500 {
+  background-color: #ffb8b8 !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1080, app/assets/stylesheets/eu-added.scss */
+.bg-red-500:hover {
+  background-color: #ffaf90 !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1085, app/assets/stylesheets/eu-added.scss */
+.bg-apple {
+  background-color: #7ebc15;
+}
+
+/* line 1090, app/assets/stylesheets/eu-added.scss */
+.bg-apple:hover {
+  background-color: #9fc816;
+}
+
+/* line 1094, app/assets/stylesheets/eu-added.scss */
+.bg-apple-500 {
+  background-color: limegreen !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1099, app/assets/stylesheets/eu-added.scss */
+.bg-apple-500 {
+  background-color: limegreen !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1104, app/assets/stylesheets/eu-added.scss */
+.bg-apple-500:hover {
+  background-color: green !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1109, app/assets/stylesheets/eu-added.scss */
+.text-apple {
+  color: #8DB600;
+}
+
+/* line 1113, app/assets/stylesheets/eu-added.scss */
+.apple {
+  color: #8DB600;
+}
+
+/* line 1118, app/assets/stylesheets/eu-added.scss */
+.text-apple-500 {
+  color: limegreen !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1123, app/assets/stylesheets/eu-added.scss */
+.text-apple-500:hover {
+  color: green !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1128, app/assets/stylesheets/eu-added.scss */
+.add-new-step button {
+  width: 90%;
+  margin: 5%;
+  display: block;
+}
+
+/* line 1134, app/assets/stylesheets/eu-added.scss */
+.bg-lightorange {
+  background-color: #fff2c0 !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1138, app/assets/stylesheets/eu-added.scss */
+.bg-orange {
+  background-color: #FAE3AB !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1143, app/assets/stylesheets/eu-added.scss */
+.bg-white {
+  background-color: #FFF !important;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1150, app/assets/stylesheets/eu-added.scss */
+.bg-lightorange:hover {
+  background-color: #ffde8b !important;
+  color: #4e4e4e;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1156, app/assets/stylesheets/eu-added.scss */
+.bg-orange:hover {
+  background-color: #ffde8b !important;
+  color: #4e4e4e;
+  -webkit-transition: all 0.15s ease-out;
+}
+
+/* line 1163, app/assets/stylesheets/eu-added.scss */
+a.text-white:hover {
+  color: #fff !important;
+}
+
+/* line 1167, app/assets/stylesheets/eu-added.scss */
+.text-orange {
+  color: orange;
+}
+
+/* line 1171, app/assets/stylesheets/eu-added.scss */
+.text-black {
+  color: #202124;
+}
+
+/* line 1175, app/assets/stylesheets/eu-added.scss */
+.border-orange {
+  border: 1px solid #ffe7aa !important;
+}
+
+/* line 1179, app/assets/stylesheets/eu-added.scss */
+.text-gray {
+  color: #555 !important;
+}
+
+/* line 1183, app/assets/stylesheets/eu-added.scss */
+.text-lightgray {
+  color: #999 !important;
+}
+
+/* line 1187, app/assets/stylesheets/eu-added.scss */
+.border-gray {
+  border: 1px solid #555 !important;
+}
+
+/* line 1191, app/assets/stylesheets/eu-added.scss */
+.border-lightgray {
+  border: 1px solid #ccc !important;
+}
+
+/* line 1195, app/assets/stylesheets/eu-added.scss */
+.light-gray-button {
+  background-color: #f7fafb;
+  color: #777;
+  border: none;
+}
+
+/* line 1201, app/assets/stylesheets/eu-added.scss */
+.light-gray-button:hover {
+  background-color: #c9ddea;
+  color: #777;
+  border: none;
+}
+
+/* line 1207, app/assets/stylesheets/eu-added.scss */
+.light-bluegray-button {
+  background-color: #e5eef4;
+  color: #777;
+  border: none;
+}
+
+/* line 1213, app/assets/stylesheets/eu-added.scss */
+.light-bluegray-button:hover {
+  background-color: #c9ddea;
+  color: #777;
+  border: none;
+}
+
+/* line 1221, app/assets/stylesheets/eu-added.scss */
+.edit-button {
+  padding: 6px 15px;
+  font-weight: 500 !important;
+  font-size: 16px;
+  border: 1px solid #ffe7aa !important;
+  /* Adjust the padding as needed */
+  /* Add more styles as needed */
+}
+
+/* line 1231, app/assets/stylesheets/eu-added.scss */
+.save-button {
+  padding: 6px 15px;
+  font-weight: 500 !important;
+  font-size: 16px;
+  border: 1px solid #ffe7aa !important;
+  /* Adjust the padding as needed */
+  /* Add more styles as needed */
+}
+
+/* Add this CSS to your page or your CSS file */
+/* line 1243, app/assets/stylesheets/eu-added.scss */
+.table-hover tbody tr:hover {
+  background-color: #f5f5f5;
+  /* Set a lighter gray background color for hover */
+}
+
+/* line 1248, app/assets/stylesheets/eu-added.scss */
+.table-hover tbody tr:hover td:first-child a {
+  color: #007bff;
+  /* Change link color to blue when hovering over the first <td> */
+}
+
+/* line 1253, app/assets/stylesheets/eu-added.scss */
+.table-hover tbody tr:hover td:first-child a:hover {
+  text-decoration: none;
+  /* Remove underline when rolling over the link */
+}
+
+/* Add this CSS to your page or your CSS file */
+/* line 1260, app/assets/stylesheets/eu-added.scss */
+.table a {
+  color: black;
+  /* Set the link color to black */
+  text-decoration: none;
+  /* Remove underlines from links */
+}
+
+/* line 1267, app/assets/stylesheets/eu-added.scss */
+.table a:hover {
+  color: #00f;
+  /* Set the link color to dark blue on hover */
+}
+
+/* Add this CSS to your page or your CSS file */
+/* line 1273, app/assets/stylesheets/eu-added.scss */
+.table-hover tbody tr:hover {
+  background-color: #fefefe;
+  /* Set the background color for hover */
+}
+
+/* line 1278, app/assets/stylesheets/eu-added.scss */
+.clickable-row {
+  cursor: pointer;
+}
+
+/* line 1283, app/assets/stylesheets/eu-added.scss */
+.clickable-column {
+  cursor: pointer;
+  /* Change cursor on hover */
+}
+
+/* line 1288, app/assets/stylesheets/eu-added.scss */
+.circle-link {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  /* Makes it a circle */
+  background-color: transparent;
+  /* Transparent background */
+  text-decoration: none;
+  /* Remove underline from the link */
+}
+
+/* line 1302, app/assets/stylesheets/eu-added.scss */
+.vertical-dots {
+  color: #000;
+  /* Set the color to black */
+}
+
+/* line 1307, app/assets/stylesheets/eu-added.scss */
+.v-align {
+  vertical-align: middle !important;
+}

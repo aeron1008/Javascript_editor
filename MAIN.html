@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<!-- saved from url=(0085)http://localhost:3000/steps/8g==-%2Dr5sMOs1amUsAE0Iy-%2D4VadIxE17m0SNS2YbsM6nw==/edit -->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+      .turbo-progress-bar {
+        position: fixed;
+        display: block;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: #0076ff;
+        z-index: 2147483647;
+        transition:
+          width 300ms ease-out,
+          opacity 150ms 150ms ease-in;
+        transform: translate3d(0, 0, 0);
+      }
+    </style>
+    <style type="text/css">
+      .turbo-progress-bar {
+      position: fixed;
+      display: block;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: #0076ff;
+      z-index: 2147483647;
+      transition:
+        width 300ms ease-out,
+        opacity 150ms 150ms ease-in;
+      transform: translate3d(0, 0, 0);
+    }
+    </style>
+    <title>Cart Checkout</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-param" content="authenticity_token">
+    <meta name="csrf-token"
+      content="LYsyevCwV1KJz8KTwket0ZR7k1CKdOhbZ_AzWsFmPXjJbvsvANWLttYvXZCVQxvMdAb80npuAqJuNZUq7Gbtjw">
+
+    <link rel="stylesheet"
+      href="assets/application-5f9462d33fb132272da61caa180c0e2294e1e66ba58a325f63b08f1383dcbd61.css"
+      media="all" data-turbo-track="reload">
+
+    <link rel="stylesheet"
+      href="./thefile_files/home.debug-4af3d22dbdacfbce922711119f40c71c4bb62fdc9d5a6642a9979ce88a5f462d.css"
+      media="all" data-turbo-track="reload">
+    <link rel="stylesheet"
+      href="./thefile_files/eu-added.debug-464ceb5ffb33bd9c023501b3fb649e585231d754783f4052eb937409a1766c33.css"
+      data-turbo-track="reload">
+    <link rel="stylesheet"
+      href="./thefile_files/feather.debug-058f4d060db173001cc70da27817d77bf1f2b7318c9d519aa11c3296b046cee8.css"
+      media="all" data-turbo-track="reload">
+
+    <link
+      href="https://kit-pro.fontawesome.com/releases/v5.15.4/css/pro.min.css"
+      rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fjalla+One:wght@400;500&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@500;600&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,900&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet">
+
+    <script
+      src="./thefile_files/application.debug-51f591e5e65fcad9d85ee5e5cba383e332c291d6d8883c86aee29b15bd79e968.js"
+      data-turbo-track="reload" defer="defer"></script>
+
+  </head>
+
+  <body class="vsc-initialized">
+
+    <!-- Navbar -->
+
+    <style>
+    /* Additional CSS styles */
+
+    .sidebar {
+      position: fixed;  /* Keeps the sidebar fixed */
+      top: 65px;  /* Position at the top of the viewport */
+      left: 0; /* Position at the left of the viewport */
+      height: calc(100% - 65px);  /* Takes the full height of the viewport */
+      z-index: 1;  /* Ensures the sidebar stays on top */
+      background-color: #eee; /* Define your preferred background color */
+      overflow-y: auto;
+    }
+
+    .big-editor-container {
+      background-color: #f5f4f8;
+      /* color:blue; */
+      margin-left: 25%;  /* Adjust the margin to accommodate the sidebar width */
+      padding: 20px;  /* Optional: Add some padding for spacing */
+      overflow-y: auto;  /* Makes the content area scrollable if it overflows */
+      /* You can define a max-height to control the scrollable area's height */
+      max-height: 100%;
+      overflow-x: hidden;
+    }
+
+    .draggable {
+      padding: 1rem;
+      background-color: white;
+      border: 1px solid #f0f0f0;
+      cursor: move;
+    }
+
+    .draggable.dragging {
+      opacity: .5;
+    }
+
+    .search-panel {
+      border-radius: 10px;
+      /* width: 96%;
+      margin: 2%; */ 
+    }
+
+    .element-group {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .element-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid grey;
+      border-radius: 10px; 
+      width: 46%;
+      margin: 2%;
+      text-align: center;
+    }
+
+    .element-icon {
+      font-size: 2rem;
+      height: 44.8px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .element-icon-img {
+      height: 44.8px;
+      margin-bottom: 0.5rem;
+    }
+
+    #da-main-container {
+      /* padding: 1rem; */
+    }
+
+    .elButton {
+        padding: 13px 35px;
+        text-decoration: none; /* Remove underline by default */
+    }
+
+    .elButton:hover {
+        text-decoration: none; /* Remove underline on hover */
+    }
+
+    .elInput.elInputBR5 {
+        border-radius: 5px !important;
+    }
+
+    .elInputIRight {
+        background-position: 97%;
+    }
+    .elInputBR5 {
+        border-radius: 5px;
+    }
+    .elInputBG1 {
+        background-color: #fff;
+    }
+    .elInputStyl0 {
+        border: 1px solid rgba(0,0,0,0.2);
+    }
+    .elInput100 {
+        width: 100%;
+    }
+    .elInputMid {
+        font-size: 16px;
+        padding: 12px 18px;
+    }
+    .elInput {
+        outline: none !important;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+    .ceoinput, .ceoinput>* {
+        border: 1px solid #b4becd;
+        border-top-color: #b0baca;
+        border-bottom-color: #d3d9e2;
+        box-shadow: inset 0 1px 2px rgba(130,137,150,0.23), 0 1px 0 rgba(255,255,255,0.95) !important;
+        border-radius: 3px !important;
+    }
+    .elAlign_left {
+        text-align: left;
+    }
+
+    .back-btn{
+      background: #fafafa;
+      border:0px none;
+    }
+    .back-btn:hover{
+      background: #f1f1f1;
+      /* background: #f1f1f1; */
+      border:0px none;
+    }
+
+    .realcountdown {
+      font-size: 24px;
+      padding-top: 16px;
+      padding-bottom: 6px;
+      border-radius: 5px;
+    }
+
+    .timer {
+        text-align: right;
+        padding-right:10px;
+    }
+
+    .timer-number {
+      font-size: 26px;
+      line-height: 34px;
+      font-weight: 1000;
+      letter-spacing: 1.66px;
+      font-family: 'Nunito Sans', sans-serif;
+    }
+
+    .timer-word {
+      font-size: 12px;
+        text-align: left;
+    }
+
+    /* popup */
+    /* Add this to your CSS */
+    .popup-container {
+        display: none;
+        z-index: 1000; /* Make sure it's on top of other content */
+        position: fixed;
+        top: 50%;
+        left: 64%;
+        transform: translate(-50%, -50%);
+    }
+
+    .popup {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+        /* Additional styling for the popup */
+    }
+
+    .col-md-9.overlay {
+        background: rgba(0, 0, 0, 0.7) !important; /* Semi-transparent dark background */
+        pointer-events: none; /* Make it unclickable */
+        filter: grayscale(100%); /* Makes it grayscale */
+        position: relative; /* Ensure it covers the .col-9 content */
+        z-index: 999; /* Make sure this is lower than the popup z-index */
+
+    }
+
+    .modal-dialog{
+      max-width:none;
+    }
+
+    .modal-content {
+        /* Add additional styling for the content if needed */
+    }
+
+    #close-popup {
+        position: absolute;
+        top: 10px;
+        right: 40px;
+        text-decoration: none;
+        color: #333;
+    }
+
+    /* Style the "X" inside the anchor */
+    .popup-container .popup a#close-popup::before {
+        content: "\00D7"; /* Use the Unicode character for "×" */
+        display: inline-block;
+        margin-right: 5px; /* Add some spacing if needed */
+        font-weight: bold; /* Make the × symbol bold, if desired */
+        font-size:30px;
+    }
+
+    .smaller-font {
+        font-size: 14px;
+    }
+
+    /* For 2 step combo*/
+    .hidden{
+      display: none;
+    }
+
+  </style>
+
+    <div id="editorFormWrapper">
+      <form action="http://localhost:3000/steps/1" accept-charset="UTF-8"
+        method="post">
+        <input type="hidden" name="_method" value="patch"
+          autocomplete="off">
+        <input type="hidden" name="authenticity_token"
+          value="najoOemTb2z-6xmsK_ztwS3qtCMmMUdChzrr_anekFeI94TlZPxNBpkhWk-lK4LMGIaokb_bdqVhblSZ6Jbg8g"
+          autocomplete="off">
+
+        <div class="fixed-top">
+          <div class="row no-gutters"
+            style="background-color: #c9e9f0; padding: 8px 20px;">
+            <div class="col-4">
+              <!-- Button on the Left -->
+              <a draggable="false"
+                href="http://localhost:3000/funnels/1?step_id=1"
+                class="btn back-btn">
+                <img style="width: 15px;    margin-bottom: 2px; "
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQEAAADECAMAAACoYGR8AAAAdVBMVEX///8AAADKysqJiYl3d3eAgICOjo6CgoKGhoZxcXF6enqWlpaZmZlfX199fX1iYmJHR0fd3d00NDRycnJsbGxVVVVPT0/R0dEPDw/x8fGgoKBERETj4+Orq6s7OzsaGhonJye6urq/v7/t7e2vr6+lpaUuLi4V7UVvAAADZ0lEQVR4nO3dC1YaURCE4WoRRVFARNEIImjc/xITojGRx9D35PRU7Fv/ApLyO4A4MDNAZLP58HFhT6PuKvS/+W9bLexPwxl7Tutdje1z5+xFLbe0rV7v2aParL8N8LOKngknOwHMqnkU7AOwEXtZS+0FMJuzt7VSA4AZe1wbNQLYN/a8+JoBbMzeF16nGcDsmb0wuIMAtmRPjO0wgL2wN4bmALA+e2RkHgA7Za8MrOcBsO/smXH5ABK/EjoB7Ig9NCovQNq3xW6ACXtpUKdeAJuyp8bkB7hkT43JD5D0OFkBQM63xF0/QI+9NaQCgDP21pCqBxj4Aa7ZW0MSgADcHbO3hnQuAAHUDXDsB8j51QkBCMDdgL01pOoBrgXgrsveGlL1AGcCcJfzI1IB1A4w8QPkPCosAAEIwFuHvTUkAQigcoChANydsLeGJAABCEAAVQNcCsBdzvMmBCAAAQigaoAbAbi7YG8NSQACEIAAqga49QPkvJ6GAAQgAAE4y3kVhZEfYDI9+sJd/TvA1+/2ZfsieVUBrDu+rxzANl7MHthrKE3qfgSs+7heZMFZY8l6Pwluyd5B7O3iSOwV1NYAF+wR1Pq1PwTWD4IpewK5aeVPgvXToOC4YMpusHmF+doa4449gdydBPQs0CuhfhvqHZHeFesvo9r/NNIREh0l05FSHS2v+nj5xse/1RFsfmpWGcGuT0716Tn0DQroWzQQAUQAEaCIIOfXivXNaogAIoAIIALodEOIADrrFiKACCACiAC6FA1EAF2RCSKACCAC6BqdEAFEAF2tFyKArtsOEUAEEAGKCHLex0UE0N18oHt6QQQoIsh5c0Pd3xEiQBFBzhvd6l6/EAGKCHLe9FwEEAGKzlATgV2ztwYlAgxEUEBwxt4alAhEAHT9BJPD/9qXTAQlBFkPnJ36CV7YW4MqIJixtwblJ7hkT43KTzBlT42q5xXI+vuggIA9NC4vwRF7aFxOgiV7Z2A+gjl7ZmQdj0DWj9Xf8hBkPR3lPQdB1jfGvztMkPmV8FcHCZ7ZC8M7aQYYs/e1UDNB1suXfKqRgD2unRoIsl7NarO9BA/sZa21j2DXJeGS1t8JkPUY2c6W2z//a0WPgHVXm1fFz/qNooZWT3/9/MOqngEfzebDx4U9jQYr9pL9/QDfFlIBc4PTrAAAAABJRU5ErkJggg=="
+                  alt>
+              </a>
+
+              <a draggable="false"
+                class="btn back-btn smaller-font ml-1 popup-settings-edit-funnel"
+                href="http://localhost:3000/steps/8g==--r5sMOs1amUsAE0Iy--4VadIxE17m0SNS2YbsM6nw==/edit#editSettingsModal">
+                <i style="font-size: 14px;" class="fas  fa-cog"></i> Settings
+              </a>
+
+              <a draggable="false" class="btn back-btn smaller-font ml-1"
+                href="http://localhost:3000/steps/8g==--r5sMOs1amUsAE0Iy--4VadIxE17m0SNS2YbsM6nw==/edit#"
+                id="open-popup">
+                <i style="font-size: 14px;"
+                  class="fas fa-external-link-alt"></i> Pop up
+              </a>
+
+            </div>
+            <div class="col-8 text-right">
+              <textarea class="full-height" name="step[large_html_blob_content]"
+                rows="10" cols="40"
+                style="display: none;">&lt;div class="editor-container new-section" style="min-height: 250px; background-color: rgb(255, 255, 255);"&gt; &lt;div&gt;&lt;/div&gt; &lt;div class="draggable de elHeadlineWrapper ui-droppable de-editable" id="headline-1699635682098" data-de-type="headline" data-de-editing="false" data-title="headline" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt; &lt;h1 class="ne elHeadline fs-1 lh4 elMargin0 elBGStyle0 hsTextShadow0 display-5 font-weight-normal" data-bold="inherit" data-gramm="false" contenteditable="true" id="field-1699635682098" placeholder="Text" style="text-align: center; font-size: 32px; margin-top: 10px; margin-bottom: 10px;"&gt;&lt;b&gt;How Taa [GOoOD] Without [BAD]&lt;/b&gt;&lt;/h1&gt; &lt;/div&gt; &lt;div class="draggable de elSubHeadlineWrapper ui-droppable de-editable" id="subhead-1704456202956" data-de-type="subhead" data-de-editing="false" data-title="subhead" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt;&lt;h3 class="ne elSubHeadline hsSize3 lh4 elMargin0 elBGStyle0 hsTextShadow0" data-bold="inherit" data-gramm="false" id="field-1704456202956" placeholder="Subhead Text" style="text-align: center; font-size: 28px;"&gt;&lt;p&gt;FREE: Brand New On-Demand Class Reveals ...&lt;/p&gt;&lt;/h3&gt;&lt;/div&gt;&lt;div class="draggable de elSubHeadlineWrapper ui-droppable de-editable" id="subhead-1704456194874" data-de-type="subhead" data-de-editing="false" data-title="subhead" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt;&lt;h3 class="ne elSubHeadline hsSize3 lh4 elMargin0 elBGStyle0 hsTextShadow0" data-bold="inherit" data-gramm="false" id="field-1704456194874" placeholder="Subhead Text" style="text-align: center; font-size: 28px;"&gt;&lt;p&gt;FREE: Brand New On-Demand Class Reveals ...&lt;/p&gt;&lt;/h3&gt;&lt;/div&gt;&lt;div class="draggable de elBTN de-editable elAlign_center elMargin0" id="tmp_button-1699635684079" data-de-type="button" data-de-editing="false" data-title="button" data-ce="false" data-trigger="none" data-animate="fade" data-delay="500" draggable="true" style="outline: none; text-align: center;"&gt;&lt;a href="#open-popup" id="the_button-1699635684079" class="elSettings elButton elButtonSize1 elButtonColor1 elButtonRounded elButtonPadding2 elBtnVP_10 elButtonCorner3 elButtonFluid elBtnHP_25 elBTN_b_1 elButtonShadowN1 elButtonTxtColor1" rel="noopener noreferrer" style="color: rgb(255, 255, 255); font-weight: 600; background-color: rgb(255, 0, 0); font-size: 20px;"&gt;&lt;span class="elButtonMain"&gt;Let Me In!&lt;/span&gt;&lt;span class="elButtonSub"&gt;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="editor-container new-section" style="min-height: 250px; background-color: rgb(255, 255, 255);"&gt;&lt;div&gt;&lt;/div&gt;&lt;div class="draggable de elHeadlineWrapper ui-droppable de-editable" id="headline-1703240600978" data-de-type="headline" data-de-editing="false" data-title="headline" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt;&lt;h1 class="ne elHeadline fs-1 lh4 elMargin0 elBGStyle0 hsTextShadow0 display-5 font-weight-normal" data-bold="inherit" data-gramm="false" contenteditable="true" id="field-1703240600978" placeholder="Text" style="text-align: center; font-size: 32px; margin-top: 10px; margin-bottom: 10px; cursor: text;"&gt;&lt;b&gt;How Topo [GOOD] Without [BAD]&lt;/b&gt;&lt;/h1&gt;&lt;/div&gt;&lt;div class="draggable de elSubHeadlineWrapper ui-droppable de-editable" id="subhead-1703240605914" data-de-type="subhead" data-de-editing="false" data-title="subhead" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt;&lt;h3 class="ne elSubHeadline hsSize3 lh4 elMargin0 elBGStyle0 hsTextShadow0" data-bold="inherit" data-gramm="false" id="field-1703240605914" placeholder="Subhead Text" style="text-align: center; font-size: 28px;"&gt;&lt;p&gt;FREE: Brand New On-Demand Class Reveals ...&lt;/p&gt;&lt;/h3&gt;&lt;/div&gt;&lt;div class="draggable de elparagraphWrapper ui-droppable de-editable" id="text-1703240607678" data-de-type="text" data-de-editing="false" data-title="text" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt;&lt;p class="ne elText hsSize3 lh4 elMargin0 elBGStyle0 hsTextShadow0" data-bold="inherit" data-gramm="false" id="field-1703240607678" placeholder="Text" style="font-size: 20px;"&gt;This Class Is Available Instantly ...No Waiting.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</textarea>
+              <textarea class="full-height" name="step[popup_html_blob_content]"
+                rows="10" cols="40"
+                style="display: none;"> &lt;div class="editor-container new-section" style="min-height: 250px; background-color: rgb(255, 255, 255);"&gt; &lt;div&gt;&lt;/div&gt; &lt;div class="draggable de elHeadlineWrapper ui-droppable de-editable" id="headline-1699635688979" data-de-type="headline" data-de-editing="false" data-title="headline" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt; &lt;h1 class="ne elHeadline fs-1 lh4 elMargin0 elBGStyle0 hsTextShadow0 display-5 font-weight-normal" data-bold="inherit" data-gramm="false" contenteditable="true" id="field-1699635688979" placeholder="Text" style="text-align: center; font-size: 32px; margin-top: 10px; margin-bottom: 10px;"&gt;&lt;b&gt;How TO [GOOD] Without [BAD]&lt;/b&gt;&lt;/h1&gt; &lt;/div&gt; &lt;div class="draggable de elInputWrapper de-editable de-input-block elAlign_center elMargin0" id="tmp_input-1699869273401" data-de-type="input" data-de-editing="false" data-title="input" data-ce="false" data-trigger="none" data-animate="fade" data-delay="500" draggable="true" style="margin-top: 30px; outline: none;"&gt; &lt;input type="text" placeholder="Your Name Here..." name="name" class="elInput elInput100 elAlign_left elInputMid elInputStyl0 elInputBG1 elInputBR5 elInputI0 elInputIBlack elInputIRight required0 ceoinput" data-type="extra" style="width: 100%;"&gt; &lt;div class="addElementFlyoutDOM" style="display: none; left: 325px;"&gt;&lt;i class="fa fa-plus"&gt;&lt;/i&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="draggable de elemailWrapper de-editable de-input-block elAlign_center elMargin0" id="tmp_input-1699869279239" data-de-type="input" data-de-editing="false" data-title="input" data-ce="false" data-trigger="none" data-animate="fade" data-delay="500" draggable="true" style="margin-top: 30px; outline: none;"&gt; &lt;input type="text" placeholder="Your Email Address Here..." name="email" class="elInput elInput100 elAlign_left elInputMid elInputStyl0 elInputBG1 elInputBR5 elInputI0 elInputIBlack elInputIRight required0 ceoinput" data-type="extra" style="width: 100%;"&gt; &lt;div class="addElementFlyoutDOM" style="display: none; left: 325px;"&gt;&lt;i class="fa fa-plus"&gt;&lt;/i&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="draggable de elBTN de-editable elAlign_center elMargin0" id="tmp_button-1699635695312" data-de-type="button" data-de-editing="false" data-title="button" data-ce="false" data-trigger="none" data-animate="fade" data-delay="500" draggable="true" style=" outline: none; text-align: center;"&gt;&lt;a href="#submit-form" id="the_button-1699635695312" class="elSettings elButton elButtonSize1 elButtonColor1 elButtonRounded elButtonPadding2 elBtnVP_10 elButtonCorner3 elButtonFluid elBtnHP_25 elBTN_b_1 elButtonShadowN1 elButtonTxtColor1" rel="noopener noreferrer" style="color: rgb(255, 255, 255); font-weight: 600; background-color: rgb(255, 0, 0); font-size: 20px;"&gt;&lt;span class="elButtonMain"&gt;Let Me In!&lt;/span&gt;&lt;span class="elButtonSub"&gt;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt; &lt;/div&gt; </textarea>
+
+              <div class="btn-group">
+                <a draggable="false" class="btn back-btn smaller-font"
+                  id="add-section-button">
+                  <i class="fa fa-plus"></i> Add section
+                </a>
+
+                <a draggable="false" class="btn back-btn smaller-font"
+                  onclick="javascript:;">
+                  <i class="fal fa-tasks-alt"></i> Sections
+                </a>
+                <a draggable="false" class="btn back-btn smaller-font"
+                  onclick="javascript:;">
+                  <i class="fas fa-bars"></i> Rows
+                </a>
+                <a draggable="false" class="btn back-btn smaller-font"
+                  onclick="javascript:;">
+                  <i class="far fa-columns"></i> Columns
+                </a>
+
+              </div>
+
+              <div class="btn-group ml-1">
+                <a draggable="false" target="_blank"
+                  class="btn back-btn smaller-font"
+                  style="margin-top:1px !important"
+                  href="http://localhost:3000/funnels/1/steps/LQ==--rGaY0OlUUm3xhcn+--6iF5Hz4XGHwaYQr3%2FH4kAA==">
+                  <i style="font-size: 14px;" class="fas fa-eye"></i> Preview
+                </a>
+                <input type="submit" name="commit" value="Save"
+                  class="btn btn-primary save-button smaller-font text-orange bg-lightorange "
+                  style="color: #7a5900;" draggable="false"
+                  data-disable-with="Save">
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row" style="background-color:#eee; padding-top:65px ">
+        <!-- Sidebar with draggable elements -->
+        <div class="col-md-3 sidebar">
+
+          <input value type="text" name="search"
+            placeholder="Search Element..."
+            class="form-control my-3 search-panel">
+
+          <h4>Text</h4>
+          <div class="element-group">
+            <div class="draggable element-panel" id="headline"
+              name="headline-field" draggable="true">
+              <!-- <i class="fas fa-heading element-icon"></i> -->
+              <h1>H</h1>
+              Headline
+            </div>
+            <div class="draggable element-panel" id="subhead"
+              name="subhead-field"
+              draggable="true">
+              <i class="fa-solid fa-text element-icon"></i>
+              Sub-Headline
+            </div>
+            <div class="draggable element-panel" id="paragraph"
+              name="paragraph-field" draggable="true">
+              <i class="bi bi-paragraph element-icon"></i>
+              Text
+            </div>
+            <div class="draggable element-panel" id="list" name="list-field"
+              draggable="true">
+              <i class="bi bi-list-ul element-icon"></i>
+              Bullet List
+            </div>
+          </div>
+
+          <h4>Media</h4>
+          <div class="element-group">
+            <div class="draggable element-panel" id="image" name="image-field"
+              draggable="true">
+              <i class="bi bi-card-image element-icon"></i>
+              Image
+            </div>
+          </div>
+
+          <h4>Button</h4>
+          <div class="element-group">
+            <div class="draggable element-panel" id="button" name="button-field"
+              draggable="true">
+              <img src="./assets/element-icons/button.png"
+                class="element-icon-img">
+              Button
+            </div>
+            <div class="draggable element-panel" id="countdown"
+              name="countdown-field"
+              draggable="true">
+              <i class="bi bi-clock-history element-icon"></i>
+              CountDown
+            </div>
+          </div>
+
+          <h4>Form</h4>
+          <div class="element-group">
+            <div class="draggable element-panel" id="input" name="2step-combo"
+              draggable="true">
+              <h1>2</h1>
+              2 Step Combo
+            </div>
+            <div class="draggable element-panel" id="input" name="input-field"
+              draggable="true">
+              <i class="bi bi-input-cursor-text element-icon"></i>
+              Text Field
+            </div>
+            <div class="draggable element-panel" id="email" name="email-field"
+              draggable="true">
+              <h1>E</h1>
+              Email Field
+            </div>
+            <div class="draggable element-panel" id="phone" name="phone-field"
+              draggable="true">
+              <i class="bi bi-phone element-icon"></i>
+              Phone Field
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Main content container -->
+        <div class="col-md-9 big-editor-container p-0">
+          <div id="da-main-container">
+
+          </div>
+          <div class="popup-container col-md-6" style="display: none;">
+            <div class="popup py-3">
+              <div class>
+
+                <div class="modal-dialog " role="document">
+                  <div class="modal-content p-1" style="border-color:white">
+
+                    <div id="da-popup-container" class="modal-body p-0"
+                      style="max-height: 65vh; overflow-y: auto;" "="">
+                      <div class="editor-container new-section"
+                        id="new-section-container"
+                        style="min-height: 250px; background-color: rgb(255, 255, 255);">
+                        <div></div> <div
+                          class="draggable de elHeadlineWrapper ui-droppable de-editable"
+                          id="headline-1699635688979" data-de-type="headline"
+                          data-de-editing="false" data-title="headline"
+                          data-ce="true" data-trigger="none"
+                          data-animate="fade"
+                          data-delay="500" aria-disabled="false"
+                          draggable="true"
+                          style="outline: none; cursor: pointer;"> <h1
+                            class="ne elHeadline fs-1 lh4 elMargin0 elBGStyle0 hsTextShadow0 display-5 font-weight-normal"
+                            data-bold="inherit" data-gramm="false"
+                            contenteditable="true" id="field-1699635688979"
+                            placeholder="Text"
+                            style="text-align: center; font-size: 32px; margin-top: 10px; margin-bottom: 10px;"><b>How
+                              TO [GOOD] Without [BAD]</b></h1> </div> <div
+                          class="draggable de elInputWrapper de-editable de-input-block elAlign_center elMargin0"
+                          id="tmp_input-1699869273401" data-de-type="input"
+                          data-de-editing="false" data-title="input"
+                          data-ce="false" data-trigger="none"
+                          data-animate="fade" data-delay="500"
+                          draggable="true"
+                          style="margin-top: 30px; outline: none;"> <input
+                            type="text" placeholder="Your Name Here..."
+                            name="name"
+                            class="elInput elInput100 elAlign_left elInputMid elInputStyl0 elInputBG1 elInputBR5 elInputI0 elInputIBlack elInputIRight required0 ceoinput"
+                            data-type="extra" style="width: 100%;"> <div
+                            class="addElementFlyoutDOM"
+                            style="display: none; left: 325px;"><i
+                              class="fa fa-plus"></i></div> </div> <div
+                          class="draggable de elemailWrapper de-editable de-input-block elAlign_center elMargin0"
+                          id="tmp_input-1699869279239" data-de-type="input"
+                          data-de-editing="false" data-title="input"
+                          data-ce="false" data-trigger="none"
+                          data-animate="fade" data-delay="500"
+                          draggable="true"
+                          style="margin-top: 30px; outline: none;"> <input
+                            type="text"
+                            placeholder="Your Email Address Here..."
+                            name="email"
+                            class="elInput elInput100 elAlign_left elInputMid elInputStyl0 elInputBG1 elInputBR5 elInputI0 elInputIBlack elInputIRight required0 ceoinput"
+                            data-type="extra" style="width: 100%;"> <div
+                            class="addElementFlyoutDOM"
+                            style="display: none; left: 325px;"><i
+                              class="fa fa-plus"></i></div> </div> <div
+                          class="draggable de elBTN de-editable elAlign_center elMargin0"
+                          id="tmp_button-1699635695312" data-de-type="button"
+                          data-de-editing="false" data-title="button"
+                          data-ce="false" data-trigger="none"
+                          data-animate="fade" data-delay="500"
+                          draggable="true"
+                          style="outline: none; text-align: center;"><a
+                            href="http://localhost:3000/steps/8g==--r5sMOs1amUsAE0Iy--4VadIxE17m0SNS2YbsM6nw==/edit#submit-form"
+                            id="the_button-1699635695312"
+                            class="elSettings elButton elButtonSize1 elButtonColor1 elButtonRounded elButtonPadding2 elBtnVP_10 elButtonCorner3 elButtonFluid elBtnHP_25 elBTN_b_1 elButtonShadowN1 elButtonTxtColor1"
+                            rel="noopener noreferrer"
+                            style="color: rgb(255, 255, 255); font-weight: 600; background-color: rgb(255, 0, 0); font-size: 20px;"><span
+                              class="elButtonMain">Let Me In!</span><span
+                              class="elButtonSub"></span></a></div> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <a
+                href="http://localhost:3000/steps/8g==--r5sMOs1amUsAE0Iy--4VadIxE17m0SNS2YbsM6nw==/edit#"
+                id="close-popup"></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div id="rightSlidingPopup1">
+      <div class="row">
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-full-width">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-fullwidth.8c4225bb.svg">
+            </div>
+            <div class="settingWidthIcon2">FULL WIDTH</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-wide">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-wide.8011350a.svg">
+            </div>
+            <div class="settingWidthIcon2">WIDE</div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-medium">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-medium.0d2ec18b.svg">
+            </div>
+            <div class="settingWidthIcon2">MEDIUM</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-small">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-small.26ff853a.svg">
+            </div>
+            <div class="settingWidthIcon2">SMALL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="rightSlidingPopup2">
+      <div class="row">
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-row1">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-column-1.f30cd797.svg">
+            </div>
+            <div class="settingWidthIcon2">1 COLUMN</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-row2">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-column-2.4764cc37.svg">
+            </div>
+            <div class="settingWidthIcon2">2 COLUMNS</div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-row3">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-column-3.58feaae8.svg">
+            </div>
+            <div class="settingWidthIcon2">3 COLUMNS</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-row4">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-column-4.0a0ab2a5.svg">
+            </div>
+            <div class="settingWidthIcon2">4 COLUMNS</div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-row5">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-column-5.dc7951c4.svg">
+            </div>
+            <div class="settingWidthIcon2">5 COLUMNS</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div type="button" class="settingWidthIcon" id="setting-row6">
+            <div class="settingWidthIcon1">
+              <img src="assets/row-image/artwork-column-6.0b669d30.svg">
+            </div>
+            <div class="settingWidthIcon2">6 COLUMNS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+.settingsSidebar {
+  position: fixed;
+  top: 0;
+  left: -100%; /* Initially hidden */
+  height: 100%;
+  background-color: #fff; /* White background color */
+  color: #3a85ff; /* Light blue text color */
+  transition: left 0.1s ease-in-out;
+  z-index: 1000; /* Ensure it's above other content */
+}
+#rightSlidingPopup1,
+#rightSlidingPopup2 {
+  position: fixed;
+  top: 0;
+  right: -420px; /* Initially hide the popup to the right */
+  width: 420px;
+  height: 100%;
+  background-color: #fff;
+  transition: right 0.3s ease; /* Add smooth sliding animation */
+  z-index: 9999;
+  padding: 20px;
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.3); /* Add some shadow for a popup effect */
+}
+.settingWidthIcon {
+  border: 2px solid #aaa;
+  height: 100px;
+  border-radius: 5px;
+}
+.settingWidthIcon:hover {
+  background-color: #eee;
+}
+.settingWidthIcon1 {
+  height: 65%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.settingWidthIcon2 {
+  height: 35%;
+  background-color: #eee;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-gray {
+  color: gray; /* or your preferred shade of gray */
+}
+
+.settingsSidebar .form-element {
+  display: block;
+  color: rgba(52, 73, 94, .8);
+  letter-spacing: 0.1px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-family: Montserrat;
+}
+
+.settingsSidebar .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+
+}
+
+.settingsSidebar .form-group .form-element {
+  display: flex;
+  max-height:40px;
+  height:40px;
+  overflow:hidden;
+}
+.settingsSidebar .form-element label{
+  margin-top:11px;
+}
+
+.settingsSidebar select.form-select {
+      background-position: right 7px center;
+}
+.settingsSidebar select, .settingsSidebar input {
+    border: 1px solid #b4becd !important;
+    border-top-color: #b0baca !important;
+    border-bottom-color: #d3d9e2 !important;
+    box-shadow: inset 0 1px 2px rgba(130,137,150,0.23), 0 1px 0 rgba(255,255,255,0.95) !important;
+
+  font-family: Montserrat;
+font-size: 13px;
+font-weight: 700;
+-webkit-font-smoothing: antialiased;
+padding: 0 6px;
+
+}
+.settingsSidebar input {
+    width:99%;
+    border-radius: 4px;
+
+}
+.fa, .fas {
+  font-size: 13px !important;
+  font-weight: 100 !important;
+}
+.fa-plus {
+  font-size: 18px !important;
+}
+.de-rollover-tools{
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+}
+.orange-de-rollover-tools{
+  position: absolute;
+  top: -26px;
+  right: -1px;
+  display: none;
+}
+.arrow-de-rollover-tools {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+}
+.orange-arrow-de-rollover-tools {
+  position: absolute;
+  top: -26px;
+  left: -1px;
+  display: none;
+}
+.plus-de-rollover-tools {
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  display: none;
+}
+.add-row {
+  width: 100px;
+  background-color: #37ca37;
+  color: white;
+  border: none;
+  font-size: 13px;
+  border-radius: 5px;
+}
+.add-row-de-rollover-tools {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50%;
+  transform: translateY(-50%);
+  display: none;
+}
+.add-row-plus-de-rollover-tools {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  translate: -50%;
+}
+
+.text-de-rollover-tools {
+  position: absolute;
+  top: -26px;
+  left: -1px;
+  display: none;
+}
+.flex-div {
+  display: flex;
+  position: relative;
+}
+.new-container {
+  margin: auto;
+  min-height: 250px;
+  position: relative;
+  padding: 20px 0;
+  background-color: #fff;
+  overflow-y: hidden;
+}
+
+.de-rollover-tools div,
+.arrow-de-rollover-tools div{
+  cursor: pointer;
+  padding: 0 3px;
+  /* margin: 2px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
+}
+
+/* Styles for the top-right icons (move, copy, remove) */
+.de-rollover-move {
+  background-color: orange;
+  color: white;
+  z-index: 100;
+}
+
+.de-rollover-advance {
+  background-color: orange;
+  color: white;
+  z-index: 100;
+}
+
+.de-rollover-clone {
+  background-color: orange;
+  color: white;
+  z-index: 100;
+}
+
+.de-rollover-remove {
+  background-color: orange;
+  color: white;
+  z-index: 100;
+}
+
+/* Styles for the top-left icons (arrow up, arrow down, settings) */
+.de-rollover-arrow-up {
+  background-color: orange;
+  color: white;
+  z-index: 100;
+}
+
+.de-rollover-arrow-down {
+  background-color: orange;
+  color: white;
+  z-index: 100;
+}
+
+.de-rollover-settings {
+  background-color: orange;
+  color: white;
+  z-index: 100;
+}
+
+/* Styles for the right-bottom "HEADLINE" text */
+.de-rollover-headline {
+  background-color: orange;
+  color: white;
+}
+
+/* Styles for the middle-bottom circle with a plus sign */
+.de-rollover-plus-circle {
+  background-color: orange;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  z-index: 100;
+}
+.de-rollover-bold,
+.de-rollover-italic,
+.de-rollover-underline,
+.de-rollover-strike,
+.de-rollover-left,
+.de-rollover-center,
+.de-rollover-right,
+.de-rollover-link {
+  background-color:#777;
+  color: white;
+  padding: 0 6px;
+}
+u {
+  text-decoration: underline !important;
+  background-image: none !important;
+}
+a {
+  text-decoration: underline !important;
+}
+
+.div-boundary {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  border: 5px solid rgb(58, 133, 255);
+  cursor: ew-resize;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  z-index: 20000;
+}
+.col-div {
+  min-height: 210px;
+  position: relative;
+  padding: 20px;
+}
+.row-section {
+  width: 100%;
+  min-height: 210px;
+  position: relative;
+  display: flex;
+}
+
+
+
+</style>
+    <div class="row">
+      <div id="settingsSidebar" class="settingsSidebar col-12 col-md-3 p-3"
+        style="background-color: #fff; margin-top: 66px; border-right: 12px solid #eee;">
+        <!-- Sidebar content goes here -->
+        <div class="sidebar-content">
+          <h5 class="text-gray pb-3">Button Settings</h5>
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <div class="form-element">
+                  <label for="top-margin-slider">Top Margin</label>
+                </div>
+                <div class="form-element">
+                  <label for="action-select">Action</label>
+                </div>
+                <div class="form-element url-input-container"
+                  style="display:none">
+                  <label for="url-input">URL Path</label>
+                </div>
+                <div class="form-element">
+                  <label for="button-text-input">Button Text</label>
+                </div>
+                <div class="form-element">
+                  <label for="sub-text-input">Sub Text</label>
+                </div>
+                <div class="form-element">
+                  <label for="font-family-select">Font Family</label>
+                </div>
+                <div class="form-element">
+                  <label for="font-size-slider">Font Size</label>
+                </div>
+                <div class="form-element">
+                  <label for="text-color-input">Text Color</label>
+                </div>
+                <div class="form-element">
+                  <label for="bg-color-input">BG Color</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="form-group">
+                <div class="form-element">
+                  <input class="form-input" type="range"
+                    id="top-margin-slider"
+                    min="0" max="100" step="1">
+                </div>
+                <div class="form-element">
+                  <select class="form-select" id="action-select">
+                    <option value="#open-popup">Open the Popup</option>
+                    <option value="#submit-form">Submit Form</option>
+                    <option value="#">Go to URL</option>
+                  </select>
+                </div>
+                <div class="form-element url-input-container"
+                  style="display:none">
+                  <input class="form-input" type="text" id="url-input">
+                </div>
+
+                <div class="form-element">
+                  <input class="form-input" type="text"
+                    id="button-text-input">
+                </div>
+                <div class="form-element">
+                  <input class="form-input" type="text" id="sub-text-input">
+                </div>
+                <div class="form-element">
+                  <select class="form-select" id="font-family-select">
+                    <option value="Fira Sans">Fira Sans</option>
+                    <option value="Fjalla One">Fjalla One</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Roboto Slab">Roboto Slab</option>
+                    <option value="Montserrat" selected>Montserrat</option>
+                    <option value="Merriweather">Merriweather</option>
+                  </select>
+                </div>
+                <div class="form-element">
+                  <input class="form-input" type="range" id="font-size-slider"
+                    min="12" max="36" step="1">
+                </div>
+                <div class="form-element">
+                  <input class="form-input" type="text" id="text-color-input">
+                </div>
+                <div class="form-element">
+                  <input class="form-input" type="text" id="bg-color-input">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-turbo="false" class="white-popup mfp-hide text-center"
+      id="editSettingsModal" aria-labelledby="editSettingsModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editSettingsModalLabel">Settings</h5>
+          </div>
+          <div class="modal-body">
+            <!-- Add step form goes here -->
+            <!-- app/views/steps/_step_settings_form.html.erb -->
+
+            <form id="edit_settings_popup" class="needs-validation"
+              data-remote="true" data-turbolinks="false"
+              action="http://localhost:3000/steps/1/update_settings_only"
+              accept-charset="UTF-8" method="post"><input type="hidden"
+                name="_method" value="patch" autocomplete="off"><input
+                type="hidden" name="authenticity_token"
+                value="G6bXuyYK9pUL_p1rKZ61PsPE1VM07KTPQsLCb8uu7eOF08QyC9J34l76FtAWdSm9KXC_jRj2R-BsMmt6Fk0jSQ"
+                autocomplete="off">
+
+              <div class="form-group">
+                <label for="step_workflow_id">Workflow</label>
+                <select class="form-control" name="step[workflow_id]"
+                  id="step_workflow_id"><option selected="selected"
+                    value="1">Fast Money - Weird Holiday Promo With
+                    Deadline</option>
+                  <option value="2">Black Friday - Promo With
+                    Deadline</option>
+                  <option value="3">lala</option>
+                  <option value="4">test</option></select>
+              </div>
+
+              <input type="submit" name="commit" value="Save Changes"
+                class="btn btn-primary" data-disable-with="Save Changes">
+            </form>
+            <script
+              src="./thefile_files/edit_settings_popup.debug-9600af332451c589603c9aff75e766c409aa66de1ec211410eabf39b60f592a9.js"></script>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a data-confirm="Are you sure you want to remove the large data blob?"
+      class="btn btn-danger" rel="nofollow" data-method="delete"
+      href="http://localhost:3000/steps/1/remove_large_html_blob">Remove Large
+      Data Blob</a>
+
+    <!-- <script src="./thefile_files/custom_dragn_drop.debug-c7d0e1c16a7d0fffa3f968e8f06bb17b4ae29e43c444ba2cac4f7a63e71feea2.js"></script> -->
+    <script src="custom_dragn_drop.js"></script>
+
+    <br>
+    <br>
+
+  </body></html>
+
+<script
+  src="http://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"
+  integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k="
+  crossorigin="anonymous"></script>
+<script src="assets/theme.min.js" data-turbo-track="reload"
+  defer="defer"></script>

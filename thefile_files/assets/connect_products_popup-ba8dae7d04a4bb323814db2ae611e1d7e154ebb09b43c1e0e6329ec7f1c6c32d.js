@@ -1,0 +1,2 @@
+(()=>{document.addEventListener("DOMContentLoaded",function(c){$(document).on("submit","#connectProductForm",function(n){n.preventDefault();var t=$(this);$.ajax({url:t.attr("action"),type:t.attr("method"),data:t.serialize(),success:function(o){$.magnificPopup.close()},error:function(o,r,e){console.error("Error connecting product:",e)}})}),$(document).on("click","#connectProductButton",function(){$.magnificPopup.open({items:{src:"#connectProductPopup",type:"inline"}})})});})();
+

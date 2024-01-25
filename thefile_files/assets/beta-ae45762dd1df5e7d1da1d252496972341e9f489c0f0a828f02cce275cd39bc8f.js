@@ -1,0 +1,2 @@
+(()=>{document.addEventListener("turbo:load",function(){c()});function c(){document.querySelectorAll(".toggleSwitch").forEach(function(e){e.hasListener||(e.addEventListener("change",r),e.hasListener=!0)})}function r(){console.log("Toggle changed");let n=this.nextElementSibling,e=this.dataset.updateUrl,o=document.querySelector('meta[name="csrf-token"]').content;$.ajax({type:"PATCH",url:e,data:{user_beta_update:{enabled:this.checked}},headers:{"X-CSRF-Token":o},success:function(t){},error:function(t){console.error("Error updating:",t)}})}})();
+
