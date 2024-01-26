@@ -1,6 +1,8 @@
 var slidingPopup1 = document.getElementById("rightSlidingPopup1");
 var slidingPopup2 = document.getElementById("rightSlidingPopup2");
 var slidingPopup3 = document.getElementById("rightSlidingPopup3");
+var leftSlidingPopup = document.getElementById("leftSlidingPopup");
+var basicContainerSection = document.getElementById("basic-container");
 var mainContainerSection = document.getElementById("da-main-container");
 var popupContainerSection = document.getElementById("da-popup-container");
 var settingFullWidth = document.getElementById("setting-full-width");
@@ -4618,7 +4620,8 @@ function CustomDragAndDrop(container) {
 
           const form = document.createElement("form");
           form.id = "two-step-order-form";
-          form.classList.add("container-order-form-two-step");
+          form.classList.add("container-order-form-two-step");          
+          form.onclick = () => showTwoStepSettings();
 
           const formTitle = document.createElement("div");
           formTitle.classList.add("form-title");
@@ -5383,14 +5386,20 @@ function showForm(formId) {
   document
     .getElementById("div-ctwo-setp-order-2step-form2")
     .classList.add("hidden");
-
   const currentForm = document.getElementById(formId);
-
   if (currentForm) {
     currentForm.classList.remove("hidden");
   }
-
   // You may want to hide other forms if needed
+}
+
+// Open Two Step Combo Settings Panel
+function showTwoStepSettings() {
+  if (slidingPopup3.style.right === "0px") {
+    slidingPopup3.style.right = "-420px"; // Slide out the popup
+  } else {
+    slidingPopup3.style.right = "0px"; // Slide in the popup
+  }  
 }
 
 function appendElements(parent, elements) {
@@ -5475,6 +5484,21 @@ comboButton.addEventListener("click", function () {
   }
 });
 
+const openElementsPanel = document.getElementById("add-element-button");
+openElementsPanel.addEventListener("click", function () {   
+  if (leftSlidingPopup.classList.contains("hidden")) { 
+    leftSlidingPopup.classList.remove("hidden");
+    basicContainerSection.classList.remove("col-md-12");
+    basicContainerSection.classList.add("col-md-9");
+    basicContainerSection.style.marginLeft = "25%";
+  } else {
+    leftSlidingPopup.classList.add("hidden");
+    basicContainerSection.classList.remove("col-md-9");
+    basicContainerSection.classList.add("col-md-12");
+    basicContainerSection.style.marginLeft = "0%";
+  }
+});
+
 const comboClose = document.getElementById("popup3-close");
 comboClose.addEventListener("click", function () {
   if (slidingPopup3.style.right === "0px") {
@@ -5527,18 +5551,28 @@ const step1Tab = document.getElementById("step1-tab");
 const step1Content = document.getElementById("step1-content");
 const step2Tab = document.getElementById("step2-tab");
 const step2Content = document.getElementById("step2-content");
+const eyeIcon1 = document.getElementById('eye-icon1');
+const eyeIcon2 = document.getElementById('eye-icon2');
 
 step1Tab.addEventListener("click", function () {
   step1Content.classList.add("active");
-  step1Tab.classList.add("active");
+  step1Tab.classList.add("step-active");
   step2Content.classList.remove("active");
-  step2Tab.classList.remove("active");
+  step2Tab.classList.remove("step-active");
+  eyeIcon1.classList.remove("bi-eye-slash");
+  eyeIcon1.classList.add("bi-eye");
+  eyeIcon2.classList.remove("bi-eye");
+  eyeIcon2.classList.add("bi-eye-slash");
 });
 step2Tab.addEventListener("click", function () {
   step1Content.classList.remove("active");
-  step1Tab.classList.remove("active");
+  step1Tab.classList.remove("step-active");
   step2Content.classList.add("active");
-  step2Tab.classList.add("active");
+  step2Tab.classList.add("step-active");
+  eyeIcon1.classList.remove("bi-eye");
+  eyeIcon1.classList.add("bi-eye-slash");
+  eyeIcon2.classList.remove("bi-eye-slash");
+  eyeIcon2.classList.add("bi-eye");
 });
 
 //here we will add the listener to save the HTML before they submit the form

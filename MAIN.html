@@ -119,7 +119,7 @@
     .big-editor-container {
       background-color: #f5f4f8;
       /* color:blue; */
-      margin-left: 25%;  /* Adjust the margin to accommodate the sidebar width */
+      margin-left: 0%;  /* Adjust the margin to accommodate the sidebar width */
       padding: 20px;  /* Optional: Add some padding for spacing */
       overflow-y: auto;  /* Makes the content area scrollable if it overflows */
       /* You can define a max-height to control the scrollable area's height */
@@ -323,6 +323,18 @@
       display: none;
     }
 
+    #general-tab, #advanced-tab {
+      color: #5C5776;
+    }
+
+    .nav-item .active {
+      color: #0D6EFD !important;
+    }
+
+    .subtitle-panel {
+      background-color: #F5F4F8;
+    }
+
     .align-button {
       width: 100%;
       border: 1px solid #b4becd;
@@ -362,6 +374,16 @@
       border: 1px solid grey;
       border-radius: 10px;
       width: 100%;
+      align-items: center;
+    }
+
+    .step-active {
+      border-color: #0D6EFD; 
+      color: #0D6EFD;
+    }
+
+    #eye-icon1, #eye-icon2  {
+      font-size: 20px;
     }
 
   </style>
@@ -399,6 +421,11 @@
                 id="open-popup">
                 <i style="font-size: 14px;"
                   class="fas fa-external-link-alt"></i> Pop up
+              </a>
+              
+              <a draggable="false" class="btn back-btn smaller-font ml-1"
+                id="add-element-button">
+                <i class="fa fa-plus"></i> Add Elements
               </a>
 
             </div>
@@ -459,7 +486,7 @@
     <div class="container-fluid">
       <div class="row" style="background-color:#eee; padding-top:65px ">
         <!-- Sidebar with draggable elements -->
-        <div class="col-md-3 sidebar">
+        <div class="col-md-3 sidebar hidden" id="leftSlidingPopup">
 
           <input value type="text" name="search"
             placeholder="Search Element..."
@@ -544,7 +571,7 @@
         </div>
 
         <!-- Main content container -->
-        <div class="col-md-9 big-editor-container p-0">
+        <div class="col-md-12 big-editor-container p-0" id="basic-container">
           <div id="da-main-container">
 
           </div>
@@ -737,15 +764,15 @@
      
       <ul class="nav nav-tabs nav-justified">
         <li class="nav-item">
-          <p class="nav-link" id="general-tab" data-toggle="tab">General</p>
+          <p class="nav-link active" id="general-tab" data-toggle="tab">General</p>
         </li>
         <li class="nav-item">
-          <p class="nav-link active" id="advanced-tab" data-toggle="tab">Advanced</p>
+          <p class="nav-link" id="advanced-tab" data-toggle="tab">Advanced</p>
         </li>
       </ul>
 
       <div class="tab-content mt-3">
-        <div class="tab-pane fade show" id="general-content">
+        <div class="tab-pane fade show active" id="general-content">
           <div>Element name</div>
           <input type="text" name="element-name"
             class="form-control my-2 input-panel" value="Two Step Order">
@@ -800,41 +827,85 @@
               <label for="btn-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="btn-back-color-icon"></i></label>
               <input type="color" class="form-control form-control-color" id="btn-back-color" value="#FFFFFF"></div>
           </div>
+          
+          <div>Form Corners</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>5px</option>
+          </select>
+          
+          <div>Typography Type</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>Headline Font</option>
+          </select>
+
+          <div class="py-2 pl-2 subtitle-panel">
+            <strong>Button Actions</strong>
+          </div>
+          <div>Sale Actions</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>Go to Next step</option>
+          </select>
 
         </div>
 
-        <div class="tab-pane fade show active" id="advanced-content">
-          <div>
+        <div class="tab-pane fade show" id="advanced-content">
+          <div class="py-2 pl-2 subtitle-panel">
             <strong>Form Options</strong>
           </div>
 
           <div class="row my-3">
             <div class="col-6 step-button">
-              <button class="p-2 step-tab" id="step1-tab" data-toggle="tab">Step #1</button>
+              <button class="p-2 step-tab step-active" id="step1-tab" data-toggle="tab"><i class="bi bi-eye mr-1" id="eye-icon1"></i> Step #1</button>
             </div>
             <div class="col-6 step-button">
-              <button class="p-2 step-tab" id="step2-tab" data-toggle="tab">Step #2</button>
+              <button class="p-2 step-tab" id="step2-tab" data-toggle="tab"><i class="bi bi-eye-slash mr-1" id="eye-icon2"></i> Step #2</button>
             </div>
           </div>
           
           <div class="tab-content">
             <div class="tab-pane fade show active"  id="step1-content">
               <div>Step #1 Headline</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your profile">
               <div>Step #1 Sub Headline</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Contact details">
               <div>Toggle Company Name</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <select class="form-select py-2 input-panel">
+                <option>Show Company Name</option>
+              </select>             
               <div>Company Name</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Company Name...">
               <div>Full Name</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Full Name...">
               <div>Email Address</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
-              
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Email Address...">
+              <div>Toggle Phone</div>
+              <select class="form-select my-3 py-2 input-panel">
+                <option>Show Phone Number</option>
+              </select>          
+              <div>Phone Number</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Phone Number...">
             </div>
 
-            <div class="tab-pane fade show"  id="step2-content">222</div>
+            <div class="tab-pane fade show"  id="step2-content">
+              <div>Step #2 Headline</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Normally $297. Use coupon code FAP to get 90% OFF">
+              <div>Step #2 Sub Headline</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Billing details">
+              <div>Back to shipping Text</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Edit Contact Details">
+              <div>Select Item Text</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Item">
+              <div>Select Price Text</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Price">
+              <div>Summary Item Text</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="item">
+              <div>Summary Price Text</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="amount">
+              <div>Step #2 Btn Text</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Complete Order">
+              <div>Step #2 Sub Btn Text</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="* 100% Secure & Safe Payments *">
+            </div>
           </div>
 
         </div>
@@ -861,12 +932,13 @@
   top: 0;
   right: -420px; /* Initially hide the popup to the right */
   width: 420px;
-  height: 100%;
+  height: calc(100% - 65px);
   background-color: #fff;
   transition: right 0.3s ease; /* Add smooth sliding animation */
   z-index: 9999;
   padding: 20px;
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.3); /* Add some shadow for a popup effect */
+  overflow-y: auto;
 }
 
 #rightSlidingPopup3 {
@@ -1281,10 +1353,10 @@ a {
       </div>
     </div>
 
-    <a data-confirm="Are you sure you want to remove the large data blob?"
+    <!-- <a data-confirm="Are you sure you want to remove the large data blob?"
       class="btn btn-danger" rel="nofollow" data-method="delete"
       href="http://localhost:3000/steps/1/remove_large_html_blob">Remove Large
-      Data Blob</a>
+      Data Blob</a> -->
 
     <!-- <script src="./thefile_files/custom_dragn_drop.debug-c7d0e1c16a7d0fffa3f968e8f06bb17b4ae29e43c444ba2cac4f7a63e71feea2.js"></script> -->
     <script src="custom_dragn_drop.js"></script>
