@@ -138,10 +138,9 @@
       opacity: .5;
     }
 
-    .search-panel {
+    .input-panel {
       border-radius: 10px;
-      /* width: 96%;
-      margin: 2%; */ 
+      font-size: 18px;
     }
 
     .element-group {
@@ -165,6 +164,7 @@
       font-size: 2rem;
       height: 44.8px;
       margin-bottom: 0.5rem;
+      color: #5C5776;
     }
     
     .element-icon-img {
@@ -311,7 +311,7 @@
         display: inline-block;
         margin-right: 5px; /* Add some spacing if needed */
         font-weight: bold; /* Make the × symbol bold, if desired */
-        font-size:30px;
+        font-size: 30px;
     }
 
     .smaller-font {
@@ -319,8 +319,49 @@
     }
 
     /* For 2 step combo*/
-    .hidden{
+    .hidden {
       display: none;
+    }
+
+    .align-button {
+      width: 100%;
+      border: 1px solid #b4becd;
+      border-radius: 10px;
+    }
+
+    .align-button-icon {
+      font-size: 20px;
+    }
+
+    .color-icon {      
+      font-size: 28px;
+      color: #ffffff;
+    }
+    
+    .color-icon::before {     
+      border-radius: 50%;
+      border: 1px solid #a9a9a9;
+    }
+
+    #btn-color-icon {
+      color: #ffb400;
+    }
+
+    .form-control-color {
+      width: 0px;
+      height: 0px;
+      padding: 0px;
+    }
+
+    .step-button {
+      display: flex;
+      justify-content: center;
+    } 
+
+    .step-tab {
+      border: 1px solid grey;
+      border-radius: 10px;
+      width: 100%;
     }
 
   </style>
@@ -371,6 +412,11 @@
 
               <div class="btn-group">
                 <a draggable="false" class="btn back-btn smaller-font"
+                  id="2step-section-button">
+                  <i class="fa fa-plus"></i> 2 Step Settings
+                </a>
+
+                <a draggable="false" class="btn back-btn smaller-font"
                   id="add-section-button">
                   <i class="fa fa-plus"></i> Add section
                 </a>
@@ -417,25 +463,25 @@
 
           <input value type="text" name="search"
             placeholder="Search Element..."
-            class="form-control my-3 search-panel">
+            class="form-control my-3 input-panel search-panel">
 
           <h4>Text</h4>
           <div class="element-group">
             <div class="draggable element-panel" id="headline"
               name="headline-field" draggable="true">
-              <!-- <i class="fas fa-heading element-icon"></i> -->
-              <h1>H</h1>
+              <i class="bi bi-type-h1 element-icon"></i>
               Headline
             </div>
             <div class="draggable element-panel" id="subhead"
               name="subhead-field"
               draggable="true">
-              <i class="fa-solid fa-text element-icon"></i>
+              <i class="bi bi-fonts element-icon"></i>
               Sub-Headline
             </div>
             <div class="draggable element-panel" id="paragraph"
               name="paragraph-field" draggable="true">
-              <i class="bi bi-paragraph element-icon"></i>
+              <!-- <i class="bi bi-paragraph element-icon"></i> -->
+              <i class="bi bi-textarea-t element-icon"></i>
               Text
             </div>
             <div class="draggable element-panel" id="list" name="list-field"
@@ -458,8 +504,9 @@
           <div class="element-group">
             <div class="draggable element-panel" id="button" name="button-field"
               draggable="true">
-              <img src="./assets/element-icons/button.png"
-                class="element-icon-img">
+              <!-- <img src="./assets/element-icons/button.png"
+                class="element-icon-img"> -->
+                <i class="bi bi-menu-button-wide element-icon"></i>
               Button
             </div>
             <div class="draggable element-panel" id="countdown"
@@ -474,7 +521,7 @@
           <div class="element-group">
             <div class="draggable element-panel" id="input" name="2step-combo"
               draggable="true">
-              <h1>2</h1>
+              <i class="bi bi-input-cursor element-icon"></i>
               2 Step Combo
             </div>
             <div class="draggable element-panel" id="input" name="input-field"
@@ -484,7 +531,7 @@
             </div>
             <div class="draggable element-panel" id="email" name="email-field"
               draggable="true">
-              <h1>E</h1>
+              <h1 class="element-icon">@</h1>
               Email Field
             </div>
             <div class="draggable element-panel" id="phone" name="phone-field"
@@ -678,6 +725,122 @@
         </div>
       </div>
     </div>
+    <div id="rightSlidingPopup3">
+      <div class="row">
+        <div class="col-11 mb-1">
+          <h3>Two Step Order</h3>
+        </div>
+        <div class="col-1 mb-1">
+          <a id="popup3-close"><i class="bi bi-x-lg"></i></a>
+        </div>
+      </div>
+     
+      <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+          <p class="nav-link" id="general-tab" data-toggle="tab">General</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link active" id="advanced-tab" data-toggle="tab">Advanced</p>
+        </li>
+      </ul>
+
+      <div class="tab-content mt-3">
+        <div class="tab-pane fade show" id="general-content">
+          <div>Element name</div>
+          <input type="text" name="element-name"
+            class="form-control my-2 input-panel" value="Two Step Order">
+          
+          <div class="mt-3">Text Align</div>
+          <div class="row my-2">
+            <div class="col-3">
+              <button class="align-button"><i class="bi bi-text-left align-button-icon"></i></button>
+            </div>
+            <div class="col-3">
+              <button class="align-button"><i class="bi bi-text-center align-button-icon"></i></button>
+            </div>
+            <div class="col-3">
+              <button class="align-button"><i class="bi bi-text-right align-button-icon"></i></button>
+            </div>
+            <div class="col-3">
+              <button class="align-button"><i class="bi bi-justify align-button-icon"></i></button>
+            </div>
+          </div>
+
+          <div class="row mt-3 align-items-center">
+            <div class="col-10">BUTTON COLOR</div>
+            <div class="col-2">
+              <label for="btn-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="btn-color-icon"></i></label>
+              <input type="color" class="form-control form-control-color" id="btn-color" value="#CCCCCC">
+            </div>
+          </div>
+          
+          <div class="row mb-3 align-items-center">
+            <div class="col-10">BUTTON TEXT COLOR</div>
+            <div class="col-2 align-items-center">
+              <label for="btn-txt-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="btn-txt-color-icon"></i></label>
+              <input type="color" class="form-control form-control-color" id="btn-txt-color" value="#CCCCCC"></div>
+          </div>
+
+          <div>Button Size</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>Extra Small</option>
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+          </select>
+
+          <div>Button Style</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>Flat Color</option>
+          </select>
+
+          <div class="row my-3 align-items-center">
+            <div class="col-10">INPUT<br> BACKGROUND<br> COLOR</div>
+            <div class="col-2 align-items-center">
+              <label for="btn-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="btn-back-color-icon"></i></label>
+              <input type="color" class="form-control form-control-color" id="btn-back-color" value="#FFFFFF"></div>
+          </div>
+
+        </div>
+
+        <div class="tab-pane fade show active" id="advanced-content">
+          <div>
+            <strong>Form Options</strong>
+          </div>
+
+          <div class="row my-3">
+            <div class="col-6 step-button">
+              <button class="p-2 step-tab" id="step1-tab" data-toggle="tab">Step #1</button>
+            </div>
+            <div class="col-6 step-button">
+              <button class="p-2 step-tab" id="step2-tab" data-toggle="tab">Step #2</button>
+            </div>
+          </div>
+          
+          <div class="tab-content">
+            <div class="tab-pane fade show active"  id="step1-content">
+              <div>Step #1 Headline</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <div>Step #1 Sub Headline</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <div>Toggle Company Name</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <div>Company Name</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <div>Full Name</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              <div>Email Address</div>
+              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your Profile">
+              
+            </div>
+
+            <div class="tab-pane fade show"  id="step2-content">222</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
 
     <style>
 .settingsSidebar {
@@ -691,7 +854,9 @@
   z-index: 1000; /* Ensure it's above other content */
 }
 #rightSlidingPopup1,
-#rightSlidingPopup2 {
+#rightSlidingPopup2,
+#rightSlidingPopup3
+{
   position: fixed;
   top: 0;
   right: -420px; /* Initially hide the popup to the right */
@@ -703,6 +868,11 @@
   padding: 20px;
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.3); /* Add some shadow for a popup effect */
 }
+
+#rightSlidingPopup3 {
+  top: 65px;
+}
+
 .settingWidthIcon {
   border: 2px solid #aaa;
   height: 100px;

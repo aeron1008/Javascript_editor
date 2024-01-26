@@ -1,5 +1,6 @@
 var slidingPopup1 = document.getElementById("rightSlidingPopup1");
 var slidingPopup2 = document.getElementById("rightSlidingPopup2");
+var slidingPopup3 = document.getElementById("rightSlidingPopup3");
 var mainContainerSection = document.getElementById("da-main-container");
 var popupContainerSection = document.getElementById("da-popup-container");
 var settingFullWidth = document.getElementById("setting-full-width");
@@ -563,7 +564,6 @@ settingRow2.addEventListener("click", function (e) {
   });
   configDragDrop();
 });
-
 settingRow3.addEventListener("click", function (e) {
   e.preventDefault();
   var rowSection = createRowSection();
@@ -4601,7 +4601,7 @@ function CustomDragAndDrop(container) {
         case "2step-combo":
           const comboWrapper = document.createElement("div");
           comboWrapper.classList.add("container-fluid");
-          comboWrapper.id = "2step-form1";
+          // comboWrapper.id = "2step-form1";
 
           const card = document.createElement("div");
           card.classList.add(
@@ -4643,7 +4643,11 @@ function CustomDragAndDrop(container) {
 
           const formBody = document.createElement("div");
           formBody.classList.add("form-body", "pt-4");
-          formBody.id = "div-ctwo-setp-order";
+          formBody.id = "div-ctwo-setp-order-2step-form1";
+
+          const formBody2 = document.createElement("div");
+          formBody2.classList.add("form-body", "pt-4", "hidden");
+          formBody2.id = "div-ctwo-setp-order-2step-form2";
 
           const sectionInfo = document.createElement("section");
           sectionInfo.classList.add("info");
@@ -4696,12 +4700,24 @@ function CustomDragAndDrop(container) {
           const button = document.createElement("button");
           button.classList.add("btn", "btn-success", "w-100", "p-2");
           button.type = "button";
-          button.onclick = () => showForm("2step-form1");
+          button.onclick = () => showForm("div-ctwo-setp-order-2step-form2");
           button.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
                       <span class="main-text fs-4" style="font-weight: 600;"> &nbsp; Go To Step #2 </span><br>
                       <span class="sub-text"></span>`;
 
           sectionButton.appendChild(button);
+
+          const sectionButton2 = document.createElement("section");
+
+          const button2 = document.createElement("button");
+          button2.classList.add("btn", "btn-success", "w-100", "p-2");
+          button2.type = "button";
+          button2.onclick = () => showForm("div-ctwo-setp-order-2step-form1");
+          button2.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
+                      <span class="main-text fs-4" style="font-weight: 600;"> &nbsp; Complete Order </span><br>
+                      <span class="sub-text"></span>`;
+
+          sectionButton2.appendChild(button2);
 
           const orderFormFooter = document.createElement("section");
           orderFormFooter.classList.add("order-form-footer");
@@ -4713,9 +4729,12 @@ function CustomDragAndDrop(container) {
           formBody.appendChild(sectionButton);
           formBody.appendChild(orderFormFooter);
 
+          formBody2.appendChild(sectionButton2);
+
           form.appendChild(formTitle);
           form.appendChild(dividerForm);
           form.appendChild(formBody);
+          form.appendChild(formBody2);
 
           container.appendChild(form);
           card.appendChild(container);
@@ -5358,11 +5377,17 @@ function createVMoon(height, width, borderRadius, backgroundColor, border) {
 }
 
 function showForm(formId) {
+  document
+    .getElementById("div-ctwo-setp-order-2step-form1")
+    .classList.add("hidden");
+  document
+    .getElementById("div-ctwo-setp-order-2step-form2")
+    .classList.add("hidden");
+
   const currentForm = document.getElementById(formId);
 
   if (currentForm) {
-    console.log(currentForm);
-    currentForm.classList.add("hidden");
+    currentForm.classList.remove("hidden");
   }
 
   // You may want to hide other forms if needed
@@ -5438,6 +5463,82 @@ document.addEventListener("DOMContentLoaded", function (e) {
     }
   } else {
   }
+});
+
+// here we will add the listener to apply settings to the 2-step combo
+const comboButton = document.getElementById("2step-section-button");
+comboButton.addEventListener("click", function () {
+  if (slidingPopup3.style.right === "0px") {
+    slidingPopup3.style.right = "-420px"; // Slide out the popup
+  } else {
+    slidingPopup3.style.right = "0px"; // Slide in the popup
+  }
+});
+
+const comboClose = document.getElementById("popup3-close");
+comboClose.addEventListener("click", function () {
+  if (slidingPopup3.style.right === "0px") {
+    slidingPopup3.style.right = "-420px"; // Slide out the popup
+  } else {
+    slidingPopup3.style.right = "0px"; // Slide in the popup
+  }
+});
+
+// Add event listener for 2-step combo setting tabs
+const generalTab = document.getElementById("general-tab");
+const generalContent = document.getElementById("general-content");
+const advancedTab = document.getElementById("advanced-tab");
+const advancedContent = document.getElementById("advanced-content");
+
+generalTab.addEventListener("click", function () {
+  generalContent.classList.add("active");
+  generalTab.classList.add("active");
+  advancedContent.classList.remove("active");
+  advancedTab.classList.remove("active");
+});
+advancedTab.addEventListener("click", function () {
+  generalContent.classList.remove("active");
+  generalTab.classList.remove("active");
+  advancedContent.classList.add("active");
+  advancedTab.classList.add("active");
+});
+
+// Button & Button Text & Input Background color pickers
+const BtnColor = document.getElementById("btn-color");
+const BtnColorIcon = document.getElementById("btn-color-icon");
+BtnColor.addEventListener("input", function () {
+  BtnColorIcon.style.color = BtnColor.value;
+});
+
+const BtnTxtColor = document.getElementById("btn-txt-color");
+const BtnTxtColorIcon = document.getElementById("btn-txt-color-icon");
+BtnTxtColor.addEventListener("input", function () {
+  BtnTxtColorIcon.style.color = BtnTxtColor.value;
+});
+
+const BtnBackColor = document.getElementById("btn-back-color");
+const BtnBackColorIcon = document.getElementById("btn-back-color-icon");
+BtnBackColor.addEventListener("input", function () {
+  BtnBackColorIcon.style.color = BtnBackColor.value;
+});
+
+// Add event listener for 2-step advanced setting tabs
+const step1Tab = document.getElementById("step1-tab");
+const step1Content = document.getElementById("step1-content");
+const step2Tab = document.getElementById("step2-tab");
+const step2Content = document.getElementById("step2-content");
+
+step1Tab.addEventListener("click", function () {
+  step1Content.classList.add("active");
+  step1Tab.classList.add("active");
+  step2Content.classList.remove("active");
+  step2Tab.classList.remove("active");
+});
+step2Tab.addEventListener("click", function () {
+  step1Content.classList.remove("active");
+  step1Tab.classList.remove("active");
+  step2Content.classList.add("active");
+  step2Tab.classList.add("active");
 });
 
 //here we will add the listener to save the HTML before they submit the form
@@ -5660,3 +5761,4 @@ document.querySelector(".search-panel").addEventListener("input", function () {
     }
   });
 });
+
