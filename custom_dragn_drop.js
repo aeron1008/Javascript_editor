@@ -1,6 +1,13 @@
 var slidingPopup1 = document.getElementById("rightSlidingPopup1");
 var slidingPopup2 = document.getElementById("rightSlidingPopup2");
 var slidingPopup3 = document.getElementById("rightSlidingPopup3");
+var slidingPopup4 = document.getElementById("rightSlidingPopup4");
+var slidingPopup5 = document.getElementById("rightSlidingPopup5");
+var headlineSidebar = document.getElementById("headlineSidebar");
+var subHeadSidebar = document.getElementById("subHeadSidebar");
+var textSidebar = document.getElementById("textSidebar");
+var listSidebar = document.getElementById("listSidebar");
+var settingsSidebar = document.getElementById("settingsSidebar");
 var leftSlidingPopup = document.getElementById("leftSlidingPopup");
 var basicContainerSection = document.getElementById("basic-container");
 var mainContainerSection = document.getElementById("da-main-container");
@@ -15,7 +22,6 @@ var settingRow3 = document.getElementById("setting-row3");
 var settingRow4 = document.getElementById("setting-row4");
 var settingRow5 = document.getElementById("setting-row5");
 var settingRow6 = document.getElementById("setting-row6");
-var settingsSidebar = document.getElementById("settingsSidebar");
 var id = undefined;
 
 settingFullWidth.addEventListener("click", function () {
@@ -103,6 +109,10 @@ function createContainer(width) {
   greenAdvanceButton.style.display = "none";
   greenAdvanceButton.setAttribute("type", "button");
   greenAdvanceButton.innerHTML = '<i class="fa fa-cog"></i>';
+  greenAdvanceButton.setAttribute(
+    "onclick",
+    "greenGearElement(this.parentElement.parentElement.id)"
+  );
 
   var greenCloneButton = document.createElement("div");
   greenCloneButton.classList.add("de-rollover-clone");
@@ -250,9 +260,6 @@ function createContainer(width) {
     }
   });
 
-  greenAdvanceButton.addEventListener("click", function () {
-    gearElement();
-  });
   greenCloneButton.addEventListener("click", function () {
     greenClone(width);
   });
@@ -269,7 +276,10 @@ function configDragDrop() {
 
 function createRowSection() {
   var rowSection = document.createElement("div");
+  var key = new Date().getTime();
+  rowSection.setAttribute("id", key);
   rowSection.classList.add("row-section");
+  rowSection.style.margin = "auto";
 
   var blueRolloverTools = document.createElement("div");
   blueRolloverTools.classList.add(
@@ -364,7 +374,7 @@ function createRowSection() {
   blueGearButton.style.display = "none";
   blueGearButton.innerHTML = '<i class="fa fa-cog"></i>';
   blueGearButton.setAttribute("type", "button");
-  blueGearButton.setAttribute("onclick", "gearElement()");
+  blueGearButton.setAttribute("onclick", "blueGearElement(this.parentElement.parentElement.id)");
 
   var bluePlusCircle = document.createElement("div");
   bluePlusCircle.classList.add("de-rollover-plus-circle");
@@ -461,7 +471,7 @@ function createRowSection() {
 
 function createDivCol1() {
   var divCol1 = document.createElement("div");
-  divCol1.classList.add("col-div");
+  divCol1.classList.add("col-div", "blue-container");
   divCol1.style.width = "100%";
   divCol1.style.borderRight = "none";
   return divCol1;
@@ -1071,13 +1081,31 @@ function greenClone(width) {
   createContainer(width);
 }
 
-function gearElement() {
-  if (settingsSidebar.style.left === "0px") {
-    settingsSidebar.style.left = "-100%"; // Slide out the popup
+function headlineGearElement() {
+  if (headlineSidebar.style.right === "0px") {
+    headlineSidebar.style.right = "-420px"; // Slide out the popup
   } else {
-    settingsSidebar.style.left = "0px"; // Slide in the popup
+    headlineSidebar.style.right = "0px"; // Slide in the popup
   }
 }
+function subHeadGearElement() {
+  if (subHeadSidebar.style.right === "0px") {
+    settingsSidebar.style.right = "-420px"; // Slide out the popup
+  } else {
+    settingsSidebar.style.right = "0px"; // Slide in the popup
+  }
+}
+function buttonGearElement() {
+  if (settingsSidebar.style.right === "0px") {
+    settingsSidebar.style.right = "-420px"; // Slide out the popup
+  } else {
+    settingsSidebar.style.right = "0px"; // Slide in the popup
+  }
+}
+function twoStepGearElement() {
+  slidingPopup3.style.right = "0px";
+}
+
 function createEditTextRolloverTools() {
   var editTextRolloverTools = document.createElement("div");
   editTextRolloverTools.classList.add(
@@ -1171,8 +1199,8 @@ function createOrangeRolloverTools() {
   orangeGearButton.style.display = "none";
   orangeGearButton.style.padding = "0 5px";
   orangeGearButton.innerHTML = '<i class="fa fa-cog"></i>';
-  orangeGearButton.setAttribute("type", "button");
-
+  orangeGearButton.setAttribute("type", "button"); 
+  
   var orangeRemoveButton = document.createElement("div");
   orangeRemoveButton.classList.add("de-rollover-remove");
   orangeRemoveButton.style.display = "none";
@@ -1188,7 +1216,23 @@ function createOrangeRolloverTools() {
   orangeRolloverTools.appendChild(orangeRemoveButton);
 
   orangeGearButton.addEventListener("click", function () {
-    gearElement();
+    var parentWrapper = orangeGearButton.parentElement.parentElement;
+    var parentType = parentWrapper.getAttribute("data-de-type");
+    var firstChild = parentWrapper.firstChild;
+    if (parentType === "headline") {
+      headlineGearElement();
+    } else if (parentType === "subhead") {
+      subHeadGearElement();
+    } else if (parentType === "text") {
+      textGearElement();
+    } else if (parentType === "button") {
+      // buttonGearElement();
+      openSidebar(firstChild);
+    } else if (parentType === "combo") {
+      twoStepGearElement();
+    } else {
+      buttonGearElement();
+    }
   });
 
   return orangeRolloverTools;
@@ -1547,7 +1591,7 @@ function CustompPopUpDragAndDrop() {
 
           elementToInsert.setAttribute("placeholder", "Text");
 
-          var orangeRolloverTools = createOrangeRolloverTools();
+          var orangeRolloverTools = createOrangeRolloverTools("headline");
           var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
 
           // Append all the elements to the wrapper
@@ -1894,10 +1938,10 @@ function CustompPopUpDragAndDrop() {
             "ui-droppable",
             "de-editable"
           );
-          listWrapper.setAttribute("id", `image-${Date.now()}`);
-          listWrapper.setAttribute("data-de-type", "image");
+          listWrapper.setAttribute("id", `list-${Date.now()}`);
+          listWrapper.setAttribute("data-de-type", "list");
           listWrapper.setAttribute("data-de-editing", "false");
-          listWrapper.setAttribute("data-title", "image");
+          listWrapper.setAttribute("data-title", "list");
           listWrapper.setAttribute("data-ce", "true");
           listWrapper.setAttribute("data-trigger", "none");
           listWrapper.setAttribute("data-animate", "fade");
@@ -2017,7 +2061,7 @@ function CustompPopUpDragAndDrop() {
           // Set the draggable attribute
           elementToInsert = buttonContainer;
           elementToInsert.setAttribute("draggable", true);
-          var orangeRolloverTools = createOrangeRolloverTools();
+          var orangeRolloverTools = createOrangeRolloverTools("button");
           var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
 
           // Append all the elements to the wrapper
@@ -2632,7 +2676,7 @@ function CustompPopUpDragAndDrop() {
       anchor.addEventListener("click", function (event) {
         event.preventDefault(); // Prevent the default behavior
 
-        if (settingsSidebar.style.left === "0px") {
+        if (settingsSidebar.style.right === "0px") {
           closeSidebar();
           // console.log('closing inside');
         } else {
@@ -4603,6 +4647,7 @@ function CustomDragAndDrop(container) {
         case "2step-combo":
           const comboWrapper = document.createElement("div");
           comboWrapper.classList.add("container-fluid");
+          comboWrapper.setAttribute("data-de-type", "combo");
           // comboWrapper.id = "2step-form1";
 
           const card = document.createElement("div");
@@ -4620,8 +4665,7 @@ function CustomDragAndDrop(container) {
 
           const form = document.createElement("form");
           form.id = "two-step-order-form";
-          form.classList.add("container-order-form-two-step");          
-          form.onclick = () => showTwoStepSettings();
+          form.classList.add("container-order-form-two-step");
 
           const formTitle = document.createElement("div");
           formTitle.classList.add("form-title");
@@ -4647,10 +4691,6 @@ function CustomDragAndDrop(container) {
           const formBody = document.createElement("div");
           formBody.classList.add("form-body", "pt-4");
           formBody.id = "div-ctwo-setp-order-2step-form1";
-
-          const formBody2 = document.createElement("div");
-          formBody2.classList.add("form-body", "pt-4", "hidden");
-          formBody2.id = "div-ctwo-setp-order-2step-form2";
 
           const sectionInfo = document.createElement("section");
           sectionInfo.classList.add("info");
@@ -4710,18 +4750,6 @@ function CustomDragAndDrop(container) {
 
           sectionButton.appendChild(button);
 
-          const sectionButton2 = document.createElement("section");
-
-          const button2 = document.createElement("button");
-          button2.classList.add("btn", "btn-success", "w-100", "p-2");
-          button2.type = "button";
-          button2.onclick = () => showForm("div-ctwo-setp-order-2step-form1");
-          button2.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
-                      <span class="main-text fs-4" style="font-weight: 600;"> &nbsp; Complete Order </span><br>
-                      <span class="sub-text"></span>`;
-
-          sectionButton2.appendChild(button2);
-
           const orderFormFooter = document.createElement("section");
           orderFormFooter.classList.add("order-form-footer");
           orderFormFooter.innerHTML =
@@ -4732,7 +4760,256 @@ function CustomDragAndDrop(container) {
           formBody.appendChild(sectionButton);
           formBody.appendChild(orderFormFooter);
 
-          formBody2.appendChild(sectionButton2);
+          // Second part for 2 Step Combo
+          const formBody2 = document.createElement("div");
+          formBody2.classList.add("form-body", "pt-4", "hidden");
+          formBody2.id = "div-ctwo-setp-order-2step-form2";
+
+          const sectionDetail = document.createElement("section");
+          sectionDetail.classList.add("product-detail");
+          sectionDetail.id = "ctwo-setp-order";
+
+          const productTitle = document.createElement("div");
+          productTitle.classList.add("product-title");
+          productTitle.innerHTML = `
+              <span class="item">Item</span>
+              <span class="item text-center">Quantity</span>
+              <span class="item">Price</span>
+          `;
+
+          const dividerProduct = document.createElement("div");
+          dividerProduct.classList.add("divider-product");
+
+          const productDescription = document.createElement("div");
+          productDescription.id = "659d9244637b7ce094361944";
+          productDescription.classList.add("product-description");
+          productDescription.innerHTML = `
+              <div class="d-flex">
+                  <div class="d-flex radioBtn">
+                      <input id="checkbox-ctwo-setp-order-659d9244637b7ce094361944" type="checkbox" value="659d9244637b7ce094361944">
+                  </div>
+                  <div>
+                      <span class="item product-name" style="margin-left:7px;"><strong>FAP Airtable System</strong></span>
+                      <div class="item-description"><strong></strong></div>
+                  </div>
+              </div>
+              <div class="text-center item">1</div>
+              <span class="item item-price">$29.00</span>
+          `;
+
+          sectionDetail.appendChild(productTitle);
+          sectionDetail.appendChild(dividerProduct);
+          sectionDetail.appendChild(productDescription);
+
+          // Create main container
+          const bpContainer = document.createElement("section");
+          bpContainer.classList.add("bp-container");
+
+          // Create product bump divider
+          const productBumpDivider = document.createElement("div");
+          productBumpDivider.classList.add("product-bump-divider");
+
+          // Create order bump container
+          const orderBumpContainer = document.createElement("section");
+          orderBumpContainer.classList.add("order-bump-container");
+
+          // Create main section within order bump container
+          const mainSection = document.createElement("div");
+          mainSection.classList.add("main-section");
+          mainSection.innerHTML = `
+            <img src="data:image/webp;base64,UklGRsYBAABXRUJQVlA4WAoAAAASAAAAGwAAEAAAQU5JTQYAAAAAAAAAAABBTk1GsgAAAAAAAAAAABsAABAAAA4BAANWUDhMmgAAAC8bAAQQH8GgbSRHx59rL/8/ys/gmH/FbSQ19F8pvxwHBs1/FIG/ppDrB1yyELIAuslyFqb4AEKWNQHOIiSbiaij+ADg3QGyESEADttIUqQ+Zmaeu84/y/v/mY8gov8TgH+eYwt5et+AvCoLck3eJuoOgQWlcQzIPbMgJ4uz0Ls7D2pLBKAefnxejhyqQlJaF2pjCG3ZUuiX+BpBTk1GJgAAAAAAAAAAAAAAAAAAAOYAAABWUDhMDQAAAC8AAAAQBxAREYiI/gcAQU5NRrIAAAAAAAAAAAAbAAAQAABGAAAAVlA4TJoAAAAvGwAEEB/BoG0kR8efay//P8rP4Jh/xW0kNfRfKb8cBwbNfxSBv6aQ6wdcshCyALrJcham+ABCljUBziIkm4moo/gA4N0BshEhAA7bSFKkPmZmnrvOP8v7/5mPIKL/E4B/nmMLeXrfgLwqC3JN3ibqDoEFpXEMyD2zICeLs9C7Ow9qSwSgHn58Xo4cqkJSWhdqYwht2VLol/ga" class="bump--flashing-arrow">
+            <input type="checkbox" name="order-bump" class="bump--checkbox">
+            <span class="headline bump-headline">YES! Add the "Advanced Ads Scaling Q&amp;A" for just $29!</span>
+          `;
+
+          // Create paragraph within order bump container
+          const paragraph = document.createElement("p");
+          paragraph.innerHTML = `
+            <span class="oto-headline">Advanced Ads Scaling Q&amp;A Session</span>
+            <span> Get a recording of one of our live monthly calls! Our media buyer who has run ads for Frank Kern, Agora, Dean Graziosi, Jeff Lerner (and more!) not only shows how to launch and SCALE campaigns but also answers the TOP questions most people when trying to scale ads! This is "Behind Closed Doors" information for pennies!</span>
+          `;
+
+          orderBumpContainer.appendChild(mainSection);
+          orderBumpContainer.appendChild(paragraph);
+
+          // Create separator for order summary
+          const separator = document.createElement("div");
+          separator.classList.add("separator");
+          separator.textContent = "Order Summary";
+
+          // Create product cost total section
+          const productCostTotal = document.createElement("section");
+          productCostTotal.classList.add("product-cost-total");
+          productCostTotal.innerHTML = `
+            <div class="product-title">
+                <span class="item">item</span>
+                <span class="item text-center">Quantity</span>
+                <span class="item">amount</span>
+            </div>
+            <div class="divider-product"></div>
+            <div class="product-description">
+                <span class="item"><span class="coupon-item">FAP Airtable System</span><!----></span>
+                <span class="item text-center">1</span>
+                <span class="item item-price">$ 29.00</span>
+            </div>
+            <div class="divider-product"></div>
+            <div class="order-total">
+                <span class="item"><strong>Order Total</strong></span>
+                <span class="item text-right">
+                    <div class="item-price">$ 29.00</div>
+                    <!---->
+                </span>
+            </div>
+          `;
+
+          // Append all elements to the main container
+          bpContainer.appendChild(productBumpDivider);
+          bpContainer.appendChild(orderBumpContainer);
+          bpContainer.appendChild(separator);
+          bpContainer.appendChild(productCostTotal);
+
+          // Create billing form section
+          const billingSection = document.createElement("section");
+          billingSection.classList.add("billing");
+
+          // Create credit card input elements
+          const creditCardContainer = document.createElement("div");
+          creditCardContainer.classList.add("ghl-payment-element", "pb-4");
+
+          const inlineCreditCardContainer = document.createElement("div");
+          inlineCreditCardContainer.classList.add(
+            "inline-credit-card-container"
+          );
+
+          const rowDiv = document.createElement("div");
+          rowDiv.classList.add("row");
+
+          const colMd6Div1 = document.createElement("div");
+          colMd6Div1.classList.add("col-md-6");
+
+          const cardNumberLabel = document.createElement("label");
+          cardNumberLabel.setAttribute("for", "cardNumber");
+          cardNumberLabel.classList.add("card-input-label", "d-block");
+          cardNumberLabel.textContent = "Card Number";
+
+          const cardNumberInput = document.createElement("input");
+          cardNumberInput.setAttribute("type", "text");
+          cardNumberInput.setAttribute("name", "cc");
+          cardNumberInput.setAttribute(
+            "id",
+            "cc-ctwo-setp-order-payment-element"
+          );
+          cardNumberInput.setAttribute("placeholder", "1234 1234 1234 1234");
+          cardNumberInput.classList.add("card-input");
+
+          colMd6Div1.appendChild(cardNumberLabel);
+          colMd6Div1.appendChild(cardNumberInput);
+
+          const colMd6Div2 = document.createElement("div");
+          colMd6Div2.classList.add("col-md-6");
+
+          const creditCardSubContainer = document.createElement("div");
+          creditCardSubContainer.classList.add("credit-card-sub-container");
+
+          const rowDiv2 = document.createElement("div");
+          rowDiv2.classList.add("row");
+
+          const colMd6Div3 = document.createElement("div");
+          colMd6Div3.classList.add("col-md-6");
+
+          const expirationLabel = document.createElement("label");
+          expirationLabel.setAttribute("for", "cardExpiration");
+          expirationLabel.classList.add("card-input-label");
+          expirationLabel.textContent = "Expiration";
+
+          const expirationInput = document.createElement("input");
+          expirationInput.setAttribute("type", "text");
+          expirationInput.setAttribute("name", "card-expiration");
+          expirationInput.setAttribute(
+            "id",
+            "card-expiration-ctwo-setp-order-payment-element"
+          );
+          expirationInput.setAttribute("maxlength", "5");
+          expirationInput.setAttribute("placeholder", "MM / YY");
+          expirationInput.classList.add("card-input");
+
+          colMd6Div3.appendChild(expirationLabel);
+          colMd6Div3.appendChild(expirationInput);
+
+          const colMd6Div4 = document.createElement("div");
+          colMd6Div4.classList.add("col-md-6");
+
+          const cvcLabel = document.createElement("label");
+          cvcLabel.setAttribute("for", "cardCvc");
+          cvcLabel.classList.add("card-input-label");
+          cvcLabel.textContent = "CVC";
+
+          const cvcInput = document.createElement("input");
+          cvcInput.setAttribute("type", "text");
+          cvcInput.setAttribute("name", "card-cvc");
+          cvcInput.setAttribute(
+            "id",
+            "card-cvc-ctwo-setp-order-payment-element"
+          );
+          cvcInput.setAttribute("maxlength", "3");
+          cvcInput.setAttribute("placeholder", "CVC");
+          cvcInput.classList.add("card-input");
+
+          colMd6Div4.appendChild(cvcLabel);
+          colMd6Div4.appendChild(cvcInput);
+
+          rowDiv2.appendChild(colMd6Div3);
+          rowDiv2.appendChild(colMd6Div4);
+
+          creditCardSubContainer.appendChild(rowDiv2);
+
+          colMd6Div2.appendChild(creditCardSubContainer);
+
+          rowDiv.appendChild(colMd6Div1);
+          rowDiv.appendChild(colMd6Div2);
+
+          inlineCreditCardContainer.appendChild(rowDiv);
+
+          creditCardContainer.appendChild(inlineCreditCardContainer);
+
+          // Create order button
+          const orderButton = document.createElement("button");
+          orderButton.classList.add("btn", "btn-success", "w-100", "p-2");
+          orderButton.setAttribute(
+            "onclick",
+            "showForm('div-ctwo-setp-order-2step-form1')"
+          );
+
+          const icon = document.createElement("i");
+          icon.classList.add("fas", "fa-arrow-right", "fs-5");
+
+          const mainText = document.createElement("span");
+          mainText.classList.add("main-text", "fs-4");
+          mainText.setAttribute("style", "font-weight: 600;");
+          mainText.innerHTML = "&nbsp; Complete Order";
+
+          const subText = document.createElement("span");
+          subText.classList.add("sub-text");
+
+          orderButton.appendChild(icon);
+          orderButton.appendChild(mainText);
+          orderButton.appendChild(document.createElement("br"));
+          orderButton.appendChild(subText);
+
+          // Create order form footer section
+          const orderFormFooter2 = document.createElement("section");
+          orderFormFooter2.classList.add("order-form-footer");
+          orderFormFooter2.innerHTML =
+            "<span>* 100% Secure & Safe Payments *</span>";
+
+          // Append elements to the billing section
+          billingSection.appendChild(creditCardContainer);
+          billingSection.appendChild(orderButton);
+          billingSection.appendChild(orderFormFooter2);
+
+          formBody2.appendChild(sectionDetail);
+          formBody2.appendChild(bpContainer);
+          formBody2.appendChild(billingSection);
 
           form.appendChild(formTitle);
           form.appendChild(dividerForm);
@@ -4742,6 +5019,101 @@ function CustomDragAndDrop(container) {
           container.appendChild(form);
           card.appendChild(container);
           comboWrapper.appendChild(card);
+
+          var orangeRolloverTools = createOrangeRolloverTools();
+          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+          // Append all the elements to the wrapper
+          comboWrapper.appendChild(orangeRolloverTools);
+          comboWrapper.appendChild(orangeArrowRolloverTools);
+
+          // Add event listeners to show/hide rollover tools
+
+          // Add event listeners to show/hide rollover tools and change border color on mouseover
+          comboWrapper.addEventListener("mouseenter", () => {
+            orangeRolloverTools.style.display = "block";
+            orangeArrowRolloverTools.style.display = "block";
+            orangeRolloverTools.childNodes[0].style.display = "block";
+            orangeRolloverTools.childNodes[1].style.display = "block";
+            orangeRolloverTools.childNodes[2].style.display = "block";
+            orangeArrowRolloverTools.childNodes[0].style.display = "block";
+            orangeArrowRolloverTools.childNodes[1].style.display = "block";
+            comboWrapper.style.border = "1px solid orange"; // Change border color on mouseover
+            comboWrapper.style.position = "relative";
+            comboWrapper.parentNode.parentNode.style.border = "none";
+            for (let i = 0; i < 3; i++) {
+              comboWrapper.parentNode.parentNode.childNodes[0].childNodes[
+                i
+              ].style.display = "none";
+            }
+            for (let i = 0; i < 3; i++) {
+              comboWrapper.parentNode.parentNode.childNodes[1].childNodes[
+                i
+              ].style.display = "none";
+            }
+            comboWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+              "none";
+            for (
+              let i = 3;
+              i < comboWrapper.parentNode.parentNode.children.length;
+              i++
+            ) {
+              comboWrapper.parentNode.parentNode.childNodes[
+                i
+              ].style.borderRight = "none";
+              if (
+                comboWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                  .className == "div-boundary"
+              ) {
+                comboWrapper.parentNode.parentNode.childNodes[
+                  i
+                ].childNodes[0].style.display = "none";
+              }
+            }
+          });
+
+          comboWrapper.addEventListener("mouseleave", () => {
+            orangeRolloverTools.style.display = "none";
+            orangeArrowRolloverTools.style.display = "none";
+            orangeRolloverTools.childNodes[0].style.display = "none";
+            orangeRolloverTools.childNodes[1].style.display = "none";
+            orangeRolloverTools.childNodes[2].style.display = "none";
+            orangeArrowRolloverTools.childNodes[0].style.display = "none";
+            orangeArrowRolloverTools.childNodes[1].style.display = "none";
+            comboWrapper.style.border = "none"; // Reset border color on mouseout
+            comboWrapper.style.position = "unset";
+            comboWrapper.parentNode.parentNode.style.border =
+              "1px solid rgb(58, 133, 255)";
+            for (let i = 0; i < 3; i++) {
+              comboWrapper.parentNode.parentNode.childNodes[0].childNodes[
+                i
+              ].style.display = "block";
+            }
+            for (let i = 0; i < 3; i++) {
+              comboWrapper.parentNode.parentNode.childNodes[1].childNodes[
+                i
+              ].style.display = "block";
+            }
+            comboWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+              "block";
+            for (
+              let i = 4;
+              i < comboWrapper.parentNode.parentNode.children.length;
+              i++
+            ) {
+              comboWrapper.parentNode.parentNode.childNodes[
+                i - 1
+              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+              if (
+                comboWrapper.parentNode.parentNode.childNodes[i - 1]
+                  .childNodes[0].className == "div-boundary"
+              ) {
+                comboWrapper.parentNode.parentNode.childNodes[
+                  i - 1
+                ].childNodes[0].style.display = "block";
+              }
+            }
+          });
 
           this.elementToInsert = comboWrapper;
           this.existingElement = false;
@@ -4930,7 +5302,7 @@ function CustomDragAndDrop(container) {
       anchor.addEventListener("click", function (event) {
         event.preventDefault(); // Prevent the default behavior
 
-        if (settingsSidebar.style.left === "0px") {
+        if (settingsSidebar.style.right === "0px") {
           closeSidebar();
           // console.log('closing inside');
         } else {
@@ -5393,15 +5765,6 @@ function showForm(formId) {
   // You may want to hide other forms if needed
 }
 
-// Open Two Step Combo Settings Panel
-function showTwoStepSettings() {
-  if (slidingPopup3.style.right === "0px") {
-    slidingPopup3.style.right = "-420px"; // Slide out the popup
-  } else {
-    slidingPopup3.style.right = "0px"; // Slide in the popup
-  }  
-}
-
 function appendElements(parent, elements) {
   elements.forEach((element) => {
     parent.appendChild(element);
@@ -5477,16 +5840,16 @@ document.addEventListener("DOMContentLoaded", function (e) {
 // here we will add the listener to apply settings to the 2-step combo
 const comboButton = document.getElementById("2step-section-button");
 comboButton.addEventListener("click", function () {
-  if (slidingPopup3.style.right === "0px") {
-    slidingPopup3.style.right = "-420px"; // Slide out the popup
+  if (settingsSidebar.style.right === "0px") {
+    settingsSidebar.style.right = "-420px"; // Slide out the popup
   } else {
-    slidingPopup3.style.right = "0px"; // Slide in the popup
+    settingsSidebar.style.right = "0px"; // Slide in the popup
   }
 });
 
 const openElementsPanel = document.getElementById("add-element-button");
-openElementsPanel.addEventListener("click", function () {   
-  if (leftSlidingPopup.classList.contains("hidden")) { 
+openElementsPanel.addEventListener("click", function () {
+  if (leftSlidingPopup.classList.contains("hidden")) {
     leftSlidingPopup.classList.remove("hidden");
     basicContainerSection.classList.remove("col-md-12");
     basicContainerSection.classList.add("col-md-9");
@@ -5519,6 +5882,7 @@ generalTab.addEventListener("click", function () {
   generalTab.classList.add("active");
   advancedContent.classList.remove("active");
   advancedTab.classList.remove("active");
+  console.log("124214");
 });
 advancedTab.addEventListener("click", function () {
   generalContent.classList.remove("active");
@@ -5528,22 +5892,22 @@ advancedTab.addEventListener("click", function () {
 });
 
 // Button & Button Text & Input Background color pickers
-const BtnColor = document.getElementById("btn-color");
-const BtnColorIcon = document.getElementById("btn-color-icon");
-BtnColor.addEventListener("input", function () {
-  BtnColorIcon.style.color = BtnColor.value;
+const btnColor = document.getElementById("btn-color");
+const btnColorIcon = document.getElementById("btn-color-icon");
+btnColor.addEventListener("input", function () {
+  btnColorIcon.style.color = btnColor.value;
 });
 
-const BtnTxtColor = document.getElementById("btn-txt-color");
-const BtnTxtColorIcon = document.getElementById("btn-txt-color-icon");
-BtnTxtColor.addEventListener("input", function () {
-  BtnTxtColorIcon.style.color = BtnTxtColor.value;
+const btnTxtColor = document.getElementById("btn-txt-color");
+const btnTxtColorIcon = document.getElementById("btn-txt-color-icon");
+btnTxtColor.addEventListener("input", function () {
+  btnTxtColorIcon.style.color = btnTxtColor.value;
 });
 
-const BtnBackColor = document.getElementById("btn-back-color");
-const BtnBackColorIcon = document.getElementById("btn-back-color-icon");
-BtnBackColor.addEventListener("input", function () {
-  BtnBackColorIcon.style.color = BtnBackColor.value;
+const btnBackColor = document.getElementById("btn-back-color");
+const btnBackColorIcon = document.getElementById("btn-back-color-icon");
+btnBackColor.addEventListener("input", function () {
+  btnBackColorIcon.style.color = btnBackColor.value;
 });
 
 // Add event listener for 2-step advanced setting tabs
@@ -5551,8 +5915,8 @@ const step1Tab = document.getElementById("step1-tab");
 const step1Content = document.getElementById("step1-content");
 const step2Tab = document.getElementById("step2-tab");
 const step2Content = document.getElementById("step2-content");
-const eyeIcon1 = document.getElementById('eye-icon1');
-const eyeIcon2 = document.getElementById('eye-icon2');
+const eyeIcon1 = document.getElementById("eye-icon1");
+const eyeIcon2 = document.getElementById("eye-icon2");
 
 step1Tab.addEventListener("click", function () {
   step1Content.classList.add("active");
@@ -5563,6 +5927,7 @@ step1Tab.addEventListener("click", function () {
   eyeIcon1.classList.add("bi-eye");
   eyeIcon2.classList.remove("bi-eye");
   eyeIcon2.classList.add("bi-eye-slash");
+  showForm("div-ctwo-setp-order-2step-form1");
 });
 step2Tab.addEventListener("click", function () {
   step1Content.classList.remove("active");
@@ -5573,6 +5938,7 @@ step2Tab.addEventListener("click", function () {
   eyeIcon1.classList.add("bi-eye-slash");
   eyeIcon2.classList.remove("bi-eye-slash");
   eyeIcon2.classList.add("bi-eye");
+  showForm("div-ctwo-setp-order-2step-form2");
 });
 
 //here we will add the listener to save the HTML before they submit the form
@@ -5634,25 +6000,26 @@ closePopupButton.addEventListener("click", function (event) {
 let selectedElSettings = null; // Global variable to store the selected .elSettings element
 
 // Select all anchor elements within elements with class "elSettings"
-var elSettingsAnchors = document.querySelectorAll("a.elSettings ");
+var elSettingsAnchors = document.querySelectorAll("a.elSettings");
 var settingsSidebar = document.getElementById("settingsSidebar");
-
+console.log(elSettingsAnchors);
 function openSidebar(element) {
   selectedElSettings = element.id; // Store the clicked element's ID
-  settingsSidebar.style.left = "0";
-  loadPresetSettings(element);
+  settingsSidebar.style.right = "0";
+  loadPresetButtonSettings(element);
 }
 
 function closeSidebar() {
   selectedElSettings = null;
-  settingsSidebar.style.left = "-100%";
+  // settingsSidebar.style.left = "-100%";
+  settingsSidebar.style.right = "-420px";
 }
 
 // Attach the click event to each anchor element within "elSettings" buttons
 elSettingsAnchors.forEach(function (anchor) {
   anchor.addEventListener("click", function (event) {
     event.preventDefault(); // Prevent the default behavior
-    if (settingsSidebar.style.left === "0px") {
+    if (settingsSidebar.style.right === "0px") {
       closeSidebar();
       // console.log('closing outside');
     } else {
@@ -5682,7 +6049,7 @@ actionSelect.addEventListener("change", () => {
   });
 });
 
-function loadPresetSettings(element) {
+function loadPresetButtonSettings(element) {
   // Action select dropdown -----------------------------------------
   const urlInputContainers = document.querySelectorAll(".url-input-container");
   const actionSelect = document.getElementById("action-select");
@@ -5780,7 +6147,7 @@ function loadPresetSettings(element) {
   });
 }
 
-// Add event listener to the search input
+// Add event listener to the search panel for elements input
 document.querySelector(".search-panel").addEventListener("input", function () {
   const searchKeyword = this.value.toLowerCase();
   const elementPanels = document.querySelectorAll(".element-panel");
@@ -5796,3 +6163,210 @@ document.querySelector(".search-panel").addEventListener("input", function () {
   });
 });
 
+// Close Settings Panel for Green, Blue, Yellow sections
+const headlineSettingClose = document.getElementById("headline-close");
+headlineSettingClose.addEventListener("click", function () {
+  if (headlineSidebar.style.right === "0px") {
+    headlineSidebar.style.right = "-420px"; // Slide out the popup
+  } else {
+    headlineSidebar.style.right = "0px"; // Slide in the popup
+  }
+});
+const buttonSettingClose = document.getElementById("button-setting-close");
+buttonSettingClose.addEventListener("click", function () {
+  closeSidebar();
+});
+
+// Settings for Green Section Container
+let selectedGreenSection = null;
+function greenGearElement(id) {
+  selectedGreenSection = id;
+  if (slidingPopup4.style.right === "0px") {
+    slidingPopup4.style.right = "-420px"; // Slide out the popup
+  } else {
+    slidingPopup4.style.right = "0px"; // Slide in the popup
+  }
+  loadPresetGreenSettings(id);
+}
+const sectionSettingClose = document.getElementById("popup4-close");
+sectionSettingClose.addEventListener("click", function () {
+  selectedGreenSection = null;
+  slidingPopup4.style.right = "-420px"; // Slide out the popup  
+});
+function loadPresetGreenSettings(id) {
+  const editorComponent = document.getElementById(id);
+
+  // Background color setting for Green Section
+  const greenBackColor = document.getElementById("green-back-color");
+  const greenBackColorIcon = document.getElementById("green-back-color-icon");
+  greenBackColor.style.color = editorComponent.style.backgroundColor;
+  greenBackColorIcon.style.color = editorComponent.style.backgroundColor;
+  greenBackColor.addEventListener("input", function () {
+    greenBackColorIcon.style.color = greenBackColor.value;
+    const editorComponent = document.getElementById(selectedGreenSection);
+    editorComponent.style.backgroundColor = greenBackColor.value;
+  });
+};
+
+// General and Advanced tab panel for Green Section
+const greenGeneralTab = document.getElementById("green-general-tab");
+const greenGeneralContent = document.getElementById("green-general-content");
+const greenAdvancedTab = document.getElementById("green-advanced-tab");
+const greenAdvancedContent = document.getElementById("green-advanced-content");
+greenGeneralTab.addEventListener("click", function () {
+  greenGeneralContent.classList.add("active");
+  greenGeneralTab.classList.add("active");
+  greenAdvancedContent.classList.remove("active");
+  greenAdvancedTab.classList.remove("active");
+});
+greenAdvancedTab.addEventListener("click", function () {
+  greenGeneralContent.classList.remove("active");
+  greenGeneralTab.classList.remove("active");
+  greenAdvancedContent.classList.add("active");
+  greenAdvancedTab.classList.add("active");
+});
+
+// Advanced Border Settings for Green Section
+document.addEventListener("DOMContentLoaded", function () {
+  const borderSelect = document.getElementById("border-select");
+  const borderStyleSelect = document.querySelector(
+    "#green-border-setting select:nth-of-type(2)"
+  );
+  const borderWidthSelect = document.querySelector(
+    "#green-border-setting select:nth-of-type(2)"
+  );
+  const greenBorderSetting = document.getElementById("green-border-setting");
+  const editorComponent = document.querySelector(".editor-container");
+
+  borderSelect.addEventListener("change", function () {
+    if (borderSelect.value !== "") {
+      greenBorderSetting.classList.remove("hidden");
+    } else {
+      greenBorderSetting.classList.add("hidden");
+    }
+  });
+
+  // borderStyleSelect.addEventListener("change", function() {
+  //   editorComponent.style.border = borderStyleSelect.value;
+  // });
+
+  // borderWidthSelect.addEventListener("change", function() {
+  //   editorComponent.style.borderWidth = borderWidthSelect.value + "px";
+  // });
+});
+
+// Settings for Blue Section Container
+let selectedBlueSection = null;
+function blueGearElement(id) {
+  selectedBlueSection = id;
+  if (slidingPopup5.style.right === "0px") {
+    slidingPopup5.style.right = "-420px"; // Slide out the popup
+  } else {
+    slidingPopup5.style.right = "0px"; // Slide in the popup
+  }
+  loadPresetBlueSettings(id);
+}
+const blueSettingClose = document.getElementById("popup5-close");
+blueSettingClose.addEventListener("click", function () {
+  selectedBlueSection = null;
+  slidingPopup5.style.right = "-420px"; // Slide out the popup
+});
+function loadPresetBlueSettings(id) {
+  const blueComponent = document.getElementById(id);
+
+  // Background color setting for Blue Section
+  const blueBackColor = document.getElementById("blue-back-color");
+  const blueBackColorIcon = document.getElementById("blue-back-color-icon");
+  blueBackColor.style.color = blueComponent.style.backgroundColor;
+  blueBackColorIcon.style.color = blueComponent.style.backgroundColor;
+  blueBackColor.addEventListener("input", function () {
+    blueBackColorIcon.style.color = blueBackColor.value;
+    const blueComponent = document.getElementById(selectedBlueSection);
+    blueComponent.style.backgroundColor = blueBackColor.value;
+  });
+
+  // Alginment for blue Section
+  const alignSelect = document.getElementById("blue-align-select");
+  if (blueComponent.style.margin === "auto") {
+    alignSelect.value = "center";
+  } else if (blueComponent.style.marginLeft === "auto") {
+    alignSelect.value = "right";
+  } else {
+    alignSelect.value = "left";
+  }
+  alignSelect.addEventListener("change", function () {
+    const selectedAlignment = alignSelect.value;
+    const blueComponent = document.getElementById(selectedBlueSection);
+    if (selectedAlignment === "center") {
+      blueComponent.style.margin = "auto";
+    } else if (selectedAlignment === "left") {
+      blueComponent.style.margin = "0";
+    } else if (selectedAlignment === "right") {
+      blueComponent.style.margin = "0";
+      blueComponent.style.marginLeft = "auto";
+    }
+  });
+
+  // Width range change for blue Section
+  const blueWidthSlider = document.getElementById("blue-width-slider");
+  const blueWidthValue = document.getElementById("blue-width-value");
+  if (blueComponent.style.width) {    
+    blueWidthSlider.value = parseInt(blueComponent.style.width);
+    blueWidthValue.value = parseInt(blueComponent.style.width);
+  } else {    
+    blueWidthSlider.value = 100;
+    blueWidthValue.value = 100;
+  }
+  blueWidthSlider.addEventListener("input", function () {
+    blueWidthValue.value = blueWidthSlider.value;
+    const blueComponent = document.getElementById(selectedBlueSection);
+    blueComponent.style.width = `${blueWidthSlider.value}%`;
+  });
+  blueWidthValue.addEventListener("change", function () {
+    let parsedValue = parseInt(blueWidthValue.value);
+    if (parsedValue >= 0 && parsedValue <= 100) {
+      blueWidthSlider.value = parsedValue;
+    }    
+    const blueComponent = document.getElementById(selectedBlueSection);
+    blueComponent.style.width = `${parsedValue}%`;
+  });
+};
+
+// General and Advanced tab panel for Blue Section
+const blueGeneralTab = document.getElementById("blue-general-tab");
+const blueGeneralContent = document.getElementById("blue-general-content");
+const blueAdvancedTab = document.getElementById("blue-advanced-tab");
+const blueAdvancedContent = document.getElementById("blue-advanced-content");
+blueGeneralTab.addEventListener("click", function () {
+  blueGeneralContent.classList.add("active");
+  blueGeneralTab.classList.add("active");
+  blueAdvancedContent.classList.remove("active");
+  blueAdvancedTab.classList.remove("active");
+});
+blueAdvancedTab.addEventListener("click", function () {
+  blueGeneralContent.classList.remove("active");
+  blueGeneralTab.classList.remove("active");
+  blueAdvancedContent.classList.add("active");
+  blueAdvancedTab.classList.add("active");
+});
+
+
+// General and Advanced tab panel for Orange Section
+const orangeGeneralTab = document.getElementById("orange-general-tab");
+const orangeGeneralContent = document.getElementById("orange-general-content");
+const orangeAdvancedTab = document.getElementById("orange-advanced-tab");
+const orangeAdvancedContent = document.getElementById(
+  "orange-advanced-content"
+);
+orangeGeneralTab.addEventListener("click", function () {
+  orangeGeneralContent.classList.add("active");
+  orangeGeneralTab.classList.add("active");
+  orangeAdvancedContent.classList.remove("active");
+  orangeAdvancedTab.classList.remove("active");
+});
+orangeAdvancedTab.addEventListener("click", function () {
+  orangeGeneralContent.classList.remove("active");
+  orangeGeneralTab.classList.remove("active");
+  orangeAdvancedContent.classList.add("active");
+  orangeAdvancedTab.classList.add("active");
+});

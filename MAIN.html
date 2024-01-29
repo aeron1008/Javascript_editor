@@ -119,7 +119,7 @@
     .big-editor-container {
       background-color: #f5f4f8;
       /* color:blue; */
-      margin-left: 0%;  /* Adjust the margin to accommodate the sidebar width */
+      margin-left: 25%;  /* Adjust the margin to accommodate the sidebar width */
       padding: 20px;  /* Optional: Add some padding for spacing */
       overflow-y: auto;  /* Makes the content area scrollable if it overflows */
       /* You can define a max-height to control the scrollable area's height */
@@ -140,7 +140,7 @@
 
     .input-panel {
       border-radius: 10px;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .element-group {
@@ -167,11 +167,6 @@
       color: #5C5776;
     }
     
-    .element-icon-img {
-      height: 44.8px;
-      margin-bottom: 0.5rem;
-    }
-
     #da-main-container {
       /* padding: 1rem; */
     }
@@ -323,7 +318,7 @@
       display: none;
     }
 
-    #general-tab, #advanced-tab {
+    .nav-link {
       color: #5C5776;
     }
 
@@ -384,6 +379,26 @@
 
     #eye-icon1, #eye-icon2  {
       font-size: 20px;
+    }
+
+    /* Green, Blue and Orange container settings */
+
+    .setting-icon {
+      font-size: 20px;
+      color: #5C5776;
+    }
+
+    .input-group-text {
+      padding: 0px 1rem;
+      border-radius: 10px;
+    }
+
+    .width-slider {
+      width: 280px;
+    }
+
+    .border-options {
+      border: 1px solid grey;
     }
 
   </style>
@@ -486,7 +501,7 @@
     <div class="container-fluid">
       <div class="row" style="background-color:#eee; padding-top:65px ">
         <!-- Sidebar with draggable elements -->
-        <div class="col-md-3 sidebar hidden" id="leftSlidingPopup">
+        <div class="col-md-3 sidebar" id="leftSlidingPopup">
 
           <input value type="text" name="search"
             placeholder="Search Element..."
@@ -531,8 +546,6 @@
           <div class="element-group">
             <div class="draggable element-panel" id="button" name="button-field"
               draggable="true">
-              <!-- <img src="./assets/element-icons/button.png"
-                class="element-icon-img"> -->
                 <i class="bi bi-menu-button-wide element-icon"></i>
               Button
             </div>
@@ -571,7 +584,7 @@
         </div>
 
         <!-- Main content container -->
-        <div class="col-md-12 big-editor-container p-0" id="basic-container">
+        <div class="col-md-9 big-editor-container p-0" id="basic-container">
           <div id="da-main-container">
 
           </div>
@@ -752,6 +765,7 @@
         </div>
       </div>
     </div>
+
     <div id="rightSlidingPopup3">
       <div class="row">
         <div class="col-11 mb-1">
@@ -838,73 +852,82 @@
             <option>Headline Font</option>
           </select>
 
-          <div class="py-2 pl-2 subtitle-panel">
-            <strong>Button Actions</strong>
-          </div>
-          <div>Sale Actions</div>
-          <select class="form-select my-3 py-2 input-panel">
-            <option>Go to Next step</option>
-          </select>
+            <div class="border-options">
+              <div class="py-2 pl-2 subtitle-panel">
+                <strong>Button Actions</strong>
+              </div>
+
+              <div class="p-3">
+                <div>Sale Actions</div>
+                <select class="form-select my-3 py-2 input-panel">
+                  <option>Go to Next step</option>
+                </select>
+              </div>
+            </div>
 
         </div>
 
         <div class="tab-pane fade show" id="advanced-content">
-          <div class="py-2 pl-2 subtitle-panel">
-            <strong>Form Options</strong>
-          </div>
-
-          <div class="row my-3">
-            <div class="col-6 step-button">
-              <button class="p-2 step-tab step-active" id="step1-tab" data-toggle="tab"><i class="bi bi-eye mr-1" id="eye-icon1"></i> Step #1</button>
-            </div>
-            <div class="col-6 step-button">
-              <button class="p-2 step-tab" id="step2-tab" data-toggle="tab"><i class="bi bi-eye-slash mr-1" id="eye-icon2"></i> Step #2</button>
-            </div>
-          </div>
-          
-          <div class="tab-content">
-            <div class="tab-pane fade show active"  id="step1-content">
-              <div>Step #1 Headline</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your profile">
-              <div>Step #1 Sub Headline</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Contact details">
-              <div>Toggle Company Name</div>
-              <select class="form-select py-2 input-panel">
-                <option>Show Company Name</option>
-              </select>             
-              <div>Company Name</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Company Name...">
-              <div>Full Name</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Full Name...">
-              <div>Email Address</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Email Address...">
-              <div>Toggle Phone</div>
-              <select class="form-select my-3 py-2 input-panel">
-                <option>Show Phone Number</option>
-              </select>          
-              <div>Phone Number</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Phone Number...">
+          <div class="border-options">
+            <div class="py-2 pl-2 subtitle-panel">
+              <strong>Form Options</strong>
             </div>
 
-            <div class="tab-pane fade show"  id="step2-content">
-              <div>Step #2 Headline</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Normally $297. Use coupon code FAP to get 90% OFF">
-              <div>Step #2 Sub Headline</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Billing details">
-              <div>Back to shipping Text</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Edit Contact Details">
-              <div>Select Item Text</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Item">
-              <div>Select Price Text</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Price">
-              <div>Summary Item Text</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="item">
-              <div>Summary Price Text</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="amount">
-              <div>Step #2 Btn Text</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="Complete Order">
-              <div>Step #2 Sub Btn Text</div>
-              <input type="text" name="element-name" class="form-control my-2 input-panel" value="* 100% Secure & Safe Payments *">
+            <div class="p-3">
+              <div class="row my-3">
+                <div class="col-6 step-button">
+                  <button class="p-2 step-tab step-active" id="step1-tab" data-toggle="tab"><i class="bi bi-eye mr-1" id="eye-icon1"></i> Step #1</button>
+                </div>
+                <div class="col-6 step-button">
+                  <button class="p-2 step-tab" id="step2-tab" data-toggle="tab"><i class="bi bi-eye-slash mr-1" id="eye-icon2"></i> Step #2</button>
+                </div>
+              </div>
+              
+              <div class="tab-content">
+                <div class="tab-pane fade show active"  id="step1-content">
+                  <div>Step #1 Headline</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Your profile">
+                  <div>Step #1 Sub Headline</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Contact details">
+                  <div>Toggle Company Name</div>
+                  <select class="form-select py-2 input-panel">
+                    <option>Show Company Name</option>
+                  </select>             
+                  <div>Company Name</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Company Name...">
+                  <div>Full Name</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Full Name...">
+                  <div>Email Address</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Email Address...">
+                  <div>Toggle Phone</div>
+                  <select class="form-select my-3 py-2 input-panel">
+                    <option>Show Phone Number</option>
+                  </select>          
+                  <div>Phone Number</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Phone Number...">
+                </div>
+
+                <div class="tab-pane fade show"  id="step2-content">
+                  <div>Step #2 Headline</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Normally $297. Use coupon code FAP to get 90% OFF">
+                  <div>Step #2 Sub Headline</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Billing details">
+                  <div>Back to shipping Text</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Edit Contact Details">
+                  <div>Select Item Text</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Item">
+                  <div>Select Price Text</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Price">
+                  <div>Summary Item Text</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="item">
+                  <div>Summary Price Text</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="amount">
+                  <div>Step #2 Btn Text</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="Complete Order">
+                  <div>Step #2 Sub Btn Text</div>
+                  <input type="text" name="element-name" class="form-control my-2 input-panel" value="* 100% Secure & Safe Payments *">
+                </div>
+              </div>
             </div>
           </div>
 
@@ -913,20 +936,398 @@
 
     </div>
 
+    <div id="rightSlidingPopup4">
+      <div class="row">
+        <div class="col-11 mb-1">
+          <h3>Section</h3>
+        </div>
+        <div class="col-1 mb-1">
+          <a id="popup4-close"><i class="bi bi-x-lg"></i></a>
+        </div>
+      </div>
+     
+      <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+          <p class="nav-link active" id="green-general-tab" data-toggle="tab">General</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="green-advanced-tab" data-toggle="tab">Advanced</p>
+        </li>
+      </ul>
+
+      <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="green-general-content">
+          <div>Element name</div>
+          <input type="text" name="element-name"
+            class="form-control my-2 input-panel" value="Section">
+
+          <div class="row my-3 align-items-center">
+            <div class="col-10">BACKGROUND<br> COLOR</div>
+            <div class="col-2 align-items-center">
+              <label for="green-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="green-back-color-icon"></i></label>
+              <input type="color" class="form-control form-control-color" id="green-back-color" value="#FFFFFF"></div>
+          </div>
+
+          <div>Box Shadow</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>No Shadow</option>
+          </select>
+          
+          <div>Sticky</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>No stickiness</option>
+          </select>          
+                    
+          <div>BG Media Type</div>
+          <div class="row my-3">
+            <div class="col-4 ml-3 form-check">
+              <input type="radio" class="form-check-input" id="radio-image-1" name="optradio-1" value="image" checked>Image
+              <label class="form-check-label" for="radio-image-1"></label>
+            </div>
+            <div class="col-4 form-check">
+              <input type="radio" class="form-check-input" id="radio-video-1" name="optradio-1" value="video" >Video
+              <label class="form-check-label" for="radio-video-1"></label>
+            </div>
+          </div>
+
+          <div>BG Media</div>
+          <div class="input-group my-3">
+            <input type="text" class="form-control input-panel" placeholder="Media URL">
+            <span class="input-group-text"><i class="bi bi-image setting-icon"></i></span>
+          </div>
+        </div>
+
+        <div class="tab-pane fade show" id="green-advanced-content">
+          <div class="border-options">
+            <div class="py-2 pl-2 subtitle-panel">
+              <strong>Border Options</strong>
+            </div>
+
+            <div class="p-3">
+              <div>Border</div>
+              <select class="form-select py-2 mt-2 input-panel" id="border-select">
+                <option value="">No Border</option>
+                <option value="full">Full Border</option>
+                <option value="bottom">Bottom Border</option>
+                <option value="top">Top Border</option>
+                <option value="top&bototm">Top & Bottom Border</option>
+                <option value="bottom3px">Bottom Border 3px</option>
+              </select> 
+
+              <div class="hidden" id="green-border-setting">
+                <div class="my-2">Border Style</div>
+                <select class="form-select py-2 input-panel">
+                  <option value="solid">Solid</option>
+                  <option value="dashed">Dashed</option>
+                  <option value="dotted">Dotted</option>
+                </select>   
+
+                <div class="my-2">Border Width</div>
+                <select class="form-select py-2 input-panel">
+                  <option value="2">2px</option>
+                  <option value="3">3px</option>
+                  <option value="4">4px</option>
+                  <option value="5">5px</option>
+                </select>   
+
+                <div class="row my-3 align-items-center">
+                  <div class="col-10">BORDER<br> COLOR</div>
+                  <div class="col-2 align-items-center">
+                    <label for="green-border-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="green-border-color-icon"></i></label>
+                    <input type="color" class="form-control form-control-color" id="green-border-color" value="#000000"></div>
+                </div>
+
+                <div class="my-2">Border Radius</div>
+                <select class="form-select py-2 input-panel">
+                  <option value="2">2px</option>
+                  <option value="3">3px</option>
+                  <option value="4">4px</option>
+                  <option value="5">5px</option>
+                </select>   
+
+                <div class="my-2">Radius Edge</div>
+                <select class="form-select py-2 input-panel">
+                  <option value="all">All Edges</option>
+                </select>  
+
+              </div>
+
+            </div> 
+          </div>
+      
+          <div class="my-2">Width</div>
+          <select class="form-select py-2 input-panel">
+            <option>Full</option>
+            <option>Wide</option>
+            <option>Mid Wide</option>
+            <option>Small</option>
+          </select>               
+
+        </div>
+      </div>
+
+    </div>
+
+    <div id="rightSlidingPopup5">
+      <div class="row">
+        <div class="col-11 mb-1">
+          <h3>1 Column Row</h3>
+        </div>
+        <div class="col-1 mb-1">
+          <a id="popup5-close"><i class="bi bi-x-lg"></i></a>
+        </div>
+      </div>
+     
+      <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+          <p class="nav-link active" id="blue-general-tab" data-toggle="tab">General</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="blue-advanced-tab" data-toggle="tab">Advanced</p>
+        </li>
+      </ul>
+
+      <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="blue-general-content">
+          <div>Element name</div>
+          <input type="text" name="element-name"
+            class="form-control my-2 input-panel" value="1 Column Row">
+
+          <div class="row my-3 align-items-center">
+          <div class="col-10">BACKGROUND<br> COLOR</div>
+          <div class="col-2 align-items-center">
+            <label for="blue-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="blue-back-color-icon"></i></label>
+            <input type="color" class="form-control form-control-color" id="blue-back-color" value="#FFFFFF"></div>
+          </div>
+
+          <div>Align</div>
+          <select class="form-select my-3 py-2 input-panel" id="blue-align-select">
+            <option value="center">Center</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+          </select>
+          
+          <div>Box Shadow</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>No Shadow</option>
+          </select>          
+          
+          <div>BG Media Type</div>
+          <div class="row my-3">
+            <div class="col-4 ml-3 form-check">
+              <input type="radio" class="form-check-input" id="radio-image-2" name="optradio-2" value="image" checked>Image
+              <label class="form-check-label" for="radio-image-2"></label>
+            </div>
+            <div class="col-4 form-check">
+              <input type="radio" class="form-check-input" id="radio-video-2" name="optradio-2" value="video" >Video
+              <label class="form-check-label" for="radio-video-2"></label>
+            </div>
+          </div>
+
+          <div>BG Media</div>
+          <div class="input-group my-3">
+            <input type="text" class="form-control input-panel" placeholder="Media URL">
+            <span class="input-group-text"><i class="bi bi-image setting-icon"></i></span>
+          </div>
+
+          <div>Width</div>
+          <div class="input-group">
+            <input class="form-input width-slider mr-2" type="range"
+              id="blue-width-slider"
+              min="10" max="100" step="1" value="100">
+            <input type="number" min="10" max="100" name="element-name" id="blue-width-value" class="form-control my-2 input-panel" value="100">
+          </div>
+
+        </div>
+
+        <div class="tab-pane fade show" id="blue-advanced-content">
+          <div class="border-options">
+            <div class="py-2 pl-2 subtitle-panel">
+              <strong>Border Options</strong>
+            </div>
+
+            <div class="p-3">
+              <div class="my-2">Border</div>
+              <select class="form-select py-2 input-panel">
+                <option>No Border</option>
+                <option>Full Border</option>
+                <option>bottom Border</option>
+                <option>Top Border</option>
+                <option>Top & Bottom Border</option>
+                <option>No Border</option>
+              </select>   
+          
+              <div class="my-2">Width</div>
+              <select class="form-select py-2 input-panel">
+                <option>Full</option>
+                <option>Wide</option>
+                <option>Mid Wide</option>
+                <option>Small</option>
+              </select>  
+            </div>
+          </div>  
+
+        </div>
+      </div>
+
+    </div>
+
+    <div id="headlineSidebar">
+      <div class="row">
+        <div class="col-11 mb-1">
+          <h3 id="orange-title">Healine</h3>
+        </div>
+        <div class="col-1 mb-1">
+          <a id="headline-close"><i class="bi bi-x-lg"></i></a>
+        </div>
+      </div>
+     
+      <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+          <p class="nav-link active" id="orange-general-tab" data-toggle="tab">General</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="orange-advanced-tab" data-toggle="tab">Advanced</p>
+        </li>
+      </ul>
+
+      <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="orange-general-content">
+          <div>Element name</div>
+          <input type="text" name="element-name"
+            class="form-control my-2 input-panel" value="Headline">
+
+          <div class="row my-3 align-items-center">
+            <div class="col-10">BACKGROUND<br> COLOR</div>
+            <div class="col-2 align-items-center">
+              <label for="orange-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="orange-back-color-icon"></i></label>
+              <input type="color" class="form-control form-control-color" id="orange-back-color" value="#FFFFFF">
+            </div>
+          </div>
+
+          <div>Opacity</div>
+          <select class="form-select my-3 py-2 input-panel" id="orange-align-select">
+            <option value="center">None</option>
+          </select>
+          
+          <div>Text Shadow</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>No Shadow</option>
+          </select>   
+                    
+          <div>Letter Spacing</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>Normal</option>
+          </select> 
+          
+          <div>Box Shadow</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>No Shadow</option>
+          </select>  
+
+          <div>Font size</div>
+          <div class="input-group">
+            <input class="form-input width-slider mr-2" type="range"
+              id="orange-width-slider"
+              min="0" max="100" step="1" value="100">
+            <input type="number" min="12" max="72" name="element-name" id="orange-width-value" class="form-control my-2 input-panel" value="32">
+          </div>
+          
+          <div>Typography Type</div>
+          <select class="form-select my-3 py-2 input-panel">
+            <option>Headline Font</option>
+          </select>  
+          
+          <div class="border-options">
+            <div class="py-2 pl-2 subtitle-panel">
+              <strong>Color Options</strong>
+            </div>
+
+            <div class="p-3">
+              <div class="row align-items-center">
+                <div class="col-10">COLOR</div>
+                <div class="col-2 align-items-center">
+                  <label for="orange-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="orange-back-color-icon"></i></label>
+                  <input type="color" class="form-control form-control-color" id="orange-back-color" value="#FFFFFF">
+                </div>
+              </div>
+
+              <div class="row my-3 align-items-center">
+                <div class="col-10">BOLD TEXT<br> COLOR</div>
+                <div class="col-2 align-items-center">
+                  <label for="orange-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="orange-back-color-icon"></i></label>
+                  <input type="color" class="form-control form-control-color" id="orange-back-color" value="#FFFFFF">
+                </div>
+              </div>
+
+              <div class="row my-3 align-items-center">
+                <div class="col-10">ITALIC TEXT<br> COLOR</div>
+                <div class="col-2 align-items-center">
+                  <label for="orange-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="orange-back-color-icon"></i></label>
+                  <input type="color" class="form-control form-control-color" id="orange-back-color" value="#FFFFFF">
+                </div>
+              </div>
+
+              <div class="row my-3 align-items-center">
+                <div class="col-10">UNDERLINE TEXT<br> COLOR</div>
+                <div class="col-2 align-items-center">
+                  <label for="orange-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="orange-back-color-icon"></i></label>
+                  <input type="color" class="form-control form-control-color" id="orange-back-color" value="#FFFFFF">
+                </div>
+              </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="tab-pane fade show" id="orange-advanced-content">
+          <div class="py-2 pl-2 subtitle-panel">
+            <strong>Border Options</strong>
+          </div>
+
+          <div class="my-2">Border</div>
+          <select class="form-select py-2 input-panel">
+            <option>No Border</option>
+            <option>Full Border</option>
+            <option>bottom Border</option>
+            <option>Top Border</option>
+            <option>Top & Bottom Border</option>
+            <option>No Border</option>
+          </select>   
+      
+          <div class="my-2">Width</div>
+          <select class="form-select py-2 input-panel">
+            <option>Full</option>
+            <option>Wide</option>
+            <option>Mid Wide</option>
+            <option>Small</option>
+          </select>               
+
+        </div>
+      </div>
+
+    </div>
+
     <style>
-.settingsSidebar {
+/* .settingsSidebar {
   position: fixed;
   top: 0;
-  left: -100%; /* Initially hidden */
-  height: 100%;
-  background-color: #fff; /* White background color */
-  color: #3a85ff; /* Light blue text color */
+  height: calc(100% - 65px);
+  right: -420px; 
+  width: 420px;
+  background-color: #fff; 
+  color: #3a85ff; 
   transition: left 0.1s ease-in-out;
-  z-index: 1000; /* Ensure it's above other content */
-}
+  z-index: 1000; 
+  overflow-y: auto;
+} */
+.settingsSidebar,
 #rightSlidingPopup1,
 #rightSlidingPopup2,
-#rightSlidingPopup3
+#rightSlidingPopup3,
+#rightSlidingPopup4,
+#rightSlidingPopup5,
+#headlineSidebar
 {
   position: fixed;
   top: 0;
@@ -941,7 +1342,10 @@
   overflow-y: auto;
 }
 
-#rightSlidingPopup3 {
+#rightSlidingPopup3, 
+#rightSlidingPopup4, 
+#rightSlidingPopup5,
+#headlineSidebar {
   top: 65px;
 }
 
@@ -1214,7 +1618,294 @@ a {
   display: flex;
 }
 
+/* 2 Step Combo*/
+.separator-vertical {
+            border: none;
+            border-left: 4px solid #ccc;
+            /* Choose your desired color for the separator */
+            height: 100%;
+            /* Adjust the height as needed */
+        }
 
+        .form-step .active {
+            color: #1571a8;
+        }
+
+        .form-heading {
+            font-size: 14px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .form-sub-heading {
+            font-size: 12px;
+            color: #607179;
+            word-break: break-word;
+        }
+
+        .order-form-footer {
+            text-align: center;
+            margin-top: 10px;
+            color: #9c9c9c;
+            font-size: 12px;
+            word-break: break-word;
+        }
+
+        .main-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .address-title,
+        .payment-title {
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #626262;
+            font-size: 12px;
+            background-color: #fff;
+            padding-right: 10px;
+            z-index: 1;
+            margin-top: -9px;
+        }
+
+        .shipping-title-wrapp,
+        .payment-title-wrapp {
+            width: 100%;
+            position: relative;
+            margin-top: 15px;
+            padding: 8px 0;
+        }
+
+        .shipping-bar,
+        .payment-bar {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #e5e7eb;
+            top: 7px;
+        }
+
+        .container-order-form-two-step .form-control,  .form-select  {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-position: 97%;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            box-shadow: 0 0 0 0 transparent,transparent!important;
+            -moz-box-shadow: 0 0 0 0 transparent,transparent!important;
+            -webkit-box-shadow: 0 0 0 0 transparent,transparent!important;
+            font-size: 14px;
+            line-height: 24px;
+            outline: none!important;
+            padding: 8px 12px;
+            width: 100%;
+        }
+
+        /* <!-- this is the style for the form #2 --> */
+
+        .product-description {
+            display: grid;
+            grid-template-columns: 8fr 1fr 1fr;
+            margin-bottom: 10px;
+        }
+
+        .product-description .item {
+            font-size: 13px;
+        }
+
+        .item-description {
+            color: gray;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .radioBtn {
+            display: block;
+            margin-top: 4px;
+            width: -moz-fit-content;
+            width: fit-content;
+        }
+
+        .product-title {
+            display: grid;
+            grid-template-columns: 8fr 1fr 1fr;
+        }
+
+        .product-title .item {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .divider-form {
+            background: #1571a8;
+            height: 5px;
+            position: relative;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .container-order-form-two-step .form-title {
+            padding: 7px;
+        }
+
+        .divider-form i,
+        .step2 i {
+            color: #1571a8;
+            font-size: 30px;
+            position: absolute;
+            top: -18px;
+        }
+
+        .caret-up:before {
+            content: "";
+        }
+
+        .divider-form i {
+            left: 75%;
+        }
+
+        svg:not(:root).svg-inline--fa {
+            overflow: visible;
+        }
+
+        .svg-inline--fa.fa-w-10 {
+            width: 0.625em;
+        }
+
+        .svg-inline--fa {
+            display: inline-block;
+            font-size: inherit;
+            height: 1em;
+            overflow: visible;
+            vertical-align: -0.125em;
+        }
+
+        .order-bump-container {
+            background-color: #fbf8e3;
+            border: 2px dashed #c7c7c7;
+            border-radius: 5px;
+            padding: 8px;
+        }
+
+        .product-bump-divider {
+            margin-bottom: 10px;
+        }
+
+        .bp-container {
+            padding: 5px 0;
+        }
+
+        .product-detail {
+            margin-top: 20px;
+        }
+
+        .forward-shopping-details {
+            color: #888 !important;
+            display: block;
+            font-size: 12px;
+        }
+
+        .order-bump-container .headline {
+            word-wrap: break-word;
+            color: #090;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 30px;
+            margin-left: 2px;
+        }
+
+        .oto-headline {
+            color: #c30;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .radioBtn {
+            display: block;
+            margin-top: 4px;
+            width: -moz-fit-content;
+            width: fit-content;
+        }
+
+        .order-bump-container .main-section {
+            background-color: #fefcbf;
+            border-radius: 5px;
+            padding: 2px;
+            text-align: left;
+        }
+
+        .bump--flashing-arrow {
+            margin-top: -5px;
+            padding: 0 9px;
+            width: 40px;
+        }
+
+        .divider-product {
+            background-color: #888;
+            height: 2px;
+            margin: 6px 0;
+            opacity: .3;
+            width: 100%;
+        }
+
+        .item-price {
+            color: #1571a8;
+            font-weight: 700;
+        }
+
+        .order-total {
+            color: #333;
+            display: flex;
+            font-size: 13px;
+            font-weight: 700;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .card-input-label {
+            display: block;
+            margin-bottom: 5px;
+            /* Adjust as needed for spacing */
+        }
+
+        .separator {
+            align-items: center;
+            display: flex;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 10px 0;
+            padding: 1px 0;
+            text-align: center;
+        }
+
+        .product-description .item:last-child {
+            text-align: right;
+        }
+
+        .product-title .item:last-child {
+            text-align: right;
+        }
+
+        .ghl-payment-element .card-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-position: 97%;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            box-shadow: 0 0 #0000, #0000 !important;
+            -moz-box-shadow: 0 0 0 0 transparent, transparent !important;
+            -webkit-box-shadow: 0 0 0 0 transparent, transparent !important;
+            font-size: 12px;
+            line-height: 24px;
+            outline: none !important;
+            padding: 8px 12px;
+            text-align: left;
+            width: 100%;
+        }
 
 </style>
     <div class="row">
@@ -1222,7 +1913,15 @@ a {
         style="background-color: #fff; margin-top: 66px; border-right: 12px solid #eee;">
         <!-- Sidebar content goes here -->
         <div class="sidebar-content">
-          <h5 class="text-gray pb-3">Button Settings</h5>
+          <div class="row">
+            <div class="col-11 mb-1">
+              <h3>Button Settings</h3>
+            </div>
+            <div class="col-1 mb-1">
+              <a id="button-setting-close"><i class="bi bi-x-lg"></i></a>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-md-5">
               <div class="form-group">
