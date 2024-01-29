@@ -336,6 +336,11 @@
       border-radius: 10px;
     }
 
+    .selected-button {
+      border-color: #0D6EFD;
+      color: #0D6EFD;
+    }
+
     .align-button-icon {
       font-size: 20px;
     }
@@ -344,12 +349,12 @@
       font-size: 28px;
       color: #ffffff;
     }
-    
+   
     .color-icon::before {     
       border-radius: 50%;
       border: 1px solid #a9a9a9;
     }
-
+    
     #btn-color-icon {
       color: #ffb400;
     }
@@ -453,10 +458,10 @@
                 style="display: none;"> &lt;div class="editor-container new-section" style="min-height: 250px; background-color: rgb(255, 255, 255);"&gt; &lt;div&gt;&lt;/div&gt; &lt;div class="draggable de elHeadlineWrapper ui-droppable de-editable" id="headline-1699635688979" data-de-type="headline" data-de-editing="false" data-title="headline" data-ce="true" data-trigger="none" data-animate="fade" data-delay="500" aria-disabled="false" draggable="true" style="outline: none; cursor: pointer;"&gt; &lt;h1 class="ne elHeadline fs-1 lh4 elMargin0 elBGStyle0 hsTextShadow0 display-5 font-weight-normal" data-bold="inherit" data-gramm="false" contenteditable="true" id="field-1699635688979" placeholder="Text" style="text-align: center; font-size: 32px; margin-top: 10px; margin-bottom: 10px;"&gt;&lt;b&gt;How TO [GOOD] Without [BAD]&lt;/b&gt;&lt;/h1&gt; &lt;/div&gt; &lt;div class="draggable de elInputWrapper de-editable de-input-block elAlign_center elMargin0" id="tmp_input-1699869273401" data-de-type="input" data-de-editing="false" data-title="input" data-ce="false" data-trigger="none" data-animate="fade" data-delay="500" draggable="true" style="margin-top: 30px; outline: none;"&gt; &lt;input type="text" placeholder="Your Name Here..." name="name" class="elInput elInput100 elAlign_left elInputMid elInputStyl0 elInputBG1 elInputBR5 elInputI0 elInputIBlack elInputIRight required0 ceoinput" data-type="extra" style="width: 100%;"&gt; &lt;div class="addElementFlyoutDOM" style="display: none; left: 325px;"&gt;&lt;i class="fa fa-plus"&gt;&lt;/i&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="draggable de elemailWrapper de-editable de-input-block elAlign_center elMargin0" id="tmp_input-1699869279239" data-de-type="input" data-de-editing="false" data-title="input" data-ce="false" data-trigger="none" data-animate="fade" data-delay="500" draggable="true" style="margin-top: 30px; outline: none;"&gt; &lt;input type="text" placeholder="Your Email Address Here..." name="email" class="elInput elInput100 elAlign_left elInputMid elInputStyl0 elInputBG1 elInputBR5 elInputI0 elInputIBlack elInputIRight required0 ceoinput" data-type="extra" style="width: 100%;"&gt; &lt;div class="addElementFlyoutDOM" style="display: none; left: 325px;"&gt;&lt;i class="fa fa-plus"&gt;&lt;/i&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="draggable de elBTN de-editable elAlign_center elMargin0" id="tmp_button-1699635695312" data-de-type="button" data-de-editing="false" data-title="button" data-ce="false" data-trigger="none" data-animate="fade" data-delay="500" draggable="true" style=" outline: none; text-align: center;"&gt;&lt;a href="#submit-form" id="the_button-1699635695312" class="elSettings elButton elButtonSize1 elButtonColor1 elButtonRounded elButtonPadding2 elBtnVP_10 elButtonCorner3 elButtonFluid elBtnHP_25 elBTN_b_1 elButtonShadowN1 elButtonTxtColor1" rel="noopener noreferrer" style="color: rgb(255, 255, 255); font-weight: 600; background-color: rgb(255, 0, 0); font-size: 20px;"&gt;&lt;span class="elButtonMain"&gt;Let Me In!&lt;/span&gt;&lt;span class="elButtonSub"&gt;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt; &lt;/div&gt; </textarea>
 
               <div class="btn-group">
-                <a draggable="false" class="btn back-btn smaller-font"
+                <!-- <a draggable="false" class="btn back-btn smaller-font"
                   id="2step-section-button">
                   <i class="fa fa-plus"></i> 2 Step Settings
-                </a>
+                </a> -->
 
                 <a draggable="false" class="btn back-btn smaller-font"
                   id="add-section-button">
@@ -772,7 +777,7 @@
           <h3>Two Step Order</h3>
         </div>
         <div class="col-1 mb-1">
-          <a id="popup3-close"><i class="bi bi-x-lg"></i></a>
+          <a type="button" id="combo-close"><i class="bi bi-x-lg"></i></a>
         </div>
       </div>
      
@@ -942,7 +947,7 @@
           <h3>Section</h3>
         </div>
         <div class="col-1 mb-1">
-          <a id="popup4-close"><i class="bi bi-x-lg"></i></a>
+          <a type="button" id="popup4-close"><i class="bi bi-x-lg"></i></a>
         </div>
       </div>
      
@@ -995,6 +1000,10 @@
             <input type="text" class="form-control input-panel" placeholder="Media URL">
             <span class="input-group-text"><i class="bi bi-image setting-icon"></i></span>
           </div>
+          <!-- <div class="input-group my-3">
+            <input type="text" class="form-control input-panel" id='green-image-input' placeholder="Media URL" name="green-image">
+            <label for="green-media"><span class="input-group-text"><i class="bi bi-image setting-icon"></i></span></label>
+          </div> -->
         </div>
 
         <div class="tab-pane fade show" id="green-advanced-content">
@@ -1074,7 +1083,7 @@
           <h3>1 Column Row</h3>
         </div>
         <div class="col-1 mb-1">
-          <a id="popup5-close"><i class="bi bi-x-lg"></i></a>
+          <a type="button" id="popup5-close"><i class="bi bi-x-lg"></i></a>
         </div>
       </div>
      
@@ -1178,7 +1187,7 @@
           <h3 id="orange-title">Healine</h3>
         </div>
         <div class="col-1 mb-1">
-          <a id="headline-close"><i class="bi bi-x-lg"></i></a>
+          <a type="button" id="headline-close"><i class="bi bi-x-lg"></i></a>
         </div>
       </div>
      
@@ -1199,46 +1208,75 @@
 
           <div class="row my-3 align-items-center">
             <div class="col-10">BACKGROUND<br> COLOR</div>
-            <div class="col-2 align-items-center">
-              <label for="orange-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="orange-back-color-icon"></i></label>
-              <input type="color" class="form-control form-control-color" id="orange-back-color" value="#FFFFFF">
+            <div class="col-2 align-items-center">             
+              <label for="headline-back-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="headline-back-color-icon"></i></label>
+              <input type="color" class="form-control form-control-color" id="headline-back-color" value="#FFFFFF">              
             </div>
           </div>
 
           <div>Opacity</div>
-          <select class="form-select my-3 py-2 input-panel" id="orange-align-select">
-            <option value="center">None</option>
+          <select class="form-select my-3 py-2 input-panel" id="headline-opacity-select">
+            <option value="1.0">None</option>
+            <option value="1.0">1</option>
+            <option value="0.8">0.8</option>
+            <option value="0.5">0.5</option>
+            <option value="0.3">0.3</option>
+            <option value="0.0">0</option>
           </select>
           
-          <div>Text Shadow</div>
+          <!-- <div>Text Shadow</div>
           <select class="form-select my-3 py-2 input-panel">
-            <option>No Shadow</option>
-          </select>   
+            <option value="">No Shadow</option>
+          </select>    -->
                     
-          <div>Letter Spacing</div>
+          <!-- <div>Letter Spacing</div>
           <select class="form-select my-3 py-2 input-panel">
             <option>Normal</option>
-          </select> 
+          </select>  -->
+
+          <div class="mt-3">Text Align</div>
+          <div class="row my-2">
+            <div class="col-3">
+              <button class="align-button"><i class="bi bi-text-left align-button-icon"></i></button>
+            </div>
+            <div class="col-3">
+              <button class="align-button selected-button"><i class="bi bi-text-center align-button-icon"></i></button>
+            </div>
+            <div class="col-3">
+              <button class="align-button"><i class="bi bi-text-right align-button-icon"></i></button>
+            </div>
+            <div class="col-3">
+              <button class="align-button"><i class="bi bi-justify align-button-icon"></i></button>
+            </div>
+          </div>
           
-          <div>Box Shadow</div>
+          <!-- <div>Box Shadow</div>
           <select class="form-select my-3 py-2 input-panel">
             <option>No Shadow</option>
-          </select>  
+          </select>   -->
 
           <div>Font size</div>
           <div class="input-group">
             <input class="form-input width-slider mr-2" type="range"
-              id="orange-width-slider"
-              min="0" max="100" step="1" value="100">
-            <input type="number" min="12" max="72" name="element-name" id="orange-width-value" class="form-control my-2 input-panel" value="32">
+              id="headline-font-slider"
+              min="12" max="72" step="2" value="32">
+            <input type="number" min="12" max="72" name="element-name" id="headline-font-value" class="form-control my-2 input-panel" value="32">
           </div>
           
           <div>Typography Type</div>
           <select class="form-select my-3 py-2 input-panel">
             <option>Headline Font</option>
           </select>  
+
+          <div class="row my-3 align-items-center">
+            <div class="col-10">COLOR</div>
+            <div class="col-2 align-items-center">             
+              <label for="headline-color" class="form-label"><i class="bi bi-circle-fill color-icon" id="headline-color-icon"></i></label>
+              <input type="color" class="form-control form-control-color" id="headline-color" value="#000000">              
+            </div>
+          </div>
           
-          <div class="border-options">
+          <!-- <div class="border-options">
             <div class="py-2 pl-2 subtitle-panel">
               <strong>Color Options</strong>
             </div>
@@ -1276,32 +1314,36 @@
                 </div>
               </div>
             </div>
-          </div> 
+          </div>  -->
 
         </div>
 
         <div class="tab-pane fade show" id="orange-advanced-content">
-          <div class="py-2 pl-2 subtitle-panel">
-            <strong>Border Options</strong>
-          </div>
+          <div class="border-options">
+            <div class="py-2 pl-2 subtitle-panel">
+              <strong>Border Options</strong>
+            </div>
 
-          <div class="my-2">Border</div>
-          <select class="form-select py-2 input-panel">
-            <option>No Border</option>
-            <option>Full Border</option>
-            <option>bottom Border</option>
-            <option>Top Border</option>
-            <option>Top & Bottom Border</option>
-            <option>No Border</option>
-          </select>   
-      
-          <div class="my-2">Width</div>
-          <select class="form-select py-2 input-panel">
-            <option>Full</option>
-            <option>Wide</option>
-            <option>Mid Wide</option>
-            <option>Small</option>
-          </select>               
+            <div class="p-3">
+              <div class="my-2">Border</div>
+              <select class="form-select py-2 input-panel">
+                <option>No Border</option>
+                <option>Full Border</option>
+                <option>bottom Border</option>
+                <option>Top Border</option>
+                <option>Top & Bottom Border</option>
+                <option>No Border</option>
+              </select>   
+          
+              <div class="my-2">Width</div>
+              <select class="form-select py-2 input-panel">
+                <option>Full</option>
+                <option>Wide</option>
+                <option>Mid Wide</option>
+                <option>Small</option>
+              </select>        
+            </div>
+          </div> 
 
         </div>
       </div>
@@ -1340,6 +1382,11 @@
   padding: 20px;
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.3); /* Add some shadow for a popup effect */
   overflow-y: auto;
+}
+
+#rightSlidingPopup1,
+#rightSlidingPopup2 {
+  height: 100%;
 }
 
 #rightSlidingPopup3, 
@@ -1918,7 +1965,7 @@ a {
               <h3>Button Settings</h3>
             </div>
             <div class="col-1 mb-1">
-              <a id="button-setting-close"><i class="bi bi-x-lg"></i></a>
+              <a type="button" id="button-setting-close"><i class="bi bi-x-lg"></i></a>
             </div>
           </div>
 

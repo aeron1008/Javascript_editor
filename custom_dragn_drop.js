@@ -1081,13 +1081,6 @@ function greenClone(width) {
   createContainer(width);
 }
 
-function headlineGearElement() {
-  if (headlineSidebar.style.right === "0px") {
-    headlineSidebar.style.right = "-420px"; // Slide out the popup
-  } else {
-    headlineSidebar.style.right = "0px"; // Slide in the popup
-  }
-}
 function subHeadGearElement() {
   if (subHeadSidebar.style.right === "0px") {
     settingsSidebar.style.right = "-420px"; // Slide out the popup
@@ -1101,9 +1094,6 @@ function buttonGearElement() {
   } else {
     settingsSidebar.style.right = "0px"; // Slide in the popup
   }
-}
-function twoStepGearElement() {
-  slidingPopup3.style.right = "0px";
 }
 
 function createEditTextRolloverTools() {
@@ -1220,18 +1210,17 @@ function createOrangeRolloverTools() {
     var parentType = parentWrapper.getAttribute("data-de-type");
     var firstChild = parentWrapper.firstChild;
     if (parentType === "headline") {
-      headlineGearElement();
+      headlineGearElement(parentWrapper);
     } else if (parentType === "subhead") {
-      subHeadGearElement();
+      headlineGearElement(parentWrapper);
     } else if (parentType === "text") {
-      textGearElement();
+      headlineGearElement(parentWrapper);
     } else if (parentType === "button") {
-      // buttonGearElement();
       openSidebar(firstChild);
     } else if (parentType === "combo") {
-      twoStepGearElement();
+      twoStepGearElement(parentWrapper);
     } else {
-      buttonGearElement();
+      headlineGearElement(parentWrapper);
     }
   });
 
@@ -1559,6 +1548,7 @@ function CustompPopUpDragAndDrop() {
           // wrapper.style.marginTop = '15px';
           wrapper.style.outline = "none";
           wrapper.style.cursor = "pointer";
+          wrapper.style.backgroundColor = "transparent";
           wrapper.setAttribute("aria-disabled", "false");
           wrapper.setAttribute("draggable", true);
 
@@ -1566,7 +1556,7 @@ function CustompPopUpDragAndDrop() {
           elementToInsert.classList.add(
             "ne",
             "elHeadline",
-            "fs-1",
+            // "fs-1",
             "lh4",
             "elMargin0",
             "elBGStyle0",
@@ -1580,6 +1570,7 @@ function CustompPopUpDragAndDrop() {
           elementToInsert.dataset.gramm = "false";
           elementToInsert.style.marginTop = "10px";
           elementToInsert.style.marginBottom = "10px";
+          elementToInsert.style.color = "#000000";
           // elementToInsert.setAttribute('contenteditable', 'false');
           elementToInsert.setAttribute("contenteditable", "true");
 
@@ -3128,6 +3119,7 @@ function CustomDragAndDrop(container) {
           // wrapper.style.marginTop = '15px';
           wrapper.style.outline = "none";
           wrapper.style.cursor = "pointer";
+          wrapper.style.backgroundColor = "transparent";
           wrapper.setAttribute("aria-disabled", "false");
           wrapper.setAttribute("draggable", true);
 
@@ -3135,7 +3127,7 @@ function CustomDragAndDrop(container) {
           elementToInsert.classList.add(
             "ne",
             "elHeadline",
-            "fs-1",
+            // "fs-1",
             "lh4",
             "elMargin0",
             "elBGStyle0",
@@ -3149,6 +3141,7 @@ function CustomDragAndDrop(container) {
           elementToInsert.dataset.gramm = "false";
           elementToInsert.style.marginTop = "10px";
           elementToInsert.style.marginBottom = "10px";
+          elementToInsert.style.color = "#000000";
           // elementToInsert.setAttribute('contenteditable', 'false');
           elementToInsert.setAttribute("contenteditable", "true");
 
@@ -4647,7 +4640,8 @@ function CustomDragAndDrop(container) {
         case "2step-combo":
           const comboWrapper = document.createElement("div");
           comboWrapper.classList.add("container-fluid");
-          comboWrapper.setAttribute("data-de-type", "combo");
+          comboWrapper.setAttribute("data-de-type", "combo");          
+          comboWrapper.setAttribute("id", `combo-${Date.now()}`);
           // comboWrapper.id = "2step-form1";
 
           const card = document.createElement("div");
@@ -4690,7 +4684,7 @@ function CustomDragAndDrop(container) {
 
           const formBody = document.createElement("div");
           formBody.classList.add("form-body", "pt-4");
-          formBody.id = "div-ctwo-setp-order-2step-form1";
+          formBody.id = `formBody-${Date.now()}`;
 
           const sectionInfo = document.createElement("section");
           sectionInfo.classList.add("info");
@@ -4743,7 +4737,7 @@ function CustomDragAndDrop(container) {
           const button = document.createElement("button");
           button.classList.add("btn", "btn-success", "w-100", "p-2");
           button.type = "button";
-          button.onclick = () => showForm("div-ctwo-setp-order-2step-form2");
+          button.onclick = () => showForm(form, formBody2.id);
           button.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
                       <span class="main-text fs-4" style="font-weight: 600;"> &nbsp; Go To Step #2 </span><br>
                       <span class="sub-text"></span>`;
@@ -4762,8 +4756,8 @@ function CustomDragAndDrop(container) {
 
           // Second part for 2 Step Combo
           const formBody2 = document.createElement("div");
-          formBody2.classList.add("form-body", "pt-4", "hidden");
-          formBody2.id = "div-ctwo-setp-order-2step-form2";
+          formBody2.classList.add("form-body", "pt-4", "hidden");          
+          formBody2.id = `formBody2-${Date.now()}`;
 
           const sectionDetail = document.createElement("section");
           sectionDetail.classList.add("product-detail");
@@ -4975,10 +4969,7 @@ function CustomDragAndDrop(container) {
           // Create order button
           const orderButton = document.createElement("button");
           orderButton.classList.add("btn", "btn-success", "w-100", "p-2");
-          orderButton.setAttribute(
-            "onclick",
-            "showForm('div-ctwo-setp-order-2step-form1')"
-          );
+          orderButton.onclick = () => showForm(form, formBody.id);
 
           const icon = document.createElement("i");
           icon.classList.add("fas", "fa-arrow-right", "fs-5");
@@ -5654,7 +5645,7 @@ function createFormBody(id, inputs1, inputs2, country) {
   const button = document.createElement("button");
   button.classList.add("btn", "btn-success", "w-100", "p-2");
   button.type = "button";
-  button.onclick = () => showForm(nextFormId);
+  // button.onclick = () => showForm();
   button.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
                       <span class="main-text fs-4" style="font-weight: 600;"> &nbsp; Go To Step #2 </span><br>
                       <span class="sub-text"></span>`;
@@ -5684,7 +5675,7 @@ function createFormButtons(nextFormId, buttonText) {
 
   const button = document.createElement("button");
   button.classList.add("btn", "btn-success", "w-100", "p-2");
-  button.onclick = () => showForm(nextFormId);
+  // button.onclick = () => showForm(nextFormId);
   button.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
                       <span class="main-text fs-4" style="font-weight: 600;"> &nbsp; ${buttonText} </span><br>
                       <span class="sub-text"></span>`;
@@ -5751,18 +5742,14 @@ function createVMoon(height, width, borderRadius, backgroundColor, border) {
   return vMoon;
 }
 
-function showForm(formId) {
-  document
-    .getElementById("div-ctwo-setp-order-2step-form1")
-    .classList.add("hidden");
-  document
-    .getElementById("div-ctwo-setp-order-2step-form2")
-    .classList.add("hidden");
+function showForm(form, formId) {
+  document.getElementById(form.childNodes[2].id).classList.add("hidden");
+  document.getElementById(form.childNodes[3].id).classList.add("hidden");
   const currentForm = document.getElementById(formId);
   if (currentForm) {
     currentForm.classList.remove("hidden");
   }
-  // You may want to hide other forms if needed
+  
 }
 
 function appendElements(parent, elements) {
@@ -5838,14 +5825,14 @@ document.addEventListener("DOMContentLoaded", function (e) {
 });
 
 // here we will add the listener to apply settings to the 2-step combo
-const comboButton = document.getElementById("2step-section-button");
-comboButton.addEventListener("click", function () {
-  if (settingsSidebar.style.right === "0px") {
-    settingsSidebar.style.right = "-420px"; // Slide out the popup
-  } else {
-    settingsSidebar.style.right = "0px"; // Slide in the popup
-  }
-});
+// const comboButton = document.getElementById("2step-section-button");
+// comboButton.addEventListener("click", function () {
+//   if (headlineSidebar.style.right === "0px") {
+//     headlineSidebar.style.right = "-420px"; // Slide out the popup
+//   } else {
+//     headlineSidebar.style.right = "0px"; // Slide in the popup
+//   }
+// });
 
 const openElementsPanel = document.getElementById("add-element-button");
 openElementsPanel.addEventListener("click", function () {
@@ -5860,85 +5847,6 @@ openElementsPanel.addEventListener("click", function () {
     basicContainerSection.classList.add("col-md-12");
     basicContainerSection.style.marginLeft = "0%";
   }
-});
-
-const comboClose = document.getElementById("popup3-close");
-comboClose.addEventListener("click", function () {
-  if (slidingPopup3.style.right === "0px") {
-    slidingPopup3.style.right = "-420px"; // Slide out the popup
-  } else {
-    slidingPopup3.style.right = "0px"; // Slide in the popup
-  }
-});
-
-// Add event listener for 2-step combo setting tabs
-const generalTab = document.getElementById("general-tab");
-const generalContent = document.getElementById("general-content");
-const advancedTab = document.getElementById("advanced-tab");
-const advancedContent = document.getElementById("advanced-content");
-
-generalTab.addEventListener("click", function () {
-  generalContent.classList.add("active");
-  generalTab.classList.add("active");
-  advancedContent.classList.remove("active");
-  advancedTab.classList.remove("active");
-  console.log("124214");
-});
-advancedTab.addEventListener("click", function () {
-  generalContent.classList.remove("active");
-  generalTab.classList.remove("active");
-  advancedContent.classList.add("active");
-  advancedTab.classList.add("active");
-});
-
-// Button & Button Text & Input Background color pickers
-const btnColor = document.getElementById("btn-color");
-const btnColorIcon = document.getElementById("btn-color-icon");
-btnColor.addEventListener("input", function () {
-  btnColorIcon.style.color = btnColor.value;
-});
-
-const btnTxtColor = document.getElementById("btn-txt-color");
-const btnTxtColorIcon = document.getElementById("btn-txt-color-icon");
-btnTxtColor.addEventListener("input", function () {
-  btnTxtColorIcon.style.color = btnTxtColor.value;
-});
-
-const btnBackColor = document.getElementById("btn-back-color");
-const btnBackColorIcon = document.getElementById("btn-back-color-icon");
-btnBackColor.addEventListener("input", function () {
-  btnBackColorIcon.style.color = btnBackColor.value;
-});
-
-// Add event listener for 2-step advanced setting tabs
-const step1Tab = document.getElementById("step1-tab");
-const step1Content = document.getElementById("step1-content");
-const step2Tab = document.getElementById("step2-tab");
-const step2Content = document.getElementById("step2-content");
-const eyeIcon1 = document.getElementById("eye-icon1");
-const eyeIcon2 = document.getElementById("eye-icon2");
-
-step1Tab.addEventListener("click", function () {
-  step1Content.classList.add("active");
-  step1Tab.classList.add("step-active");
-  step2Content.classList.remove("active");
-  step2Tab.classList.remove("step-active");
-  eyeIcon1.classList.remove("bi-eye-slash");
-  eyeIcon1.classList.add("bi-eye");
-  eyeIcon2.classList.remove("bi-eye");
-  eyeIcon2.classList.add("bi-eye-slash");
-  showForm("div-ctwo-setp-order-2step-form1");
-});
-step2Tab.addEventListener("click", function () {
-  step1Content.classList.remove("active");
-  step1Tab.classList.remove("step-active");
-  step2Content.classList.add("active");
-  step2Tab.classList.add("step-active");
-  eyeIcon1.classList.remove("bi-eye");
-  eyeIcon1.classList.add("bi-eye-slash");
-  eyeIcon2.classList.remove("bi-eye-slash");
-  eyeIcon2.classList.add("bi-eye");
-  showForm("div-ctwo-setp-order-2step-form2");
 });
 
 //here we will add the listener to save the HTML before they submit the form
@@ -6163,15 +6071,7 @@ document.querySelector(".search-panel").addEventListener("input", function () {
   });
 });
 
-// Close Settings Panel for Green, Blue, Yellow sections
-const headlineSettingClose = document.getElementById("headline-close");
-headlineSettingClose.addEventListener("click", function () {
-  if (headlineSidebar.style.right === "0px") {
-    headlineSidebar.style.right = "-420px"; // Slide out the popup
-  } else {
-    headlineSidebar.style.right = "0px"; // Slide in the popup
-  }
-});
+// Close Settings Panel
 const buttonSettingClose = document.getElementById("button-setting-close");
 buttonSettingClose.addEventListener("click", function () {
   closeSidebar();
@@ -6206,6 +6106,9 @@ function loadPresetGreenSettings(id) {
     const editorComponent = document.getElementById(selectedGreenSection);
     editorComponent.style.backgroundColor = greenBackColor.value;
   });
+
+  // // Background Image upload
+  // const inputPanel = document.getElementById
 };
 
 // General and Advanced tab panel for Green Section
@@ -6369,4 +6272,213 @@ orangeAdvancedTab.addEventListener("click", function () {
   orangeGeneralTab.classList.remove("active");
   orangeAdvancedContent.classList.add("active");
   orangeAdvancedTab.classList.add("active");
+});
+
+// Settings for headline element
+let selectedHeadlineElement = null;
+function headlineGearElement(parentWrapper) {
+  selectedHeadlineElement = parentWrapper.firstChild.id;
+  if (headlineSidebar.style.right === "0px") {
+    headlineSidebar.style.right = "-420px"; // Slide out the popup
+  } else {
+    headlineSidebar.style.right = "0px"; // Slide in the popup
+  }
+  loadPresetHeadlineSettings(parentWrapper);
+}
+const headlineSettingClose = document.getElementById("headline-close");
+headlineSettingClose.addEventListener("click", function () {
+  selectedHeadlineElement = null;
+  headlineSidebar.style.right = "-420px"; // Slide out the popup
+});
+function loadPresetHeadlineSettings(parentWrapper) {
+  const headlineContainer = document.getElementById(parentWrapper.id);
+  const headlineComponent = document.getElementById(
+    parentWrapper.firstChild.id
+  );
+  const headlineOpacitySelect = document.getElementById("headline-opacity-select");
+
+  // Background color setting for Headline Element
+  const headlineBackColor = document.getElementById("headline-back-color");
+  const headlineBackColorIcon = document.getElementById(
+    "headline-back-color-icon"
+  );
+  headlineBackColor.style.color = headlineContainer.style.backgroundColor;
+  headlineBackColorIcon.style.color = headlineContainer.style.backgroundColor;
+  headlineBackColor.addEventListener("input", function () {
+    headlineBackColorIcon.style.color = headlineBackColor.value;
+    const headlineContainer = document.getElementById(parentWrapper.id);
+    headlineContainer.style.backgroundColor = headlineBackColor.value;
+    headlineOpacitySelect.value = "1.0";
+  });
+
+  // Background color opacity for Headline Element
+  headlineOpacitySelect.addEventListener("change", function () {  
+    const headlineContainer = document.getElementById(parentWrapper.id);
+    let rgbColor = headlineContainer.style.backgroundColor;
+    if (headlineContainer.style.backgroundColor.includes("rgba")) {
+      rgbColor =
+        headlineContainer.style.backgroundColor.replace(/, [\d\.]+\)$/, "") +
+        ")";
+    } 
+    let convertedRGBA = rgbColor.replace(
+      ")",
+      `, ${headlineOpacitySelect.value})`
+    );
+    headlineContainer.style.backgroundColor = convertedRGBA;
+  })
+
+  // Text Alignment for Headline Element
+  const headlineAlignButtons = document.querySelectorAll('.align-button');
+  headlineAlignButtons.forEach(function(button) {
+    button.addEventListener('click', function () {
+      const headlineComponent = document.getElementById(selectedHeadlineElement);
+      
+      headlineComponent.style.textAlign = "";
+      headlineAlignButtons.forEach(function (btn) {
+        btn.classList.remove("selected-button");
+      });
+      if (this.querySelector('i').classList.contains('bi-text-left')) {
+        headlineComponent.style.textAlign = "left";
+        this.classList.add('selected-button');
+      } else if (this.querySelector('i').classList.contains('bi-text-center')) {
+        headlineComponent.style.textAlign = "center";
+        this.classList.add("selected-button");
+      } else if (this.querySelector('i').classList.contains('bi-text-right')) {
+        headlineComponent.style.textAlign = "right";
+        this.classList.add("selected-button");
+      } else if (this.querySelector('i').classList.contains('bi-justify')) {
+        headlineComponent.style.textAlign = "justify";
+        this.classList.add("selected-button");
+      }
+    })
+  })
+
+  // Font size setting for Headline Element
+  const headlineFontSlider = document.getElementById("headline-font-slider");
+  const headlineFontValue = document.getElementById("headline-font-value");
+  headlineFontSlider.value = parseInt(headlineComponent.style.fontSize);
+  headlineFontValue.value = parseInt(headlineComponent.style.fontSize);
+  headlineFontSlider.addEventListener("input", function () {
+    headlineFontValue.value = headlineFontSlider.value;
+    const headlineComponent = document.getElementById(selectedHeadlineElement);
+    headlineComponent.style.fontSize = `${headlineFontSlider.value}px`;
+  });
+  headlineFontValue.addEventListener("change", function () {
+    let parsedValue = parseInt(headlineFontValue.value);
+    if (parsedValue >= 0 && parsedValue <= 100) {
+      headlineFontSlider.value = parsedValue;
+    }
+    const headlineComponent = document.getElementById(selectedHeadlineElement);
+    headlineComponent.style.fontSize = `${parsedValue}px`;
+  });
+
+  // Text color setting for Headline Element
+  const headlineColor = document.getElementById("headline-color");
+  const headlineColorIcon = document.getElementById("headline-color-icon");
+  headlineColor.style.color = headlineComponent.style.color;
+  headlineColorIcon.style.color = headlineComponent.style.color;
+  headlineColor.addEventListener("input", function () {
+    headlineColorIcon.style.color = headlineColor.value;
+    const headlineComponent = document.getElementById(selectedHeadlineElement);
+    headlineComponent.style.color = headlineColor.value;
+  });
+};
+
+// Settings for 2 Step Combo Element
+let selectedComboElement = null;
+function twoStepGearElement(parentWrapper) {
+  selectedComboElement = parentWrapper.firstChild.id;
+  if (slidingPopup3.style.right === "0px") {
+    slidingPopup3.style.right = "-420px"; // Slide out the popup
+  } else {
+    slidingPopup3.style.right = "0px"; // Slide in the popup
+  }
+  loadPresetComboSettings(parentWrapper.firstChild.firstChild);
+}
+const comboSettingClose = document.getElementById("combo-close");
+comboSettingClose.addEventListener("click", function () {
+  selectedComboElement = null;
+  slidingPopup3.style.right = "-420px"; // Slide out the popup
+});
+
+function loadPresetComboSettings(parentContainer) {  
+  const firstForm = parentContainer.firstChild.childNodes[2];
+  const secondForm = parentContainer.firstChild.childNodes[3];
+
+  // Add event listener for 2-step advanced setting tabs
+  const step1Tab = document.getElementById("step1-tab");
+  const step2Tab = document.getElementById("step2-tab");
+  const eyeIcon1 = document.getElementById("eye-icon1");
+  const eyeIcon2 = document.getElementById("eye-icon2");
+  if (firstForm.classList.contains("hidden")) {
+    step1Tab.classList.remove("step-active");
+    step2Tab.classList.add("step-active");
+    eyeIcon1.classList.remove("bi-eye");
+    eyeIcon1.classList.add("bi-eye-slash");
+    eyeIcon2.classList.remove("bi-eye-slash");
+    eyeIcon2.classList.add("bi-eye");
+  } else if (secondForm.classList.contains("hidden")) {
+    step1Tab.classList.add("step-active");
+    step2Tab.classList.remove("step-active");
+    eyeIcon1.classList.remove("bi-eye-slash");
+    eyeIcon1.classList.add("bi-eye");
+    eyeIcon2.classList.remove("bi-eye");
+    eyeIcon2.classList.add("bi-eye-slash");
+  }
+
+  step1Tab.addEventListener("click", function () {
+    step1Tab.classList.add("step-active");
+    step2Tab.classList.remove("step-active");
+    eyeIcon1.classList.remove("bi-eye-slash");
+    eyeIcon1.classList.add("bi-eye");
+    eyeIcon2.classList.remove("bi-eye");
+    eyeIcon2.classList.add("bi-eye-slash");
+    showForm(parentContainer.firstChild, firstForm.id);
+  });
+  step2Tab.addEventListener("click", function () {
+    step1Tab.classList.remove("step-active");
+    step2Tab.classList.add("step-active");
+    eyeIcon1.classList.remove("bi-eye");
+    eyeIcon1.classList.add("bi-eye-slash");
+    eyeIcon2.classList.remove("bi-eye-slash");
+    eyeIcon2.classList.add("bi-eye");
+    showForm(parentContainer.firstChild, secondForm.id);
+  });
+};
+
+// Button & Button Text & Input Background color pickers
+const btnColor = document.getElementById("btn-color");
+const btnColorIcon = document.getElementById("btn-color-icon");
+btnColor.addEventListener("input", function () {
+  btnColorIcon.style.color = btnColor.value;
+});
+
+const btnTxtColor = document.getElementById("btn-txt-color");
+const btnTxtColorIcon = document.getElementById("btn-txt-color-icon");
+btnTxtColor.addEventListener("input", function () {
+  btnTxtColorIcon.style.color = btnTxtColor.value;
+});
+
+const btnBackColor = document.getElementById("btn-back-color");
+const btnBackColorIcon = document.getElementById("btn-back-color-icon");
+btnBackColor.addEventListener("input", function () {
+  btnBackColorIcon.style.color = btnBackColor.value;
+});
+
+// Add event listener for 2-step combo setting tabs
+const generalTab = document.getElementById("general-tab");
+const generalContent = document.getElementById("general-content");
+const advancedTab = document.getElementById("advanced-tab");
+const advancedContent = document.getElementById("advanced-content");
+generalTab.addEventListener("click", function () {
+  generalContent.classList.add("active");
+  generalTab.classList.add("active");
+  advancedContent.classList.remove("active");
+  advancedTab.classList.remove("active");
+});
+advancedTab.addEventListener("click", function () {
+  generalContent.classList.remove("active");
+  generalTab.classList.remove("active");
+  advancedContent.classList.add("active");
+  advancedTab.classList.add("active");
 });
