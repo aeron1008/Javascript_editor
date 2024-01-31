@@ -4,11 +4,9 @@ var slidingPopup3 = document.getElementById("rightSlidingPopup3");
 var slidingPopup4 = document.getElementById("rightSlidingPopup4");
 var slidingPopup5 = document.getElementById("rightSlidingPopup5");
 var headlineSidebar = document.getElementById("headlineSidebar");
-var subHeadSidebar = document.getElementById("subHeadSidebar");
-var textSidebar = document.getElementById("textSidebar");
-var listSidebar = document.getElementById("listSidebar");
 var settingsSidebar = document.getElementById("settingsSidebar");
 var leftSlidingPopup = document.getElementById("leftSlidingPopup");
+var openElementsPanel = document.getElementById("add-element-button");
 var basicContainerSection = document.getElementById("basic-container");
 var mainContainerSection = document.getElementById("da-main-container");
 var popupContainerSection = document.getElementById("da-popup-container");
@@ -23,6 +21,16 @@ var settingRow4 = document.getElementById("setting-row4");
 var settingRow5 = document.getElementById("setting-row5");
 var settingRow6 = document.getElementById("setting-row6");
 var id = undefined;
+
+var draggables = undefined;
+var containers = undefined;
+var placeholder = undefined;
+var elementToInsert = "";
+var afterElement = undefined;
+var sectionCount = 0;
+var mainContainer = undefined;
+var popupContainer = undefined;
+var existingElement = undefined;
 
 settingFullWidth.addEventListener("click", function () {
   createContainer("100%");
@@ -108,10 +116,11 @@ function createContainer(width) {
   greenAdvanceButton.style.backgroundColor = "#37ca37";
   greenAdvanceButton.style.display = "none";
   greenAdvanceButton.setAttribute("type", "button");
+  greenAdvanceButton.setAttribute("id", `greenButton-${Date.now()}`);
   greenAdvanceButton.innerHTML = '<i class="fa fa-cog"></i>';
   greenAdvanceButton.setAttribute(
     "onclick",
-    "greenGearElement(this.parentElement.parentElement.id)"
+    "greenGearElement(parentElement.parentElement.id)"
   );
 
   var greenCloneButton = document.createElement("div");
@@ -129,7 +138,7 @@ function createContainer(width) {
   greenRemoveButton.innerHTML = '<i class="fa fa-trash"></i>';
   greenRemoveButton.setAttribute(
     "onclick",
-    "removeElement(this.parentElement.parentElement)"
+    "removeElement(parentElement.parentElement)"
   );
 
   var greenArrowUpButton = document.createElement("div");
@@ -140,7 +149,7 @@ function createContainer(width) {
   greenArrowUpButton.innerHTML = '<i class="fa fa-arrow-up"></i>';
   greenArrowUpButton.setAttribute(
     "onclick",
-    "moveUp(this.parentElement.parentElement)"
+    "moveUp(parentElement.parentElement)"
   );
 
   var greenArrowDownButton = document.createElement("div");
@@ -151,7 +160,7 @@ function createContainer(width) {
   greenArrowDownButton.innerHTML = '<i class="fa fa-arrow-down"></i>';
   greenArrowDownButton.setAttribute(
     "onclick",
-    "moveDown(this.parentElement.parentElement)"
+    "moveDown(parentElement.parentElement)"
   );
 
   var greenPlusCircle = document.createElement("div");
@@ -265,15 +274,6 @@ function createContainer(width) {
   });
 }
 
-function configDragDrop() {
-  const customDragnDrop = new CustomDragAndDrop();
-  customDragnDrop.init();
-  console.log("customDragnDropInitialized=true");
-  customDragnDrop.loadSections();
-  console.log("we loaded the Sections");
-  customDragnDropInitialized = true;
-}
-
 function createRowSection() {
   var rowSection = document.createElement("div");
   var key = new Date().getTime();
@@ -332,7 +332,7 @@ function createRowSection() {
   blueRemoveButton.setAttribute("type", "button");
   blueRemoveButton.setAttribute(
     "onclick",
-    "removeElement(this.parentElement.parentElement)"
+    "removeElement(parentElement.parentElement)"
   );
 
   var blueArrowUpButton = document.createElement("div");
@@ -344,7 +344,7 @@ function createRowSection() {
   blueArrowUpButton.setAttribute("type", "button");
   blueArrowUpButton.setAttribute(
     "onclick",
-    "rowMoveUp(this.parentElement.parentElement.parentElement)"
+    "rowMoveUp(parentElement.parentElement.parentElement)"
   );
 
   var blueArrowDownButton = document.createElement("div");
@@ -356,7 +356,7 @@ function createRowSection() {
   blueArrowDownButton.setAttribute("type", "button");
   blueArrowDownButton.setAttribute(
     "onclick",
-    "rowMoveDown(this.parentElement.parentElement.parentElement)"
+    "rowMoveDown(parentElement.parentElement.parentElement)"
   );
 
   var blueCloneButton = document.createElement("div");
@@ -374,7 +374,11 @@ function createRowSection() {
   blueGearButton.style.display = "none";
   blueGearButton.innerHTML = '<i class="fa fa-cog"></i>';
   blueGearButton.setAttribute("type", "button");
-  blueGearButton.setAttribute("onclick", "blueGearElement(this.parentElement.parentElement.id)");
+  blueGearButton.setAttribute("id", `blueButton-${Date.now()}`);
+  blueGearButton.setAttribute(
+    "onclick",
+    "blueGearElement(parentElement.parentElement.id)"
+  );
 
   var bluePlusCircle = document.createElement("div");
   bluePlusCircle.classList.add("de-rollover-plus-circle");
@@ -391,6 +395,7 @@ function createRowSection() {
   rowSection.appendChild(blueRolloverTools);
   rowSection.appendChild(blueArrowRolloverTools);
   rowSection.appendChild(bluePlusRolloverTools);
+
   blueRolloverTools.appendChild(blueMoveButton);
   blueRolloverTools.appendChild(blueCloneButton);
   blueRolloverTools.appendChild(blueRemoveButton);
@@ -466,6 +471,7 @@ function createRowSection() {
       settingRow6.click();
     }
   });
+
   return rowSection;
 }
 
@@ -507,6 +513,33 @@ function createDivCol6() {
   return divCol6;
 }
 
+function addElement() {
+  var blueAddElementRolloverTools = document.createElement("div");
+  blueAddElementRolloverTools.classList.add(
+    "add-row-de-rollover-tools",
+    "smallWidthElementHover",
+    "d-flex"
+  );
+  blueAddElementRolloverTools.setAttribute("data-current-id", "nill");
+  blueAddElementRolloverTools.setAttribute("data-current-type", "type");
+  blueAddElementRolloverTools.style.display = "none";
+
+  var blueAddElementButton = document.createElement("div");
+  blueAddElementButton.innerHTML =
+    '<button class="add-element"> + Add Element</button>';
+  blueAddElementButton.style.backgroundColor = "rgb(58, 133, 255)";
+  blueAddElementButton.style.borderRadius = "3px";
+  blueAddElementButton.style.display = "none";
+
+  blueAddElementRolloverTools.appendChild(blueAddElementButton);
+
+  blueAddElementButton.addEventListener("click", function () {
+    console.log("blue add element button clicked");
+    openElementsPanel.click();
+  });
+  return blueAddElementRolloverTools;
+}
+
 //Add Row Setting
 settingRow1.addEventListener("click", function (e) {
   e.preventDefault();
@@ -516,7 +549,23 @@ settingRow1.addEventListener("click", function (e) {
   var divCol1 = createDivCol1();
   rowSection.appendChild(divCol1);
   slidingPopup2.style.right = "-420px";
-  configDragDrop();
+  blueAddElementRolloverTools = addElement();
+  divCol1.appendChild(blueAddElementRolloverTools);
+
+  rowSection.addEventListener("mouseenter", (e) => {
+    if (divCol1.childNodes[1]) {
+      blueAddElementRolloverTools.style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools.style.display = "block";
+      blueAddElementRolloverTools.childNodes[0].style.display = "block";
+    }
+  });
+  rowSection.addEventListener("mouseleave", (e) => {
+    blueAddElementRolloverTools.style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+  });
+  loadSections();
 });
 settingRow2.addEventListener("click", function (e) {
   e.preventDefault();
@@ -528,14 +577,37 @@ settingRow2.addEventListener("click", function (e) {
   rowSection.appendChild(divCol2);
   rowSection.appendChild(divCol2_1);
 
+  blueAddElementRolloverTools = addElement();
+  blueAddElementRolloverTools1 = addElement();
+  divCol2.appendChild(blueAddElementRolloverTools);
+  divCol2_1.appendChild(blueAddElementRolloverTools1);
+
   slidingPopup2.style.right = "-420px";
   rowSection.addEventListener("mouseenter", (e) => {
     divCol2.style.borderRight = "1px dotted #3a85ff";
     divCol2Boundary.style.display = "block";
+    if (divCol2.childNodes[2]) {
+      blueAddElementRolloverTools.style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools.style.display = "block";
+      blueAddElementRolloverTools.childNodes[0].style.display = "block";
+    }
+    if (divCol2_1.childNodes[1]) {
+      blueAddElementRolloverTools1.style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools1.style.display = "block";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "block";
+    }
   });
   rowSection.addEventListener("mouseleave", (e) => {
     divCol2.style.borderRight = "none";
     divCol2Boundary.style.display = "none";
+    blueAddElementRolloverTools.style.display = "none";
+    blueAddElementRolloverTools1.style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -574,7 +646,8 @@ settingRow2.addEventListener("click", function (e) {
     divCol2.style.width = columnNumber1 * columnSize + "px";
     divCol2_1.style.width = columnNumber2 * columnSize + "px";
   });
-  configDragDrop();
+  // configDragDrop();
+  loadSections();
 });
 settingRow3.addEventListener("click", function (e) {
   e.preventDefault();
@@ -588,17 +661,53 @@ settingRow3.addEventListener("click", function (e) {
   rowSection.appendChild(divCol3_1);
   rowSection.appendChild(divCol3_2);
   slidingPopup2.style.right = "-420px";
+
+  blueAddElementRolloverTools = addElement();
+  blueAddElementRolloverTools1 = addElement();
+  blueAddElementRolloverTools2 = addElement();
+
+  divCol3.appendChild(blueAddElementRolloverTools);
+  divCol3_1.appendChild(blueAddElementRolloverTools1);
+  divCol3_2.appendChild(blueAddElementRolloverTools2);
+
   rowSection.addEventListener("mouseenter", (e) => {
     divCol3.style.borderRight = "1px dotted #3a85ff";
     divCol3_1.style.borderRight = "1px dotted #3a85ff";
     divCol3Boundary1.style.display = "block";
     divCol3Boundary2.style.display = "block";
+    if (divCol3.childNodes[2]) {
+      blueAddElementRolloverTools.style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools.style.display = "block";
+      blueAddElementRolloverTools.childNodes[0].style.display = "block";
+    }
+    if (divCol3_1.childNodes[2]) {
+      blueAddElementRolloverTools1.style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools1.style.display = "block";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "block";
+    }
+    if (divCol3_2.childNodes[1]) {
+      blueAddElementRolloverTools2.style.display = "none";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools2.style.display = "block";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "block";
+    }
   });
   rowSection.addEventListener("mouseleave", (e) => {
     divCol3.style.borderRight = "none";
     divCol3_1.style.borderRight = "none";
     divCol3Boundary1.style.display = "none";
     divCol3Boundary2.style.display = "none";
+    blueAddElementRolloverTools.style.display = "none";
+    blueAddElementRolloverTools1.style.display = "none";
+    blueAddElementRolloverTools2.style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -655,7 +764,8 @@ settingRow3.addEventListener("click", function (e) {
     divCol3_1.style.width = columnNumber2 * columnSize + "px";
     divCol3_2.style.width = columnNumber3 * columnSize + "px";
   });
-  configDragDrop();
+  // configDragDrop();
+  loadSections();
 });
 settingRow4.addEventListener("click", function (e) {
   e.preventDefault();
@@ -671,6 +781,16 @@ settingRow4.addEventListener("click", function (e) {
   rowSection.appendChild(divCol4_2);
   rowSection.appendChild(divCol4_3);
   slidingPopup2.style.right = "-420px";
+
+  blueAddElementRolloverTools = addElement();
+  blueAddElementRolloverTools1 = addElement();
+  blueAddElementRolloverTools2 = addElement();
+  blueAddElementRolloverTools3 = addElement();
+  divCol4.appendChild(blueAddElementRolloverTools);
+  divCol4_1.appendChild(blueAddElementRolloverTools1);
+  divCol4_2.appendChild(blueAddElementRolloverTools2);
+  divCol4_3.appendChild(blueAddElementRolloverTools3);
+
   rowSection.addEventListener("mouseenter", (e) => {
     divCol4.style.borderRight = "1px dotted #3a85ff";
     divCol4_1.style.borderRight = "1px dotted #3a85ff";
@@ -678,6 +798,34 @@ settingRow4.addEventListener("click", function (e) {
     divCol4Boundary1.style.display = "block";
     divCol4Boundary2.style.display = "block";
     divCol4Boundary3.style.display = "block";
+    if (divCol4.childNodes[2]) {
+      blueAddElementRolloverTools.style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools.style.display = "block";
+      blueAddElementRolloverTools.childNodes[0].style.display = "block";
+    }
+    if (divCol4_1.childNodes[2]) {
+      blueAddElementRolloverTools1.style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools1.style.display = "block";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "block";
+    }
+    if (divCol4_2.childNodes[2]) {
+      blueAddElementRolloverTools2.style.display = "none";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools2.style.display = "block";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "block";
+    }
+    if (divCol4_3.childNodes[1]) {
+      blueAddElementRolloverTools3.style.display = "none";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools3.style.display = "block";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "block";
+    }
   });
   rowSection.addEventListener("mouseleave", (e) => {
     divCol4.style.borderRight = "none";
@@ -686,6 +834,14 @@ settingRow4.addEventListener("click", function (e) {
     divCol4Boundary1.style.display = "none";
     divCol4Boundary2.style.display = "none";
     divCol4Boundary3.style.display = "none";
+    blueAddElementRolloverTools.style.display = "none";
+    blueAddElementRolloverTools1.style.display = "none";
+    blueAddElementRolloverTools2.style.display = "none";
+    blueAddElementRolloverTools3.style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -757,7 +913,8 @@ settingRow4.addEventListener("click", function (e) {
     divCol4_3.style.width = columnNumber4 * columnSize + "px";
   });
 
-  configDragDrop();
+  // configDragDrop();
+  loadSections();
 });
 settingRow5.addEventListener("click", function (e) {
   e.preventDefault();
@@ -776,6 +933,18 @@ settingRow5.addEventListener("click", function (e) {
   rowSection.appendChild(divCol5_3);
   rowSection.appendChild(divCol5_4);
   slidingPopup2.style.right = "-420px";
+
+  blueAddElementRolloverTools = addElement();
+  blueAddElementRolloverTools1 = addElement();
+  blueAddElementRolloverTools2 = addElement();
+  blueAddElementRolloverTools3 = addElement();
+  blueAddElementRolloverTools4 = addElement();
+  divCol5.appendChild(blueAddElementRolloverTools);
+  divCol5_1.appendChild(blueAddElementRolloverTools1);
+  divCol5_2.appendChild(blueAddElementRolloverTools2);
+  divCol5_3.appendChild(blueAddElementRolloverTools3);
+  divCol5_4.appendChild(blueAddElementRolloverTools4);
+
   rowSection.addEventListener("mouseenter", (e) => {
     divCol5.style.borderRight = "1px dotted #3a85ff";
     divCol5_1.style.borderRight = "1px dotted #3a85ff";
@@ -785,6 +954,41 @@ settingRow5.addEventListener("click", function (e) {
     divCol5Boundary2.style.display = "block";
     divCol5Boundary3.style.display = "block";
     divCol5Boundary4.style.display = "block";
+    if (divCol5.childNodes[2]) {
+      blueAddElementRolloverTools.style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools.style.display = "block";
+      blueAddElementRolloverTools.childNodes[0].style.display = "block";
+    }
+    if (divCol5_1.childNodes[2]) {
+      blueAddElementRolloverTools1.style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools1.style.display = "block";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "block";
+    }
+    if (divCol5_2.childNodes[2]) {
+      blueAddElementRolloverTools2.style.display = "none";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools2.style.display = "block";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "block";
+    }
+    if (divCol5_3.childNodes[2]) {
+      blueAddElementRolloverTools3.style.display = "none";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools3.style.display = "block";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "block";
+    }
+    if (divCol5_4.childNodes[1]) {
+      blueAddElementRolloverTools4.style.display = "none";
+      blueAddElementRolloverTools4.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools4.style.display = "block";
+      blueAddElementRolloverTools4.childNodes[0].style.display = "block";
+    }
   });
   rowSection.addEventListener("mouseleave", (e) => {
     divCol5.style.borderRight = "none";
@@ -795,6 +999,16 @@ settingRow5.addEventListener("click", function (e) {
     divCol5Boundary2.style.display = "none";
     divCol5Boundary3.style.display = "none";
     divCol5Boundary4.style.display = "none";
+    blueAddElementRolloverTools.style.display = "none";
+    blueAddElementRolloverTools1.style.display = "none";
+    blueAddElementRolloverTools2.style.display = "none";
+    blueAddElementRolloverTools3.style.display = "none";
+    blueAddElementRolloverTools4.style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools4.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -883,7 +1097,8 @@ settingRow5.addEventListener("click", function (e) {
     divCol5_4.style.width = columnNumber5 * columnSize + "px";
   });
 
-  configDragDrop();
+  // configDragDrop();
+  loadSections();
 });
 settingRow6.addEventListener("click", function (e) {
   e.preventDefault();
@@ -903,6 +1118,20 @@ settingRow6.addEventListener("click", function (e) {
   rowSection.appendChild(divCol6_4);
   rowSection.appendChild(divCol6_5);
   slidingPopup2.style.right = "-420px";
+
+  blueAddElementRolloverTools = addElement();
+  blueAddElementRolloverTools1 = addElement();
+  blueAddElementRolloverTools2 = addElement();
+  blueAddElementRolloverTools3 = addElement();
+  blueAddElementRolloverTools4 = addElement();
+  blueAddElementRolloverTools5 = addElement();
+  divCol6.appendChild(blueAddElementRolloverTools);
+  divCol6_1.appendChild(blueAddElementRolloverTools1);
+  divCol6_2.appendChild(blueAddElementRolloverTools2);
+  divCol6_3.appendChild(blueAddElementRolloverTools3);
+  divCol6_4.appendChild(blueAddElementRolloverTools4);
+  divCol6_5.appendChild(blueAddElementRolloverTools5);
+
   rowSection.addEventListener("mouseenter", (e) => {
     divCol6.style.borderRight = "1px dotted #3a85ff";
     divCol6_1.style.borderRight = "1px dotted #3a85ff";
@@ -914,6 +1143,48 @@ settingRow6.addEventListener("click", function (e) {
     divCol6Boundary3.style.display = "block";
     divCol6Boundary4.style.display = "block";
     divCol6Boundary5.style.display = "block";
+    if (divCol6.childNodes[2]) {
+      blueAddElementRolloverTools.style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools.style.display = "block";
+      blueAddElementRolloverTools.childNodes[0].style.display = "block";
+    }
+    if (divCol6_1.childNodes[2]) {
+      blueAddElementRolloverTools1.style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools1.style.display = "block";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "block";
+    }
+    if (divCol6_2.childNodes[2]) {
+      blueAddElementRolloverTools2.style.display = "none";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools2.style.display = "block";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "block";
+    }
+    if (divCol6_3.childNodes[2]) {
+      blueAddElementRolloverTools3.style.display = "none";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools3.style.display = "block";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "block";
+    }
+    if (divCol6_4.childNodes[2]) {
+      blueAddElementRolloverTools4.style.display = "none";
+      blueAddElementRolloverTools4.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools4.style.display = "block";
+      blueAddElementRolloverTools4.childNodes[0].style.display = "block";
+    }
+    if (divCol6_5.childNodes[1]) {
+      blueAddElementRolloverTools5.style.display = "none";
+      blueAddElementRolloverTools5.childNodes[0].style.display = "none";
+    } else {
+      blueAddElementRolloverTools5.style.display = "block";
+      blueAddElementRolloverTools5.childNodes[0].style.display = "block";
+    }
   });
   rowSection.addEventListener("mouseleave", (e) => {
     divCol6.style.borderRight = "none";
@@ -926,6 +1197,18 @@ settingRow6.addEventListener("click", function (e) {
     divCol6Boundary3.style.display = "none";
     divCol6Boundary4.style.display = "none";
     divCol6Boundary5.style.display = "none";
+    blueAddElementRolloverTools.style.display = "none";
+    blueAddElementRolloverTools1.style.display = "none";
+    blueAddElementRolloverTools2.style.display = "none";
+    blueAddElementRolloverTools3.style.display = "none";
+    blueAddElementRolloverTools4.style.display = "none";
+    blueAddElementRolloverTools5.style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools4.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools5.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -1031,7 +1314,8 @@ settingRow6.addEventListener("click", function (e) {
     divCol6_5.style.width = columnNumber6 * columnSize + "px";
   });
 
-  configDragDrop();
+  // configDragDrop();
+  loadSections();
 });
 
 function setFormat(command) {
@@ -1079,21 +1363,6 @@ function removeElement(element) {
 }
 function greenClone(width) {
   createContainer(width);
-}
-
-function subHeadGearElement() {
-  if (subHeadSidebar.style.right === "0px") {
-    settingsSidebar.style.right = "-420px"; // Slide out the popup
-  } else {
-    settingsSidebar.style.right = "0px"; // Slide in the popup
-  }
-}
-function buttonGearElement() {
-  if (settingsSidebar.style.right === "0px") {
-    settingsSidebar.style.right = "-420px"; // Slide out the popup
-  } else {
-    settingsSidebar.style.right = "0px"; // Slide in the popup
-  }
 }
 
 function createEditTextRolloverTools() {
@@ -1177,20 +1446,14 @@ function createOrangeRolloverTools() {
   orangeMoveButton.innerHTML = '<i class="fa fa-arrows"></i>';
   orangeMoveButton.style.cursor = "move";
 
-  // var orangeCloneButton = document.createElement("div");
-  // orangeCloneButton.classList.add("de-rollover-clone");
-  // orangeCloneButton.style.display = 'none';
-  // orangeCloneButton.style.padding = '0 5px';
-  // orangeCloneButton.innerHTML = '<i class="fa fa-copy"></i>';
-  // orangeCloneButton.setAttribute("type", "button");
-
   var orangeGearButton = document.createElement("div");
   orangeGearButton.classList.add("de-rollover-settings");
   orangeGearButton.style.display = "none";
   orangeGearButton.style.padding = "0 5px";
   orangeGearButton.innerHTML = '<i class="fa fa-cog"></i>';
-  orangeGearButton.setAttribute("type", "button"); 
-  
+  orangeGearButton.setAttribute("type", "button");
+  orangeGearButton.setAttribute("id", `orangeButton-${Date.now()}`);
+
   var orangeRemoveButton = document.createElement("div");
   orangeRemoveButton.classList.add("de-rollover-remove");
   orangeRemoveButton.style.display = "none";
@@ -1199,7 +1462,7 @@ function createOrangeRolloverTools() {
   orangeRemoveButton.setAttribute("type", "button");
   orangeRemoveButton.setAttribute(
     "onclick",
-    "removeElement(this.parentElement.parentElement)"
+    "removeElement(parentElement.parentElement)"
   );
   orangeRolloverTools.appendChild(orangeMoveButton);
   orangeRolloverTools.appendChild(orangeGearButton);
@@ -1245,7 +1508,7 @@ function createOrangeArrowRolloverTools() {
   orangeArrowUpButton.setAttribute("type", "button");
   orangeArrowUpButton.setAttribute(
     "onclick",
-    "moveUp(this.parentElement.parentElement)"
+    "moveUp(parentElement.parentElement)"
   );
 
   var orangeArrowDownButton = document.createElement("div");
@@ -1257,7 +1520,7 @@ function createOrangeArrowRolloverTools() {
   orangeArrowDownButton.setAttribute("type", "button");
   orangeArrowDownButton.setAttribute(
     "onclick",
-    "moveDown(this.parentElement.parentElement)"
+    "moveDown(parentElement.parentElement)"
   );
 
   orangeArrowRolloverTools.appendChild(orangeArrowUpButton);
@@ -1266,3518 +1529,1796 @@ function createOrangeArrowRolloverTools() {
   return orangeArrowRolloverTools;
 }
 
-function CustompPopUpDragAndDrop() {
-  this.draggables = undefined;
-  this.containers = undefined;
-  this.placeholder = undefined;
-  this.elementToInsert = undefined;
-  this.afterElement = undefined;
-  this.sectionCount = 0;
-  this.mainContainer = undefined;
-  this.popupContainer = undefined;
-  this.existingElement = undefined;
+// function CustomDragAndDrop (container) {
 
-  this.loadSections = function () {
-    var popupContainer = document.getElementsByClassName("popup-container")[0];
-    var allContainers = popupContainer.querySelectorAll(".editor-container");
+loadSections = function () {
+  var newContainer = document.getElementById(id);
+  var allContainers = newContainer.querySelectorAll(".col-div");
 
-    if (allContainers.length > 0) {
-      allContainers.forEach((container) => {
-        this.addEventListenersForContainer(container);
-      });
-      this.updateContainers();
-    } else {
-      // Handle the case when no elements with the class .editor-container are found.
-      // You can choose to display an error message or take appropriate action here.
-    }
-  };
-
-  this.addSection = function () {
-    // Create a new section container
-    let container = document.createElement("div");
-    container.classList.add("editor-container", "new-section"); //p-3
-
-    // Set the minimum height to 250px
-    container.style.minHeight = "250px";
-    container.style.backgroundColor = "#ffffff";
-
-    let section = document.createElement("div");
-
-    container.appendChild(section);
-    console.log("this main container", this.mainContainer);
-    console.log("this popup container", this.popupContainer);
-
-    if (isPopupOpen()) {
-      this.popupContainer.appendChild(container);
-      console.log("The popup is open.");
-    } else {
-      this.mainContainer.appendChild(container);
-      console.log("The popup is not open.");
-    }
-
-    this.addEventListenersForContainer(container);
-    this.updateContainers();
-  };
-
-  this.updateContainers = function () {
-    this.containers = document.querySelectorAll(".editor-container");
-  };
-  this.updateDraggables = function () {
-    this.draggables = document.querySelectorAll(".draggable");
-  };
-  this.addEventListeners = function (name) {
-    // console.log("adding event listeners", this.containers, this.draggables);
-    if (name === "containers" && this.containers) {
-      this.containers.forEach((container) => {
-        container.addEventListener("dragover", (e) =>
-          this.onDragHover(e, container, false)
-        );
-        container.addEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.addEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.addEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-    } else if ("draggables" && this.draggables) {
-      this.draggables.forEach((draggable) => {
-        draggable.addEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e, draggable),
-          false
-        );
-        draggable.addEventListener(
-          "dragend",
-          (e) => this.onDragEnd(e, draggable),
-          false
-        );
-      });
-    } else if (this.draggables && this.containers) {
-      this.containers.forEach((container) => {
-        container.addEventListener(
-          "dragover",
-          (e) => this.onDragHover(e, container),
-          false
-        );
-        container.addEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.addEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.addEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-      this.draggables.forEach((draggable) => {
-        draggable.addEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e),
-          false
-        );
-        draggable.addEventListener("dragend", (e) => this.onDragEnd(e), false);
-      });
-    }
-
-    // console.log("draggables", this.draggables);
-    // console.log("this.containers", this.containers);
-  };
-  this.removeEventListeners = function (name) {
-    if (name === "col-div" && this.containers) {
-      this.containers.forEach((container) => {
-        container.removeEventListener(
-          "dragover",
-          (e) => this.onDragHover(e, container),
-          false
-        );
-        container.removeEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.removeEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.removeEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-    } else if (name === "draggables" && this.draggables) {
-      this.draggables.forEach((draggable) => {
-        draggable.removeEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e, draggable),
-          false
-        );
-        draggable.removeEventListener(
-          "dragend",
-          (e) => this.onDragEnd(e, draggable),
-          false
-        );
-      });
-    } else if (this.draggables && this.containers) {
-      this.containers.forEach((container) => {
-        container.removeEventListener(
-          "dragover",
-          (e) => this.onDragHover(e, container),
-          false
-        );
-        container.removeEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.removeEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.removeEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-      this.draggables.forEach((draggable) => {
-        draggable.removeEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e),
-          false
-        );
-        draggable.removeEventListener(
-          "dragend",
-          (e) => this.onDragEnd(e),
-          false
-        );
-      });
-    }
-  };
-  this.createPlaceHolder = function () {
-    let placeholder = document.createElement("div");
-    placeholder.style.height = "50px";
-    placeholder.style.borderRadius = "5px";
-    placeholder.style.backgroundColor = "#eee";
-    placeholder.style.margin = "10px 0";
-    this.placeholder = placeholder;
-  };
-  this.getDragAfterElement = function (container, y) {
-    const draggableElements = [
-      ...container.querySelectorAll(".draggable:not(.dragging)"),
-    ];
-    return draggableElements.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-          return {
-            offset: offset,
-            element: child,
-          };
-        } else {
-          return closest;
-        }
-      },
-      {
-        offset: Number.NEGATIVE_INFINITY,
+  if (allContainers.length > 0) {
+    allContainers.forEach((container) => {
+      var condition = container.getAttribute("data-dragetted");
+      if (!condition) {
+        container.setAttribute("data-dragetted", "true");
+        addEventListenersForContainer(container);
       }
-    ).element;
-  };
+    });
+    // updateContainers();
+  } else {
+    // Handle the case when no elements with the class .editor-container are found.
+    // You can choose to display an error message or take appropriate action here.
+  }
+};
 
-  this.onDragStart = function (e, draggable) {
-    e.stopPropagation();
-    let elementToInsert;
-    console.log("drag start", draggable);
-    // e.dataTransfer.setData('elementid',e.target.id);
-    if (draggable && draggable.getAttribute("name")) {
-      let element = draggable.getAttribute("name");
+addSection = function () {
+  let section = document.createElement("div");
+  container.appendChild(section);
+  mainContainer.appendChild(container);
+  addEventListenersForContainer(container);
+  // updateContainers();
+};
 
-      // Create rollover tools div
-      var rolloverTools = document.createElement("div");
-      rolloverTools.classList.add(
-        "de-rollover-tools",
-        "smallWidthElementHover"
+updateDraggables = function () {
+  draggables = document.querySelectorAll(".draggable");
+};
+
+addEventListeners = function () {
+  if (draggables) {
+    draggables.forEach((draggable) => {
+      draggable.addEventListener(
+        "dragstart",
+        (e) => onDragStart(e, draggable),
+        false
       );
-      rolloverTools.setAttribute("data-current-id", "nill");
-      rolloverTools.setAttribute("data-current-type", "type");
-      rolloverTools.style.display = "none";
-
-      // Add move, advance, clone, and remove buttons to rollover tools
-      var moveButton = document.createElement("div");
-      moveButton.classList.add("de-rollover-move");
-      moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
-
-      var advanceButton = document.createElement("div");
-      advanceButton.classList.add("de-rollover-advance");
-      advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
-
-      var cloneButton = document.createElement("div");
-      cloneButton.classList.add("de-rollover-clone");
-      cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
-
-      var removeButton = document.createElement("div");
-      removeButton.classList.add("de-rollover-remove");
-      removeButton.innerHTML = '<i class="fa fa-trash-o"></i>';
-
-      // Append the buttons to the rollover tools
-      rolloverTools.appendChild(moveButton);
-      rolloverTools.appendChild(advanceButton);
-      rolloverTools.appendChild(cloneButton);
-      rolloverTools.appendChild(removeButton);
-
-      switch (element) {
-        case "headline-field": // * HEADLINE *****************************************
-          const wrapper = document.createElement("div");
-          wrapper.classList.add(
-            "draggable",
-            "de",
-            "elHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          wrapper.setAttribute("id", `headline-${Date.now()}`);
-          wrapper.setAttribute("data-de-type", "headline");
-          wrapper.setAttribute("data-de-editing", "false");
-          wrapper.setAttribute("data-title", "headline");
-          wrapper.setAttribute("data-ce", "true");
-          wrapper.setAttribute("data-trigger", "none");
-          wrapper.setAttribute("data-animate", "fade");
-          wrapper.setAttribute("data-delay", "500");
-          // wrapper.style.marginTop = '15px';
-          wrapper.style.outline = "none";
-          wrapper.style.cursor = "pointer";
-          wrapper.style.backgroundColor = "transparent";
-          wrapper.setAttribute("aria-disabled", "false");
-          wrapper.setAttribute("draggable", true);
-
-          elementToInsert = document.createElement("h1");
-          elementToInsert.classList.add(
-            "ne",
-            "elHeadline",
-            // "fs-1",
-            "lh4",
-            "elMargin0",
-            "elBGStyle0",
-            "hsTextShadow0",
-            "display-5",
-            "font-weight-normal"
-          );
-          elementToInsert.style.textAlign = "center";
-          elementToInsert.style.fontSize = "32px";
-          // elementToInsert.dataset.bold = "inherit";
-          elementToInsert.dataset.gramm = "false";
-          elementToInsert.style.marginTop = "10px";
-          elementToInsert.style.marginBottom = "10px";
-          elementToInsert.style.color = "#000000";
-          // elementToInsert.setAttribute('contenteditable', 'false');
-          elementToInsert.setAttribute("contenteditable", "true");
-
-          const bElement = document.createElement("b");
-          bElement.textContent = "How To [GOOD] Without [BAD]";
-
-          elementToInsert.appendChild(bElement);
-          elementToInsert.setAttribute("id", `field-${Date.now()}`);
-
-          elementToInsert.setAttribute("placeholder", "Text");
-
-          var orangeRolloverTools = createOrangeRolloverTools("headline");
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          wrapper.appendChild(elementToInsert);
-          wrapper.appendChild(orangeRolloverTools);
-          wrapper.appendChild(orangeArrowRolloverTools);
-
-          wrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            wrapper.style.borderColor = "orange"; // Change border color on mouseover
-            wrapper.style.borderWidth = "1px";
-            wrapper.style.position = "relative";
-          });
-          wrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            wrapper.style.borderColor = ""; // Reset border color on mouseout
-            wrapper.style.borderWidth = "";
-            wrapper.style.position = "unset";
-
-            editTextRolloverTools.style.display = "none";
-            for (let i = 0; i < 8; i++) {
-              editTextRolloverTools.childNodes[i].style.display = "none";
-            }
-          });
-
-          // Edit Text
-          var editTextRolloverTools = createEditTextRolloverTools();
-
-          wrapper.appendChild(editTextRolloverTools);
-
-          wrapper.addEventListener("mousedown", (e) => {
-            const boundingRect = wrapper.getBoundingClientRect();
-            const width = boundingRect.width;
-            const height = boundingRect.height;
-            const x = e.clientX - boundingRect.left;
-            const y = e.clientY - boundingRect.top;
-
-            // Calculate 80% width and height range
-            const minWidth = width * 0.1; // 10% from the left
-            const maxWidth = width * 0.9; // 10% from the right
-            const minHeight = height * 0.1; // 10% from the top
-            const maxHeight = height * 0.9; // 10% from the bottom
-
-            // Check if the click position is within the 80% center part
-            if (
-              x >= minWidth &&
-              x <= maxWidth &&
-              y >= minHeight &&
-              y <= maxHeight
-            ) {
-              wrapper.style.border = "1px solid #777";
-              for (let i = 0; i < 3; i++) {
-                wrapper.childNodes[1].childNodes[i].style.display = "none";
-              }
-              for (let i = 0; i < 2; i++) {
-                wrapper.childNodes[2].childNodes[i].style.display = "none";
-              }
-              editTextRolloverTools.style.display = "block";
-              for (let i = 0; i < 8; i++) {
-                editTextRolloverTools.childNodes[i].style.display = "block";
-              }
-            }
-          });
-
-          this.elementToInsert = wrapper;
-          this.existingElement = false;
-
-          break;
-
-        case "subhead-field":
-          const subheadWrapper = document.createElement("div");
-          subheadWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          subheadWrapper.setAttribute("id", `subhead-${Date.now()}`);
-          subheadWrapper.setAttribute("data-de-type", "subhead");
-          subheadWrapper.setAttribute("data-de-editing", "false");
-          subheadWrapper.setAttribute("data-title", "subhead");
-          subheadWrapper.setAttribute("data-ce", "true");
-          subheadWrapper.setAttribute("data-trigger", "none");
-          subheadWrapper.setAttribute("data-animate", "fade");
-          subheadWrapper.setAttribute("data-delay", "500");
-          // subheadWrapper.style.marginTop = '15px';
-          subheadWrapper.style.outline = "none";
-          subheadWrapper.style.cursor = "pointer";
-          subheadWrapper.setAttribute("aria-disabled", "false");
-          subheadWrapper.setAttribute("draggable", true);
-
-          const subheadElement = document.createElement("h3");
-          subheadElement.classList.add(
-            "ne",
-            "elSubHeadline",
-            "hsSize3",
-            "lh4",
-            "elMargin0",
-            "elBGStyle0",
-            "hsTextShadow0"
-          );
-          subheadElement.style.textAlign = "center";
-          subheadElement.style.fontSize = "28px";
-          subheadElement.dataset.bold = "inherit";
-          subheadElement.dataset.gramm = "false";
-          //subheadElement.setAttribute('contenteditable', 'false');
-
-          const subheadBElement = document.createElement("p");
-          subheadBElement.textContent =
-            "FREE: Brand New On-Demand Class Reveals ...";
-
-          subheadElement.appendChild(subheadBElement);
-          subheadElement.setAttribute("id", `field-${Date.now()}`);
-          subheadElement.setAttribute("placeholder", "Subhead Text");
-
-          // Add any additional styling or attributes for the subhead as needed
-
-          subheadWrapper.appendChild(subheadElement);
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          subheadWrapper.appendChild(orangeRolloverTools);
-          subheadWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          subheadWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            subheadWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            subheadWrapper.style.borderWidth = "1px";
-            subheadWrapper.style.position = "relative";
-          });
-
-          subheadWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            subheadWrapper.style.borderColor = ""; // Reset border color on mouseout
-            subheadWrapper.style.borderWidth = "";
-            subheadWrapper.style.position = "unset";
-            editTextRolloverTools.style.display = "none";
-            for (let i = 0; i < 8; i++) {
-              editTextRolloverTools.childNodes[i].style.display = "none";
-            }
-          });
-
-          // Edit Text
-          var editTextRolloverTools = createEditTextRolloverTools();
-
-          subheadWrapper.appendChild(editTextRolloverTools);
-
-          subheadWrapper.addEventListener("mousedown", (e) => {
-            const boundingRect = subheadWrapper.getBoundingClientRect();
-            const width = boundingRect.width;
-            const height = boundingRect.height;
-            const x = e.clientX - boundingRect.left;
-            const y = e.clientY - boundingRect.top;
-
-            // Calculate 80% width and height range
-            const minWidth = width * 0.1; // 10% from the left
-            const maxWidth = width * 0.9; // 10% from the right
-            const minHeight = height * 0.1; // 10% from the top
-            const maxHeight = height * 0.9; // 10% from the bottom
-
-            // Check if the click position is within the 80% center part
-            if (
-              x >= minWidth &&
-              x <= maxWidth &&
-              y >= minHeight &&
-              y <= maxHeight
-            ) {
-              subheadWrapper.style.border = "1px solid #777";
-              for (let i = 0; i < 3; i++) {
-                subheadWrapper.childNodes[1].childNodes[i].style.display =
-                  "none";
-              }
-              for (let i = 0; i < 2; i++) {
-                subheadWrapper.childNodes[2].childNodes[i].style.display =
-                  "none";
-              }
-              editTextRolloverTools.style.display = "block";
-              for (let i = 0; i < 8; i++) {
-                editTextRolloverTools.childNodes[i].style.display = "block";
-              }
-            }
-          });
-
-          this.elementToInsert = subheadWrapper;
-          this.existingElement = false;
-          break;
-
-        case "paragraph-field":
-          const paragraphWrapper = document.createElement("div");
-          paragraphWrapper.classList.add(
-            "draggable",
-            "de",
-            "elparagraphWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          paragraphWrapper.setAttribute("id", `text-${Date.now()}`);
-          paragraphWrapper.setAttribute("data-de-type", "text");
-          paragraphWrapper.setAttribute("data-de-editing", "false");
-          paragraphWrapper.setAttribute("data-title", "text");
-          paragraphWrapper.setAttribute("data-ce", "true");
-          paragraphWrapper.setAttribute("data-trigger", "none");
-          paragraphWrapper.setAttribute("data-animate", "fade");
-          paragraphWrapper.setAttribute("data-delay", "500");
-          // paragraphWrapper.style.marginTop = '15px';
-          paragraphWrapper.style.outline = "none";
-          paragraphWrapper.style.cursor = "pointer";
-          paragraphWrapper.setAttribute("aria-disabled", "false");
-          paragraphWrapper.setAttribute("draggable", true);
-
-          const textElement = document.createElement("p");
-          textElement.classList.add(
-            "ne",
-            "elText",
-            "hsSize3",
-            "lh4",
-            "elMargin0",
-            "elBGStyle0",
-            "hsTextShadow0"
-          );
-          // textElement.style.textAlign = 'center';
-          textElement.style.fontSize = "20px";
-          textElement.dataset.bold = "inherit";
-          textElement.dataset.gramm = "false";
-          // textElement.setAttribute('contenteditable', 'false');
-
-          // const textPElement = document.createElement('p');
-          textElement.textContent =
-            "This Class Is Available Instantly ...No Waiting.";
-
-          // textElement.appendChild(textPElement);
-          textElement.setAttribute("id", `field-${Date.now()}`);
-          textElement.setAttribute("placeholder", "Text");
-
-          // Add any additional styling or attributes for the text element as needed
-
-          paragraphWrapper.appendChild(textElement);
-
-          this.elementToInsert = paragraphWrapper;
-          this.existingElement = false;
-          this.addEventListenerForText(paragraphWrapper);
-          break;
-
-        case "image-field":
-          const imageWrapper = document.createElement("div");
-          imageWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          imageWrapper.setAttribute("id", `image-${Date.now()}`);
-          imageWrapper.setAttribute("data-de-type", "image");
-          imageWrapper.setAttribute("data-de-editing", "false");
-          imageWrapper.setAttribute("data-title", "image");
-          imageWrapper.setAttribute("data-ce", "true");
-          imageWrapper.setAttribute("data-trigger", "none");
-          imageWrapper.setAttribute("data-animate", "fade");
-          imageWrapper.setAttribute("data-delay", "500");
-          // imageWrapper.style.marginTop = '15px';
-          imageWrapper.style.outline = "none";
-          imageWrapper.style.cursor = "pointer";
-          imageWrapper.setAttribute("aria-disabled", "false");
-          imageWrapper.setAttribute("draggable", true);
-          imageWrapper.innerHTML =
-            '<p style="display:flex; margin:auto; justify-content:center;">Image</p>';
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          imageWrapper.appendChild(orangeRolloverTools);
-          imageWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          imageWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            imageWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            imageWrapper.style.borderWidth = "1px";
-            imageWrapper.style.position = "relative";
-          });
-
-          imageWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            imageWrapper.style.borderColor = ""; // Reset border color on mouseout
-            imageWrapper.style.borderWidth = "";
-            imageWrapper.style.position = "unset";
-          });
-          this.elementToInsert = imageWrapper;
-          this.existingElement = false;
-          break;
-
-        case "list-field":
-          const listWrapper = document.createElement("div");
-          listWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          listWrapper.setAttribute("id", `list-${Date.now()}`);
-          listWrapper.setAttribute("data-de-type", "list");
-          listWrapper.setAttribute("data-de-editing", "false");
-          listWrapper.setAttribute("data-title", "list");
-          listWrapper.setAttribute("data-ce", "true");
-          listWrapper.setAttribute("data-trigger", "none");
-          listWrapper.setAttribute("data-animate", "fade");
-          listWrapper.setAttribute("data-delay", "500");
-          // listWrapper.style.marginTop = '15px';
-          listWrapper.style.outline = "none";
-          listWrapper.style.cursor = "pointer";
-          listWrapper.setAttribute("aria-disabled", "false");
-          listWrapper.setAttribute("draggable", true);
-          listWrapper.innerHTML =
-            '<p style="display:flex; margin:auto; justify-content:center;">Bullet List</p>';
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          listWrapper.appendChild(orangeRolloverTools);
-          listWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          listWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            listWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            listWrapper.style.borderWidth = "1px";
-            listWrapper.style.position = "relative";
-          });
-
-          listWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            listWrapper.style.borderColor = ""; // Reset border color on mouseout
-            listWrapper.style.borderWidth = "";
-            listWrapper.style.position = "unset";
-          });
-          this.elementToInsert = listWrapper;
-          this.existingElement = false;
-          break;
-
-        case "button-field":
-          // Create the outer container
-          const buttonContainer = document.createElement("div");
-          buttonContainer.classList.add(
-            "draggable",
-            "de",
-            "elBTN",
-            "de-editable",
-            "elAlign_center",
-            "elMargin0"
-          );
-          buttonContainer.id = `tmp_button-${Date.now()}`;
-          buttonContainer.dataset.deType = "button";
-          buttonContainer.dataset.deEditing = "false";
-          buttonContainer.dataset.title = "button";
-          buttonContainer.dataset.ce = "false";
-          buttonContainer.dataset.trigger = "none";
-          buttonContainer.dataset.animate = "fade";
-          buttonContainer.dataset.delay = "500";
-          buttonContainer.style.outline = "none";
-          buttonContainer.style.textAlign = "center";
-          // buttonContainer.style.margin = '20px 30px';
-
-          // Create the <a> element
-          const linkElement = document.createElement("a");
-          linkElement.href = "#submit-form";
-          linkElement.id = `the_button-${Date.now()}`;
-          linkElement.classList.add(
-            "elSettings",
-            "elButton",
-            "elButtonSize1",
-            "elButtonColor1",
-            "elButtonRounded",
-            "elButtonPadding2",
-            "elBtnVP_10",
-            "elButtonCorner3",
-            "elButtonFluid",
-            "elBtnHP_25",
-            "elBTN_b_1",
-            "elButtonShadowN1",
-            "elButtonTxtColor1"
-          );
-          linkElement.style.color = "rgb(255, 255, 255)";
-          linkElement.style.fontWeight = "600";
-          linkElement.style.backgroundColor = "#ff0000";
-          linkElement.style.fontSize = "20px";
-          linkElement.rel = "noopener noreferrer";
-
-          // Create the main and sub spans
-          const mainSpan = document.createElement("span");
-          mainSpan.classList.add("elButtonMain");
-          mainSpan.textContent = "Let Me In!";
-
-          const subSpan = document.createElement("span");
-          subSpan.classList.add("elButtonSub");
-
-          // Append the main and sub spans to the <a> element
-          linkElement.appendChild(mainSpan);
-          linkElement.appendChild(subSpan);
-
-          // Append the <a> element to the button container
-          buttonContainer.appendChild(linkElement);
-
-          // Add rollover tools for the button (you should complete this part)
-
-          // Set the draggable attribute
-          elementToInsert = buttonContainer;
-          elementToInsert.setAttribute("draggable", true);
-          var orangeRolloverTools = createOrangeRolloverTools("button");
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          buttonContainer.appendChild(orangeRolloverTools);
-          buttonContainer.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          buttonContainer.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            buttonContainer.style.borderColor = "orange"; // Change border color on mouseover
-            buttonContainer.style.borderWidth = "1px";
-            buttonContainer.style.position = "relative";
-          });
-
-          buttonContainer.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            buttonContainer.style.borderColor = ""; // Reset border color on mouseout
-            buttonContainer.style.borderWidth = "";
-            buttonContainer.style.position = "unset";
-          });
-          this.elementToInsert = elementToInsert;
-          this.existingElement = false;
-          break;
-
-        case "countdown-field":
-          const currentDate = new Date();
-          const futureDate = new Date();
-
-          futureDate.setDate(currentDate.getDate() + 1); // Add 1 day
-          futureDate.setHours(currentDate.getHours() + 12); // Add 11 hours
-
-          // Construct the targetDateStr with the desired format, including hours, minutes, and seconds
-          const targetDateStr = `${futureDate.getFullYear()}-${(
-            futureDate.getMonth() + 1
-          )
-            .toString()
-            .padStart(2, "0")}-${futureDate
-            .getDate()
-            .toString()
-            .padStart(2, "0")}T${futureDate
-            .getHours()
-            .toString()
-            .padStart(2, "0")}:${futureDate
-            .getMinutes()
-            .toString()
-            .padStart(2, "0")}:${futureDate
-            .getSeconds()
-            .toString()
-            .padStart(2, "0")}`;
-
-          const targetDate = new Date(targetDateStr);
-          const targetStamp = targetDate.getTime();
-
-          const containercountdownWrapper = document.createElement("div");
-          containercountdownWrapper.classList.add(
-            "container-fluid",
-            "draggable",
-            "de",
-            "elCountdownWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-
-          const countdownWrapper = document.createElement("div");
-          countdownWrapper.classList.add("row", "no-gutters");
-          // countdownWrapper.style.margin = 0;
-          countdownWrapper.style.backgroundColor = "red";
-          countdownWrapper.style.color = "yellow";
-          countdownWrapper.style.display = "flex"; // Enable Flexbox
-          countdownWrapper.style.alignItems = "center"; // Center content vertically
-
-          const leftColumn = document.createElement("div");
-          // leftColumn.classList.add('col-md-9');
-          leftColumn.classList.add("col-md-8", "d-none", "d-md-block"); // Hide on iPhones, show on medium and larger screens
-
-          const textLeft = document.createElement("div");
-          textLeft.classList.add("text-left");
-
-          function getFormattedDate(date) {
-            const options = {
-              weekday: "long",
-              hour: "numeric",
-              minute: "numeric",
-              timeZoneName: "short",
-              timeZone: "America/New_York",
-              // timeZone: 'Europe/Vienna'
-            };
-            return date.toLocaleString("en-US", options);
+      draggable.addEventListener(
+        "dragend",
+        (e) => onDragEnd(e, draggable),
+        false
+      );
+    });
+  }
+};
+
+createPlaceHolder = function () {
+  placeholder = document.createElement("div");
+  placeholder.style.height = "50px";
+  placeholder.style.borderRadius = "5px";
+  placeholder.style.backgroundColor = "#eee";
+  placeholder.style.margin = "10px 0";
+  placeholder = placeholder;
+};
+
+getDragAfterElement = function (container, y) {
+  const draggableElements = [
+    ...container.querySelectorAll(".draggable:not(.dragging)"),
+  ];
+  return draggableElements.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return {
+          offset: offset,
+          element: child,
+        };
+      } else {
+        return closest;
+      }
+    },
+    {
+      offset: Number.NEGATIVE_INFINITY,
+    }
+  ).element;
+};
+
+onDragStart = function (e, draggable) {
+  e.stopPropagation();
+
+  console.log("drag start", draggable);
+
+  if (draggable && draggable.getAttribute("name")) {
+    console.log(placeholder, "name=============================");
+    let element = draggable.getAttribute("name");
+
+    // Create rollover tools div
+    var rolloverTools = document.createElement("div");
+    rolloverTools.classList.add("de-rollover-tools", "smallWidthElementHover");
+    rolloverTools.setAttribute("data-current-id", "nill");
+    rolloverTools.setAttribute("data-current-type", "type");
+    rolloverTools.style.display = "none";
+
+    // Add move, advance, clone, and remove buttons to rollover tools
+    var moveButton = document.createElement("div");
+    moveButton.classList.add("de-rollover-move");
+    moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
+
+    var advanceButton = document.createElement("div");
+    advanceButton.classList.add("de-rollover-advance");
+    advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
+
+    var cloneButton = document.createElement("div");
+    cloneButton.classList.add("de-rollover-clone");
+    cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
+
+    var removeButton = document.createElement("div");
+    removeButton.classList.add("de-rollover-remove");
+    removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+
+    // Append the buttons to the rollover tools
+    rolloverTools.appendChild(moveButton);
+    rolloverTools.appendChild(advanceButton);
+    rolloverTools.appendChild(cloneButton);
+    rolloverTools.appendChild(removeButton);
+
+    switch (element) {
+      case "headline-field": // * HEADLINE *****************************************
+        const wrapper = document.createElement("div");
+        wrapper.classList.add(
+          "draggable",
+          "de",
+          "elHeadlineWrapper",
+          "ui-droppable",
+          "de-editable"
+        );
+        wrapper.setAttribute("id", `headline-${Date.now()}`);
+        wrapper.setAttribute("data-de-type", "headline");
+        wrapper.setAttribute("data-de-editing", "false");
+        wrapper.setAttribute("data-title", "headline");
+        wrapper.setAttribute("data-ce", "true");
+        wrapper.setAttribute("data-trigger", "none");
+        wrapper.setAttribute("data-animate", "fade");
+        wrapper.setAttribute("data-delay", "500");
+        // wrapper.style.marginTop = '15px';
+        wrapper.style.outline = "none";
+        wrapper.style.cursor = "pointer";
+        wrapper.style.backgroundColor = "transparent";
+        wrapper.setAttribute("aria-disabled", "false");
+        wrapper.setAttribute("draggable", true);
+
+        elementToInsert = document.createElement("h1");
+        elementToInsert.classList.add(
+          "ne",
+          "elHeadline",
+          // "fs-1",
+          "lh4",
+          "elMargin0",
+          "elBGStyle0",
+          "hsTextShadow0",
+          "display-5",
+          "font-weight-normal"
+        );
+        elementToInsert.style.textAlign = "center";
+        elementToInsert.style.fontSize = "32px";
+        // elementToInsert.dataset.bold = "inherit";
+        elementToInsert.dataset.gramm = "false";
+        elementToInsert.style.marginTop = "10px";
+        elementToInsert.style.marginBottom = "10px";
+        elementToInsert.style.color = "#000000";
+        // elementToInsert.setAttribute('contenteditable', 'false');
+        elementToInsert.setAttribute("contenteditable", "true");
+
+        const bElement = document.createElement("b");
+        bElement.textContent = "How To [GOOD] Without [BAD]";
+
+        elementToInsert.appendChild(bElement);
+        elementToInsert.setAttribute("id", `field-${Date.now()}`);
+
+        elementToInsert.setAttribute("placeholder", "Text");
+
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+        // Append all the elements to the wrapper
+        wrapper.appendChild(elementToInsert);
+        wrapper.appendChild(orangeRolloverTools);
+        wrapper.appendChild(orangeArrowRolloverTools);
+
+        // Add event listeners to show/hide rollover tools
+
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        wrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          wrapper.style.borderColor = "orange"; // Change border color on mouseover
+          wrapper.style.borderWidth = "1px";
+          wrapper.style.position = "relative";
+
+          wrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            wrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
           }
-
-          const heading = document.createElement("div");
-          // heading.style.fontSize = '24px'; // Set font size
-          heading.style.fontSize = "1.6vw"; // 3% of the viewport width
-
-          heading.style.fontWeight = "600"; // Set font weight
-          heading.style.letterSpacing = "letter-spacing: -0.5px;"; // Set letter spacing
-          heading.style.fontFamily = "Nunito Sans, sans-serif"; // Set font family
-          heading.style.paddingLeft = "20px";
-          const formattedTargetDateMessage = `Hurry! This special offer is available until ${getFormattedDate(
-            currentDate
-          )}`;
-          heading.textContent = formattedTargetDateMessage;
-
-          textLeft.appendChild(heading);
-          // textLeft.appendChild(paragraph);
-          leftColumn.appendChild(textLeft);
-
-          const rightColumn = document.createElement("div");
-          // rightColumn.classList.add('col-md-3');
-          rightColumn.classList.add("col-12", "col-md-4"); // Span full width on small screens, and col-3 on medium and larger screens
-
-          const countdownDiv = document.createElement("div");
-          countdownDiv.classList.add(
-            "de",
-            "elCountdown",
-            "de-editable",
-            "elAlign_center",
-            "elMargin0"
-          );
-          countdownDiv.setAttribute("id", `countdown-${Date.now()}`);
-          countdownDiv.setAttribute("data-de-type", "countdown");
-          countdownDiv.setAttribute("data-de-editing", "false");
-          countdownDiv.setAttribute("data-title", "Date Countdown 2.0");
-          countdownDiv.setAttribute("data-ce", "false");
-          countdownDiv.setAttribute("data-trigger", "none");
-          countdownDiv.setAttribute("data-animate", "fade");
-          countdownDiv.setAttribute("data-delay", "500");
-          countdownDiv.style.outline = "none";
-          countdownDiv.style.backgroundColor = "red";
-          countdownDiv.style.color = "yellow";
-          countdownDiv.style.border = "0px none";
-
-          const countdownElement = document.createElement("div");
-          countdownElement.classList.add(
-            "realcountdown",
-            "wideCountdownSize2",
-            "cdBlack",
-            "cdStyleTextOnly",
-            "clearfix",
-            "hide"
-          );
-
-          countdownElement.setAttribute("data-date", targetDateStr);
-          countdownElement.setAttribute("data-time", targetStamp);
-          countdownElement.setAttribute("data-tz", "America/New_York");
-          // countdownElement.setAttribute('data-tz', 'Europe/Vienna');
-          countdownElement.setAttribute("data-url", "#");
-          countdownElement.setAttribute("data-lang", "eng");
-          countdownElement.textContent = "";
-
-          const countdownDemo = document.createElement("div");
-          countdownDemo.classList.add(
-            "wideCountdown",
-            "wideCountdownSize2",
-            "cdBlack",
-            "cdStyleTextOnly",
-            "wideCountdown-demo",
-            "is-countdown",
-            "clearfix"
-          );
-
-          const timerDiv = document.createElement("div");
-          timerDiv.classList.add("timer");
-
-          const timerElements = [
-            {
-              number: "03",
-              word: "days",
-            },
-            {
-              number: "04",
-              word: "hrs",
-            },
-            {
-              number: "12",
-              word: "min",
-            },
-            {
-              number: "03",
-              word: "sec",
-            },
-          ];
-
-          timerElements.forEach((element) => {
-            const timerItem = document.createElement("div");
-            timerItem.style.display = "inline-block";
-            timerItem.style.marginRight = "10px";
-
-            const timerNumber = document.createElement("div");
-            timerNumber.classList.add("timer-number");
-            timerNumber.textContent = element.number;
-
-            const timerWord = document.createElement("div");
-            timerWord.classList.add("timer-word");
-            timerWord.textContent = element.word;
-
-            timerItem.appendChild(timerNumber);
-            timerItem.appendChild(timerWord);
-            timerDiv.appendChild(timerItem);
-          });
-
-          countdownElement.appendChild(timerDiv); // Nest the timer inside .realcountdown
-
-          countdownDiv.appendChild(countdownElement);
-          countdownDiv.appendChild(countdownDemo);
-
-          // Append columns to the countdown wrapper
-          containercountdownWrapper.appendChild(countdownWrapper);
-
-          countdownWrapper.appendChild(leftColumn);
-          countdownWrapper.appendChild(rightColumn);
-
-          rightColumn.appendChild(countdownDiv);
-
-          // countdownWrapper.appendChild(rolloverTools);
-
-          countdownWrapper.setAttribute("draggable", true);
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          containercountdownWrapper.appendChild(orangeRolloverTools);
-          containercountdownWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          containercountdownWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            containercountdownWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            containercountdownWrapper.style.borderWidth = "1px";
-            containercountdownWrapper.style.position = "relative";
-          });
-
-          containercountdownWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            containercountdownWrapper.style.borderColor = ""; // Reset border color on mouseout
-            containercountdownWrapper.style.borderWidth = "";
-            containercountdownWrapper.style.position = "unset";
-          });
-          this.elementToInsert = containercountdownWrapper;
-          this.existingElement = false;
-
-          break;
-
-        case "input-field":
-          const inputWrapper = document.createElement("div");
-          inputWrapper.classList.add(
-            "draggable",
-            "de",
-            "elInputWrapper",
-            "de-editable",
-            "de-input-block",
-            "elAlign_center",
-            "elMargin0"
-          );
-          inputWrapper.setAttribute("id", `tmp_input-${Date.now()}`);
-          inputWrapper.setAttribute("data-de-type", "input");
-          inputWrapper.setAttribute("data-de-editing", "false");
-          inputWrapper.setAttribute("data-title", "input");
-          inputWrapper.setAttribute("data-ce", "false");
-          inputWrapper.setAttribute("data-trigger", "none");
-          inputWrapper.setAttribute("data-animate", "fade");
-          inputWrapper.setAttribute("data-delay", "500");
-          // inputWrapper.style.marginTop = "30px";
-          inputWrapper.style.outline = "none";
-
-          const inputElement = document.createElement("input");
-          inputElement.type = "text";
-
-          inputElement.placeholder = "Your Name Here...";
-          inputElement.name = "name"; //not-set
-          inputElement.classList.add(
-            "elInput",
-            "elInput100",
-            "elAlign_left",
-            "elInputMid",
-            "elInputStyl0",
-            "elInputBG1",
-            "elInputBR5",
-            "elInputI0",
-            "elInputIBlack",
-            "elInputIRight",
-            "required0",
-            "ceoinput"
-          );
-          inputElement.dataset.type = "extra";
-          inputElement.style.width = "100%"; // This sets the input field to full width
-
-          // Create rollover tools div
-          // const rolloverTools = document.createElement('div');
-          // rolloverTools.classList.add('de-rollover-tools', 'smallWidthElementHover');
-          // rolloverTools.setAttribute('data-current-id', 'nill');
-          // rolloverTools.setAttribute('data-current-type', 'type');
-          // rolloverTools.style.display = 'none';
-
-          // Add move, advance, clone, and remove buttons to rollover tools
-          moveButton = document.createElement("div");
-          moveButton.classList.add("de-rollover-move");
-          moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
-
-          advanceButton = document.createElement("div");
-          advanceButton.classList.add("de-rollover-advance");
-          advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
-
-          cloneButton = document.createElement("div");
-          cloneButton.classList.add("de-rollover-clone");
-          cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
-
-          removeButton = document.createElement("div");
-          removeButton.classList.add("de-rollover-remove");
-          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
-
-          // Append input and rollover tools to the wrapper
-          inputWrapper.appendChild(inputElement);
-          // inputWrapper.appendChild(rolloverTools);
-
-          // Create addElementFlyoutDOM
-          addElementFlyoutDOM = document.createElement("div");
-          addElementFlyoutDOM.classList.add("addElementFlyoutDOM");
-          addElementFlyoutDOM.style.display = "none";
-          addElementFlyoutDOM.style.left = "325px";
-          addElementFlyoutDOM.innerHTML = '<i class="fa fa-plus"></i>';
-
-          inputWrapper.appendChild(addElementFlyoutDOM);
-
-          // Set the draggable attribute
-          inputWrapper.setAttribute("draggable", true);
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          inputWrapper.appendChild(orangeRolloverTools);
-          inputWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          inputWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            inputWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            inputWrapper.style.borderWidth = "1px";
-            inputWrapper.style.position = "relative";
-          });
-
-          inputWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            inputWrapper.style.borderColor = ""; // Reset border color on mouseout
-            inputWrapper.style.borderWidth = "";
-            inputWrapper.style.position = "unset";
-          });
-          this.elementToInsert = inputWrapper;
-          this.existingElement = false;
-          break;
-
-        case "email-field":
-          const emailWrapper = document.createElement("div");
-          emailWrapper.classList.add(
-            "draggable",
-            "de",
-            "elemailWrapper",
-            "de-editable",
-            "de-input-block",
-            "elAlign_center",
-            "elMargin0"
-          );
-          emailWrapper.setAttribute("id", `tmp_input-${Date.now()}`);
-          emailWrapper.setAttribute("data-de-type", "input");
-          emailWrapper.setAttribute("data-de-editing", "false");
-          emailWrapper.setAttribute("data-title", "input");
-          emailWrapper.setAttribute("data-ce", "false");
-          emailWrapper.setAttribute("data-trigger", "none");
-          emailWrapper.setAttribute("data-animate", "fade");
-          emailWrapper.setAttribute("data-delay", "500");
-          // emailWrapper.style.marginTop = "30px";
-          emailWrapper.style.outline = "none";
-
-          const emailElement = document.createElement("input");
-          emailElement.type = "text";
-          emailElement.placeholder = "Your Email Address Here...";
-          emailElement.name = "email";
-          emailElement.classList.add(
-            "elInput",
-            "elInput100",
-            "elAlign_left",
-            "elInputMid",
-            "elInputStyl0",
-            "elInputBG1",
-            "elInputBR5",
-            "elInputI0",
-            "elInputIBlack",
-            "elInputIRight",
-            "required0",
-            "ceoinput"
-          );
-          emailElement.dataset.type = "extra";
-          emailElement.style.width = "100%"; // This sets the input field to full width
-
-          // Create rollover tools div
-          // const rolloverTools = document.createElement('div');
-          // rolloverTools.classList.add('de-rollover-tools', 'smallWidthElementHover');
-          // rolloverTools.setAttribute('data-current-id', 'nill');
-          // rolloverTools.setAttribute('data-current-type', 'type');
-          // rolloverTools.style.display = 'none';
-
-          // Add move, advance, clone, and remove buttons to rollover tools
-          moveButton = document.createElement("div");
-          moveButton.classList.add("de-rollover-move");
-          moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
-
-          advanceButton = document.createElement("div");
-          advanceButton.classList.add("de-rollover-advance");
-          advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
-
-          cloneButton = document.createElement("div");
-          cloneButton.classList.add("de-rollover-clone");
-          cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
-
-          removeButton = document.createElement("div");
-          removeButton.classList.add("de-rollover-remove");
-          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
-
-          // Append input and rollover tools to the wrapper
-          emailWrapper.appendChild(emailElement);
-          // emailWrapper.appendChild(rolloverTools);
-
-          // Create addElementFlyoutDOM
-          addElementFlyoutDOM = document.createElement("div");
-          addElementFlyoutDOM.classList.add("addElementFlyoutDOM");
-          addElementFlyoutDOM.style.display = "none";
-          addElementFlyoutDOM.style.left = "325px";
-          addElementFlyoutDOM.innerHTML = '<i class="fa fa-plus"></i>';
-
-          emailWrapper.appendChild(addElementFlyoutDOM);
-
-          // Set the draggable attribute
-          emailWrapper.setAttribute("draggable", true);
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          emailWrapper.appendChild(orangeRolloverTools);
-          emailWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          emailWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            emailWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            emailWrapper.style.borderWidth = "1px";
-            emailWrapper.style.position = "relative";
-          });
-
-          emailWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            emailWrapper.style.borderColor = ""; // Reset border color on mouseout
-            emailWrapper.style.borderWidth = "";
-            emailWrapper.style.position = "unset";
-          });
-          this.elementToInsert = emailWrapper;
-          this.existingElement = false;
-          break;
-
-        case "phone-field":
-          const phoneWrapper = document.createElement("div");
-          phoneWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          phoneWrapper.setAttribute("id", `phone-${Date.now()}`);
-          phoneWrapper.setAttribute("data-de-type", "phone");
-          phoneWrapper.setAttribute("data-de-editing", "false");
-          phoneWrapper.setAttribute("data-title", "phone");
-          phoneWrapper.setAttribute("data-ce", "true");
-          phoneWrapper.setAttribute("data-trigger", "none");
-          phoneWrapper.setAttribute("data-animate", "fade");
-          phoneWrapper.setAttribute("data-delay", "500");
-          phoneWrapper.style.outline = "none";
-          phoneWrapper.style.cursor = "pointer";
-          phoneWrapper.setAttribute("aria-disabled", "false");
-          phoneWrapper.setAttribute("draggable", true);
-          phoneWrapper.innerHTML =
-            '<p style="display:flex; margin:auto; justify-content:center;">Phone</p>';
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          phoneWrapper.appendChild(orangeRolloverTools);
-          phoneWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          phoneWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            phoneWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            phoneWrapper.style.borderWidth = "1px";
-            phoneWrapper.style.position = "relative";
-          });
-
-          phoneWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            phoneWrapper.style.borderColor = ""; // Reset border color on mouseout
-            phoneWrapper.style.borderWidth = "";
-            phoneWrapper.style.position = "unset";
-          });
-          this.elementToInsert = phoneWrapper;
-          this.existingElement = false;
-          break;
-        default:
-          this.elementToInsert = draggable;
-          this.existingElement = true;
-          break;
-      }
-    } else {
-      this.existingElement = true;
-      this.elementToInsert = draggable;
-    }
-    this.placeholder.setAttribute("id", `placeholder-${Date.now()}`);
-    draggable.classList.add("dragging");
-  };
-
-  this.onDragEnd = function (e, draggable) {
-    //update the main conatiner and popup container so it can be saved
-    draggable.classList.remove("dragging");
-    updateTextareaFromContainer(
-      "da-main-container",
-      "step[large_html_blob_content]"
-    );
-    updateTextareaFromContainer(
-      "da-popup-container",
-      "step[popup_html_blob_content]"
-    );
-
-    console.log("drag end", this.elementToInsert);
-
-    // Add a click event listener for settings sidebar
-
-    console.log("adding elSettings");
-
-    var anchor = this.elementToInsert.querySelector("a.elSettings"); // Find the anchor element within 'this'
-
-    if (anchor) {
-      anchor.addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent the default behavior
-
-        if (settingsSidebar.style.right === "0px") {
-          closeSidebar();
-          // console.log('closing inside');
-        } else {
-          openSidebar(this);
-          // console.log('opening inside');
-        }
-      });
-    }
-
-    if (!this.existingElement) {
-      this.addEventListenerForDraggableItem(this.elementToInsert);
-      this.updateDraggables("draggables");
-    } else {
-      console.log("existing ele", this.elementToInsert);
-      this.elementToInsert.classList.remove("dragging");
-    }
-  };
-
-  this.addEventListenerForDraggableItem = function (element) {
-    console.log("ele", element);
-    element.addEventListener("dragstart", (e) => this.onDragStart(e, element));
-    element.addEventListener("dragend", (e) => this.onDragEnd(e, element));
-
-    const elHeadlineElements = element.querySelectorAll(
-      ".elHeadline, .elText, .elSubHeadline"
-    ); // Select .elHeadline elements inside the div
-
-    // Add click event listener for content editing to each .elHeadline element
-    elHeadlineElements.forEach((elHeadlineElement) => {
-      elHeadlineElement.addEventListener("mousedown", function () {
-        console.log("clicked to edit");
-        elHeadlineElement.setAttribute("contenteditable", "true");
-        elHeadlineElement.style.cursor = "text";
-      });
-    });
-  };
-
-  this.addEventListenersForContainer = function (container) {
-    container.addEventListener("dragover", (e) =>
-      this.onDragHover(e, container, false)
-    );
-    container.addEventListener("drop", (e) => this.onDragDrop(e), false);
-    container.addEventListener("dragleave", (e) => this.onDragLeave(e), false);
-    container.addEventListener("dragenter", (e) => this.onDragEnter(e), false);
-  };
-  this.addEventListenerForText = function (textElement) {
-    var orangeRolloverTools = createOrangeRolloverTools();
-    var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-    textElement.appendChild(orangeRolloverTools);
-    textElement.appendChild(orangeArrowRolloverTools);
-    textElement.style.padding = "1.5rem 1rem 0.5rem 1rem";
-
-    textElement.addEventListener("mouseenter", (e) => {
-      orangeRolloverTools.style.display = "block";
-      orangeArrowRolloverTools.style.display = "block";
-      orangeRolloverTools.childNodes[0].style.display = "block";
-      orangeRolloverTools.childNodes[1].style.display = "block";
-      orangeRolloverTools.childNodes[2].style.display = "block";
-      orangeArrowRolloverTools.childNodes[0].style.display = "block";
-      orangeArrowRolloverTools.childNodes[1].style.display = "block";
-      textElement.style.border = "1px solid orange";
-      textElement.style.position = "relative";
-    });
-    textElement.addEventListener("mouseleave", (e) => {
-      orangeRolloverTools.style.display = "none";
-      orangeArrowRolloverTools.style.display = "none";
-      orangeRolloverTools.childNodes[0].style.display = "none";
-      orangeRolloverTools.childNodes[1].style.display = "none";
-      orangeRolloverTools.childNodes[2].style.display = "none";
-      orangeArrowRolloverTools.childNodes[0].style.display = "none";
-      orangeArrowRolloverTools.childNodes[1].style.display = "none";
-      textElement.style.position = "unset";
-      textElement.style.border = "none";
-      editTextRolloverTools.style.display = "none";
-      for (let i = 0; i < 8; i++) {
-        editTextRolloverTools.childNodes[i].style.display = "none";
-      }
-    });
-
-    // Edit Text
-    var editTextRolloverTools = createEditTextRolloverTools();
-
-    textElement.appendChild(editTextRolloverTools);
-
-    textElement.addEventListener("mousedown", (e) => {
-      const boundingRect = textElement.getBoundingClientRect();
-      const width = boundingRect.width;
-      const height = boundingRect.height;
-      const x = e.clientX - boundingRect.left;
-      const y = e.clientY - boundingRect.top;
-
-      // Calculate 80% width and height range
-      const minWidth = width * 0.1; // 10% from the left
-      const maxWidth = width * 0.9; // 10% from the right
-      const minHeight = height * 0.1; // 10% from the top
-      const maxHeight = height * 0.9; // 10% from the bottom
-
-      // Check if the click position is within the 80% center part
-      if (x >= minWidth && x <= maxWidth && y >= minHeight && y <= maxHeight) {
-        textElement.style.border = "1px solid #777";
-        for (let i = 0; i < 3; i++) {
-          textElement.childNodes[1].childNodes[i].style.display = "none";
-        }
-        for (let i = 0; i < 2; i++) {
-          textElement.childNodes[2].childNodes[i].style.display = "none";
-        }
-        editTextRolloverTools.style.display = "block";
-        for (let i = 0; i < 8; i++) {
-          editTextRolloverTools.childNodes[i].style.display = "block";
-        }
-      }
-    });
-  };
-  this.onDragHover = function (e, container) {
-    e.preventDefault();
-    this.afterElement = this.getDragAfterElement(container, e.clientY);
-    if (this.afterElement == null) {
-      container.appendChild(this.placeholder);
-    } else {
-      container.insertBefore(this.placeholder, this.afterElement);
-    }
-  };
-  this.onDragEnter = function (e) {
-    e.preventDefault();
-  };
-  this.onDragLeave = function (e) {
-    e.preventDefault();
-  };
-
-  this.onDragDrop = function (e) {
-    e.preventDefault();
-    // let data = e.dataTransfer.getData("elementid");
-    this.placeholder.replaceWith(this.elementToInsert);
-  };
-
-  this.init = function () {
-    try {
-      this.mainContainer = document.getElementById("da-main-container");
-      this.popupContainer = document.getElementById("da-popup-container");
-      this.updateContainers();
-      this.updateDraggables();
-      this.addEventListeners();
-      this.createPlaceHolder();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-}
-
-function CustomDragAndDrop(container) {
-  this.draggables = undefined;
-  this.containers = undefined;
-  this.placeholder = undefined;
-  this.elementToInsert = "";
-  this.afterElement = undefined;
-  this.sectionCount = 0;
-  this.mainContainer = undefined;
-  this.popupContainer = undefined;
-  this.existingElement = undefined;
-
-  this.loadSections = function () {
-    var newContainer = document.getElementById(id);
-    var allContainers = newContainer.querySelectorAll(".col-div");
-
-    // var popupContainer = document.getElementsByClassName('popup-container')[0]
-    // popupContainer.querySelectorAll('.editor-container')
-
-    // function hasDragEvent(element) {
-    //   const eventListeners = getEventListeners(element);
-    //   const dragEventListeners = eventListeners.drag || eventListeners.dragstart || eventListeners.dragend;
-    //   console.log(dragEventListeners,'here is condition')
-    //   return !!dragEventListeners;
-    // }
-
-    if (allContainers.length > 0) {
-      allContainers.forEach((container) => {
-        var condition = container.getAttribute("data-dragetted");
-        console.log("condition = ", condition);
-
-        if (!condition) {
-          console.log("here is condition false");
-          container.setAttribute("data-dragetted", "true");
-          this.addEventListenersForContainer(container);
-        }
-      });
-      this.updateContainers();
-    } else {
-      // Handle the case when no elements with the class .editor-container are found.
-      // You can choose to display an error message or take appropriate action here.
-    }
-  };
-
-  this.addSection = function () {
-    let section = document.createElement("div");
-
-    // section.innerHTML = `Section ${this.sectionCount++}`;
-    // section.innerHTML = `<div class="containerInner ui-sortable">
-    // <div class="dropZoneForRows ui-droppable" style="display: none;">
-    // <div class="dropIconr"><i class="fa fa-plus fs-3"></i></div></div>
-    // <div class="de-add-new-row-empty elFont_helvectica">
-    // <a href="#" class="btn" id="de-show-rows-empty">
-    // </a></div></div>`;
-
-    // this should show the plus button inside of this HTML
-
-    container.appendChild(section);
-    console.log("this main container", this.mainContainer);
-    console.log("this popup container", this.popupContainer);
-
-    if (isPopupOpen()) {
-      this.popupContainer.appendChild(container);
-      console.log("The popup is open.");
-    } else {
-      this.mainContainer.appendChild(container);
-      console.log("The popup is not open.");
-    }
-    this.addEventListenersForContainer(container);
-    this.updateContainers();
-  };
-
-  this.updateContainers = function () {
-    this.containers = document.querySelectorAll(".col-div");
-  };
-  this.updateDraggables = function () {
-    this.draggables = document.querySelectorAll(".draggable");
-  };
-  this.addEventListeners = function (name) {
-    console.log("here is name", name);
-    // console.log("adding event listeners", this.containers, this.draggables);
-    if (name === "containers" && this.containers) {
-      this.containers.forEach((container) => {
-        container.addEventListener("dragover", (e) =>
-          this.onDragHover(e, container, false)
-        );
-        container.addEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.addEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.addEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-    } else if ("draggables" && this.draggables) {
-      this.draggables.forEach((draggable) => {
-        draggable.addEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e, draggable),
-          false
-        );
-        draggable.addEventListener(
-          "dragend",
-          (e) => this.onDragEnd(e, draggable),
-          false
-        );
-      });
-    } else if (this.draggables && this.containers) {
-      this.containers.forEach((container) => {
-        container.addEventListener(
-          "dragover",
-          (e) => this.onDragHover(e, container),
-          false
-        );
-        container.addEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.addEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.addEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-      this.draggables.forEach((draggable) => {
-        draggable.addEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e),
-          false
-        );
-        draggable.addEventListener("dragend", (e) => this.onDragEnd(e), false);
-      });
-    }
-
-    // console.log("draggables", this.draggables);
-    // console.log("this.containers", this.containers);
-  };
-  this.removeEventListeners = function (name) {
-    if (name === "editor-container" && this.containers) {
-      this.containers.forEach((container) => {
-        container.removeEventListener(
-          "dragover",
-          (e) => this.onDragHover(e, container),
-          false
-        );
-        container.removeEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.removeEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.removeEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-    } else if (name === "draggables" && this.draggables) {
-      this.draggables.forEach((draggable) => {
-        draggable.removeEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e, draggable),
-          false
-        );
-        draggable.removeEventListener(
-          "dragend",
-          (e) => this.onDragEnd(e, draggable),
-          false
-        );
-      });
-    } else if (this.draggables && this.containers) {
-      this.containers.forEach((container) => {
-        container.removeEventListener(
-          "dragover",
-          (e) => this.onDragHover(e, container),
-          false
-        );
-        container.removeEventListener("drop", (e) => this.onDragDrop(e), false);
-        container.removeEventListener(
-          "dragleave",
-          (e) => this.onDragLeave(e),
-          false
-        );
-        container.removeEventListener(
-          "dragenter",
-          (e) => this.onDragEnter(e),
-          false
-        );
-      });
-      this.draggables.forEach((draggable) => {
-        draggable.removeEventListener(
-          "dragstart",
-          (e) => this.onDragStart(e),
-          false
-        );
-        draggable.removeEventListener(
-          "dragend",
-          (e) => this.onDragEnd(e),
-          false
-        );
-      });
-    }
-  };
-  this.createPlaceHolder = function () {
-    let placeholder = document.createElement("div");
-    placeholder.style.height = "50px";
-    placeholder.style.borderRadius = "5px";
-    placeholder.style.backgroundColor = "#eee";
-    placeholder.style.margin = "10px 0";
-    this.placeholder = placeholder;
-  };
-  this.getDragAfterElement = function (container, y) {
-    const draggableElements = [
-      ...container.querySelectorAll(".draggable:not(.dragging)"),
-    ];
-    return draggableElements.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-          return {
-            offset: offset,
-            element: child,
-          };
-        } else {
-          return closest;
-        }
-      },
-      {
-        offset: Number.NEGATIVE_INFINITY,
-      }
-    ).element;
-  };
-
-  this.onDragStart = function (e, draggable) {
-    e.stopPropagation();
-    let elementToInsert;
-    console.log("drag start", draggable);
-    // e.dataTransfer.setData('elementid',e.target.id);
-    if (draggable && draggable.getAttribute("name")) {
-      let element = draggable.getAttribute("name");
-
-      // Create rollover tools div
-      var rolloverTools = document.createElement("div");
-      rolloverTools.classList.add(
-        "de-rollover-tools",
-        "smallWidthElementHover"
-      );
-      rolloverTools.setAttribute("data-current-id", "nill");
-      rolloverTools.setAttribute("data-current-type", "type");
-      rolloverTools.style.display = "none";
-
-      // Add move, advance, clone, and remove buttons to rollover tools
-      var moveButton = document.createElement("div");
-      moveButton.classList.add("de-rollover-move");
-      moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
-
-      var advanceButton = document.createElement("div");
-      advanceButton.classList.add("de-rollover-advance");
-      advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
-
-      var cloneButton = document.createElement("div");
-      cloneButton.classList.add("de-rollover-clone");
-      cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
-
-      var removeButton = document.createElement("div");
-      removeButton.classList.add("de-rollover-remove");
-      removeButton.innerHTML = '<i class="fa fa-trash"></i>';
-
-      // Append the buttons to the rollover tools
-      rolloverTools.appendChild(moveButton);
-      rolloverTools.appendChild(advanceButton);
-      rolloverTools.appendChild(cloneButton);
-      rolloverTools.appendChild(removeButton);
-
-      switch (element) {
-        case "headline-field": // * HEADLINE *****************************************
-          const wrapper = document.createElement("div");
-          wrapper.classList.add(
-            "draggable",
-            "de",
-            "elHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          wrapper.setAttribute("id", `headline-${Date.now()}`);
-          wrapper.setAttribute("data-de-type", "headline");
-          wrapper.setAttribute("data-de-editing", "false");
-          wrapper.setAttribute("data-title", "headline");
-          wrapper.setAttribute("data-ce", "true");
-          wrapper.setAttribute("data-trigger", "none");
-          wrapper.setAttribute("data-animate", "fade");
-          wrapper.setAttribute("data-delay", "500");
-          // wrapper.style.marginTop = '15px';
-          wrapper.style.outline = "none";
-          wrapper.style.cursor = "pointer";
-          wrapper.style.backgroundColor = "transparent";
-          wrapper.setAttribute("aria-disabled", "false");
-          wrapper.setAttribute("draggable", true);
-
-          elementToInsert = document.createElement("h1");
-          elementToInsert.classList.add(
-            "ne",
-            "elHeadline",
-            // "fs-1",
-            "lh4",
-            "elMargin0",
-            "elBGStyle0",
-            "hsTextShadow0",
-            "display-5",
-            "font-weight-normal"
-          );
-          elementToInsert.style.textAlign = "center";
-          elementToInsert.style.fontSize = "32px";
-          // elementToInsert.dataset.bold = "inherit";
-          elementToInsert.dataset.gramm = "false";
-          elementToInsert.style.marginTop = "10px";
-          elementToInsert.style.marginBottom = "10px";
-          elementToInsert.style.color = "#000000";
-          // elementToInsert.setAttribute('contenteditable', 'false');
-          elementToInsert.setAttribute("contenteditable", "true");
-
-          const bElement = document.createElement("b");
-          bElement.textContent = "How To [GOOD] Without [BAD]";
-
-          elementToInsert.appendChild(bElement);
-          elementToInsert.setAttribute("id", `field-${Date.now()}`);
-
-          elementToInsert.setAttribute("placeholder", "Text");
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          wrapper.appendChild(elementToInsert);
-          wrapper.appendChild(orangeRolloverTools);
-          wrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          wrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            wrapper.style.borderColor = "orange"; // Change border color on mouseover
-            wrapper.style.borderWidth = "1px";
-            wrapper.style.position = "relative";
-
-            wrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              wrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              wrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            wrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+          for (let i = 0; i < 3; i++) {
+            wrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          wrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < wrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            wrapper.parentNode.parentNode.childNodes[i].style.borderRight =
               "none";
-            for (
-              let i = 3;
-              i < wrapper.parentNode.parentNode.children.length;
-              i++
+            if (
+              wrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
             ) {
-              wrapper.parentNode.parentNode.childNodes[i].style.borderRight =
-                "none";
-              if (
-                wrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                wrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
-            }
-          });
-
-          wrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            wrapper.style.borderColor = ""; // Reset border color on mouseout
-            wrapper.style.borderWidth = "";
-            wrapper.style.position = "unset";
-
-            wrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              wrapper.parentNode.parentNode.childNodes[0].childNodes[
+              wrapper.parentNode.parentNode.childNodes[
                 i
-              ].style.display = "block";
+              ].childNodes[0].style.display = "none";
             }
-            for (let i = 0; i < 3; i++) {
-              wrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            wrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            editTextRolloverTools.style.display = "none";
-            for (let i = 0; i < 8; i++) {
-              editTextRolloverTools.childNodes[i].style.display = "none";
-            }
-            for (
-              let i = 4;
-              i < wrapper.parentNode.parentNode.children.length;
-              i++
+          }
+        });
+
+        wrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          wrapper.style.borderColor = ""; // Reset border color on mouseout
+          wrapper.style.borderWidth = "";
+          wrapper.style.position = "unset";
+
+          wrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            wrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            wrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          wrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          editTextRolloverTools.style.display = "none";
+          for (let i = 0; i < 8; i++) {
+            editTextRolloverTools.childNodes[i].style.display = "none";
+          }
+          for (
+            let i = 4;
+            i < wrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            wrapper.parentNode.parentNode.childNodes[i - 1].style.borderRight =
+              "1px dotted rgb(58, 133, 255)";
+            if (
+              wrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+                .className == "div-boundary"
             ) {
               wrapper.parentNode.parentNode.childNodes[
                 i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                wrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                wrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
+              ].childNodes[0].style.display = "block";
             }
-          });
-
-          // Edit Text
-          var editTextRolloverTools = createEditTextRolloverTools();
-
-          wrapper.appendChild(editTextRolloverTools);
-
-          wrapper.addEventListener("mousedown", (e) => {
-            const boundingRect = wrapper.getBoundingClientRect();
-            const width = boundingRect.width;
-            const height = boundingRect.height;
-            const x = e.clientX - boundingRect.left;
-            const y = e.clientY - boundingRect.top;
-
-            // Calculate 80% width and height range
-            const minWidth = width * 0.1; // 10% from the left
-            const maxWidth = width * 0.9; // 10% from the right
-            const minHeight = height * 0.1; // 10% from the top
-            const maxHeight = height * 0.9; // 10% from the bottom
-
-            // Check if the click position is within the 80% center part
-            if (
-              x >= minWidth &&
-              x <= maxWidth &&
-              y >= minHeight &&
-              y <= maxHeight
-            ) {
-              wrapper.style.border = "1px solid #777";
-              for (let i = 0; i < 3; i++) {
-                wrapper.childNodes[1].childNodes[i].style.display = "none";
-              }
-              for (let i = 0; i < 2; i++) {
-                wrapper.childNodes[2].childNodes[i].style.display = "none";
-              }
-              editTextRolloverTools.style.display = "block";
-              for (let i = 0; i < 8; i++) {
-                editTextRolloverTools.childNodes[i].style.display = "block";
-              }
-            }
-          });
-
-          this.elementToInsert = wrapper;
-          this.existingElement = false;
-
-          break;
-
-        case "subhead-field":
-          const subheadWrapper = document.createElement("div");
-          subheadWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          subheadWrapper.setAttribute("id", `subhead-${Date.now()}`);
-          subheadWrapper.setAttribute("data-de-type", "subhead");
-          subheadWrapper.setAttribute("data-de-editing", "false");
-          subheadWrapper.setAttribute("data-title", "subhead");
-          subheadWrapper.setAttribute("data-ce", "true");
-          subheadWrapper.setAttribute("data-trigger", "none");
-          subheadWrapper.setAttribute("data-animate", "fade");
-          subheadWrapper.setAttribute("data-delay", "500");
-          // subheadWrapper.style.marginTop = '15px';
-          subheadWrapper.style.outline = "none";
-          subheadWrapper.style.cursor = "pointer";
-          subheadWrapper.setAttribute("aria-disabled", "false");
-          subheadWrapper.setAttribute("draggable", true);
-
-          const subheadElement = document.createElement("h3");
-          subheadElement.classList.add(
-            "ne",
-            "elSubHeadline",
-            "hsSize3",
-            "lh4",
-            "elMargin0",
-            "elBGStyle0",
-            "hsTextShadow0"
-          );
-          subheadElement.style.textAlign = "center";
-          subheadElement.style.fontSize = "28px";
-          subheadElement.dataset.bold = "inherit";
-          subheadElement.dataset.gramm = "false";
-          //subheadElement.setAttribute('contenteditable', 'false');
-
-          const subheadBElement = document.createElement("p");
-          subheadBElement.textContent =
-            "FREE: Brand New On-Demand Class Reveals ...";
-
-          subheadElement.appendChild(subheadBElement);
-          subheadElement.setAttribute("id", `field-${Date.now()}`);
-          subheadElement.setAttribute("placeholder", "Subhead Text");
-
-          // Add any additional styling or attributes for the subhead as needed
-
-          subheadWrapper.appendChild(subheadElement);
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          subheadWrapper.appendChild(orangeRolloverTools);
-          subheadWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          subheadWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            subheadWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            subheadWrapper.style.borderWidth = "1px";
-            subheadWrapper.style.position = "relative";
-            subheadWrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              subheadWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              subheadWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            subheadWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "none";
-            for (
-              let i = 3;
-              i < subheadWrapper.parentNode.parentNode.children.length;
-              i++
-            ) {
-              subheadWrapper.parentNode.parentNode.childNodes[
-                i
-              ].style.borderRight = "none";
-              if (
-                subheadWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                subheadWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
-            }
-          });
-
-          subheadWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            subheadWrapper.style.borderColor = ""; // Reset border color on mouseout
-            subheadWrapper.style.borderWidth = "";
-            subheadWrapper.style.position = "unset";
-            subheadWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              subheadWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              subheadWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            subheadWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            editTextRolloverTools.style.display = "none";
-            for (let i = 0; i < 8; i++) {
-              editTextRolloverTools.childNodes[i].style.display = "none";
-            }
-            for (
-              let i = 4;
-              i < subheadWrapper.parentNode.parentNode.children.length;
-              i++
-            ) {
-              subheadWrapper.parentNode.parentNode.childNodes[
-                i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                subheadWrapper.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                subheadWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
-            }
-          });
-
-          // Edit Text
-          var editTextRolloverTools = createEditTextRolloverTools();
-
-          subheadWrapper.appendChild(editTextRolloverTools);
-
-          subheadWrapper.addEventListener("mousedown", (e) => {
-            const boundingRect = subheadWrapper.getBoundingClientRect();
-            const width = boundingRect.width;
-            const height = boundingRect.height;
-            const x = e.clientX - boundingRect.left;
-            const y = e.clientY - boundingRect.top;
-
-            // Calculate 80% width and height range
-            const minWidth = width * 0.1; // 10% from the left
-            const maxWidth = width * 0.9; // 10% from the right
-            const minHeight = height * 0.1; // 10% from the top
-            const maxHeight = height * 0.9; // 10% from the bottom
-
-            // Check if the click position is within the 80% center part
-            if (
-              x >= minWidth &&
-              x <= maxWidth &&
-              y >= minHeight &&
-              y <= maxHeight
-            ) {
-              subheadWrapper.style.border = "1px solid #777";
-              for (let i = 0; i < 3; i++) {
-                subheadWrapper.childNodes[1].childNodes[i].style.display =
-                  "none";
-              }
-              for (let i = 0; i < 2; i++) {
-                subheadWrapper.childNodes[2].childNodes[i].style.display =
-                  "none";
-              }
-              editTextRolloverTools.style.display = "block";
-              for (let i = 0; i < 8; i++) {
-                editTextRolloverTools.childNodes[i].style.display = "block";
-              }
-            }
-          });
-
-          this.elementToInsert = subheadWrapper;
-          this.existingElement = false;
-          break;
-
-        case "paragraph-field":
-          const paragraphWrapper = document.createElement("div");
-          paragraphWrapper.classList.add(
-            "draggable",
-            "de",
-            "elparagraphWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          paragraphWrapper.setAttribute("id", `text-${Date.now()}`);
-          paragraphWrapper.setAttribute("data-de-type", "text");
-          paragraphWrapper.setAttribute("data-de-editing", "false");
-          paragraphWrapper.setAttribute("data-title", "text");
-          paragraphWrapper.setAttribute("data-ce", "true");
-          paragraphWrapper.setAttribute("data-trigger", "none");
-          paragraphWrapper.setAttribute("data-animate", "fade");
-          paragraphWrapper.setAttribute("data-delay", "500");
-          // paragraphWrapper.style.marginTop = '15px';
-          paragraphWrapper.style.outline = "none";
-          paragraphWrapper.style.cursor = "pointer";
-          paragraphWrapper.setAttribute("aria-disabled", "false");
-          paragraphWrapper.setAttribute("draggable", true);
-
-          const textElement = document.createElement("p");
-          textElement.classList.add(
-            "ne",
-            "elText",
-            "hsSize3",
-            "lh4",
-            "elMargin0",
-            "elBGStyle0",
-            "hsTextShadow0"
-          );
-          // textElement.style.textAlign = 'center';
-          textElement.style.fontSize = "20px";
-          textElement.dataset.bold = "inherit";
-          textElement.dataset.gramm = "false";
-          // textElement.setAttribute('contenteditable', 'false');
-
-          // const textPElement = document.createElement('p');
-          textElement.textContent =
-            "This Class Is Available Instantly ...No Waiting.";
-
-          // textElement.appendChild(textPElement);
-          textElement.setAttribute("id", `field-${Date.now()}`);
-          textElement.setAttribute("placeholder", "Text");
-
-          // Add any additional styling or attributes for the text element as needed
-
-          paragraphWrapper.appendChild(textElement);
-
-          this.elementToInsert = paragraphWrapper;
-          this.existingElement = false;
-          this.addEventListenerForText(paragraphWrapper);
-          break;
-
-        case "image-field":
-          const imageWrapper = document.createElement("div");
-          imageWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          imageWrapper.setAttribute("id", `image-${Date.now()}`);
-          imageWrapper.setAttribute("data-de-type", "image");
-          imageWrapper.setAttribute("data-de-editing", "false");
-          imageWrapper.setAttribute("data-title", "image");
-          imageWrapper.setAttribute("data-ce", "true");
-          imageWrapper.setAttribute("data-trigger", "none");
-          imageWrapper.setAttribute("data-animate", "fade");
-          imageWrapper.setAttribute("data-delay", "500");
-          // imageWrapper.style.marginTop = '15px';
-          imageWrapper.style.outline = "none";
-          imageWrapper.style.cursor = "pointer";
-          imageWrapper.setAttribute("aria-disabled", "false");
-          imageWrapper.setAttribute("draggable", true);
-          imageWrapper.innerHTML =
-            '<p style="display:flex; margin:auto; justify-content:center;">Image</p>';
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          imageWrapper.appendChild(orangeRolloverTools);
-          imageWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          imageWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            imageWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            imageWrapper.style.borderWidth = "1px";
-            imageWrapper.style.position = "relative";
-            imageWrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              imageWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              imageWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            imageWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "none";
-            for (
-              let i = 3;
-              i < imageWrapper.parentNode.parentNode.children.length;
-              i++
-            ) {
-              imageWrapper.parentNode.parentNode.childNodes[
-                i
-              ].style.borderRight = "none";
-              if (
-                imageWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                imageWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
-            }
-          });
-
-          imageWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            imageWrapper.style.borderColor = ""; // Reset border color on mouseout
-            imageWrapper.style.borderWidth = "";
-            imageWrapper.style.position = "unset";
-            imageWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              imageWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              imageWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            imageWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i < imageWrapper.parentNode.parentNode.children.length;
-              i++
-            ) {
-              imageWrapper.parentNode.parentNode.childNodes[
-                i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                imageWrapper.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                imageWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
-            }
-          });
-          this.elementToInsert = imageWrapper;
-          this.existingElement = false;
-          break;
-
-        case "list-field":
-          const listWrapper = document.createElement("div");
-          listWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          listWrapper.setAttribute("id", `image-${Date.now()}`);
-          listWrapper.setAttribute("data-de-type", "image");
-          listWrapper.setAttribute("data-de-editing", "false");
-          listWrapper.setAttribute("data-title", "image");
-          listWrapper.setAttribute("data-ce", "true");
-          listWrapper.setAttribute("data-trigger", "none");
-          listWrapper.setAttribute("data-animate", "fade");
-          listWrapper.setAttribute("data-delay", "500");
-          // listWrapper.style.marginTop = '15px';
-          listWrapper.style.outline = "none";
-          listWrapper.style.cursor = "pointer";
-          listWrapper.setAttribute("aria-disabled", "false");
-          listWrapper.setAttribute("draggable", true);
-          listWrapper.innerHTML =
-            '<p style="display:flex; margin:auto; justify-content:center;">Bullet List</p>';
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          listWrapper.appendChild(orangeRolloverTools);
-          listWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          listWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            listWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            listWrapper.style.borderWidth = "1px";
-            listWrapper.style.position = "relative";
-            listWrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              listWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              listWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            listWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "none";
-            for (
-              let i = 3;
-              i < listWrapper.parentNode.parentNode.children.length;
-              i++
-            ) {
-              listWrapper.parentNode.parentNode.childNodes[
-                i
-              ].style.borderRight = "none";
-              if (
-                listWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                listWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
-            }
-          });
-
-          listWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            listWrapper.style.borderColor = ""; // Reset border color on mouseout
-            listWrapper.style.borderWidth = "";
-            listWrapper.style.position = "unset";
-            listWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              listWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              listWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            listWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i < listWrapper.parentNode.parentNode.children.length;
-              i++
-            ) {
-              listWrapper.parentNode.parentNode.childNodes[
-                i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                listWrapper.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                listWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
-            }
-          });
-          this.elementToInsert = listWrapper;
-          this.existingElement = false;
-          break;
-
-        case "button-field":
-          // Create the outer container
-          const buttonContainer = document.createElement("div");
-          buttonContainer.classList.add(
-            "draggable",
-            "de",
-            "elBTN",
-            "de-editable",
-            "elAlign_center",
-            "elMargin0"
-          );
-          buttonContainer.id = `tmp_button-${Date.now()}`;
-          buttonContainer.dataset.deType = "button";
-          buttonContainer.dataset.deEditing = "false";
-          buttonContainer.dataset.title = "button";
-          buttonContainer.dataset.ce = "false";
-          buttonContainer.dataset.trigger = "none";
-          buttonContainer.dataset.animate = "fade";
-          buttonContainer.dataset.delay = "500";
-          buttonContainer.style.outline = "none";
-          buttonContainer.style.textAlign = "center";
-          // buttonContainer.style.margin = '20px 30px';
-
-          // Create the <a> element
-          const linkElement = document.createElement("a");
-          linkElement.href = "#submit-form";
-          linkElement.id = `the_button-${Date.now()}`;
-          linkElement.classList.add(
-            "elSettings",
-            "elButton",
-            "elButtonSize1",
-            "elButtonColor1",
-            "elButtonRounded",
-            "elButtonPadding2",
-            "elBtnVP_10",
-            "elButtonCorner3",
-            "elButtonFluid",
-            "elBtnHP_25",
-            "elBTN_b_1",
-            "elButtonShadowN1",
-            "elButtonTxtColor1"
-          );
-          linkElement.style.color = "rgb(255, 255, 255)";
-          linkElement.style.fontWeight = "600";
-          linkElement.style.backgroundColor = "#ff0000";
-          linkElement.style.fontSize = "20px";
-          linkElement.rel = "noopener noreferrer";
-
-          // Create the main and sub spans
-          const mainSpan = document.createElement("span");
-          mainSpan.classList.add("elButtonMain");
-          mainSpan.textContent = "Let Me In!";
-
-          const subSpan = document.createElement("span");
-          subSpan.classList.add("elButtonSub");
-
-          // Append the main and sub spans to the <a> element
-          linkElement.appendChild(mainSpan);
-          linkElement.appendChild(subSpan);
-
-          // Append the <a> element to the button container
-          buttonContainer.appendChild(linkElement);
-
-          // Add rollover tools for the button (you should complete this part)
-
-          // Set the draggable attribute
-          elementToInsert = buttonContainer;
-          elementToInsert.setAttribute("draggable", true);
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          buttonContainer.appendChild(orangeRolloverTools);
-          buttonContainer.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          buttonContainer.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            buttonContainer.style.borderColor = "orange"; // Change border color on mouseover
-            buttonContainer.style.borderWidth = "1px";
-            buttonContainer.style.position = "relative";
-            buttonContainer.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              buttonContainer.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              buttonContainer.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            buttonContainer.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "none";
-            for (
-              let i = 3;
-              i < buttonContainer.parentNode.parentNode.children.length;
-              i++
-            ) {
-              buttonContainer.parentNode.parentNode.childNodes[
-                i
-              ].style.borderRight = "none";
-              if (
-                buttonContainer.parentNode.parentNode.childNodes[i]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                buttonContainer.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
-            }
-          });
-
-          buttonContainer.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            buttonContainer.style.borderColor = ""; // Reset border color on mouseout
-            buttonContainer.style.borderWidth = "";
-            buttonContainer.style.position = "unset";
-            buttonContainer.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              buttonContainer.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              buttonContainer.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            buttonContainer.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i < buttonContainer.parentNode.parentNode.children.length;
-              i++
-            ) {
-              buttonContainer.parentNode.parentNode.childNodes[
-                i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                buttonContainer.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                buttonContainer.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
-            }
-          });
-          this.elementToInsert = elementToInsert;
-          this.existingElement = false;
-          break;
-
-        case "countdown-field":
-          const currentDate = new Date();
-          const futureDate = new Date();
-
-          futureDate.setDate(currentDate.getDate() + 1); // Add 1 day
-          futureDate.setHours(currentDate.getHours() + 12); // Add 11 hours
-
-          // Construct the targetDateStr with the desired format, including hours, minutes, and seconds
-          const targetDateStr = `${futureDate.getFullYear()}-${(
-            futureDate.getMonth() + 1
-          )
-            .toString()
-            .padStart(2, "0")}-${futureDate
-            .getDate()
-            .toString()
-            .padStart(2, "0")}T${futureDate
-            .getHours()
-            .toString()
-            .padStart(2, "0")}:${futureDate
-            .getMinutes()
-            .toString()
-            .padStart(2, "0")}:${futureDate
-            .getSeconds()
-            .toString()
-            .padStart(2, "0")}`;
-
-          const targetDate = new Date(targetDateStr);
-          const targetStamp = targetDate.getTime();
-
-          const containercountdownWrapper = document.createElement("div");
-          containercountdownWrapper.classList.add(
-            "container-fluid",
-            "draggable",
-            "de",
-            "elCountdownWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-
-          const countdownWrapper = document.createElement("div");
-          countdownWrapper.classList.add("row", "no-gutters");
-          // countdownWrapper.style.margin = 0;
-          countdownWrapper.style.backgroundColor = "red";
-          countdownWrapper.style.color = "yellow";
-          countdownWrapper.style.display = "flex"; // Enable Flexbox
-          countdownWrapper.style.alignItems = "center"; // Center content vertically
-
-          const leftColumn = document.createElement("div");
-          // leftColumn.classList.add('col-md-9');
-          leftColumn.classList.add("col-md-8", "d-none", "d-md-block"); // Hide on iPhones, show on medium and larger screens
-
-          const textLeft = document.createElement("div");
-          textLeft.classList.add("text-left");
-
-          function getFormattedDate(date) {
-            const options = {
-              weekday: "long",
-              hour: "numeric",
-              minute: "numeric",
-              timeZoneName: "short",
-              timeZone: "America/New_York",
-              // timeZone: 'Europe/Vienna'
-            };
-            return date.toLocaleString("en-US", options);
           }
+        });
 
-          const heading = document.createElement("div");
-          // heading.style.fontSize = '24px'; // Set font size
-          heading.style.fontSize = "1.6vw"; // 3% of the viewport width
+        // Edit Text
+        var editTextRolloverTools = createEditTextRolloverTools();
 
-          heading.style.fontWeight = "600"; // Set font weight
-          heading.style.letterSpacing = "letter-spacing: -0.5px;"; // Set letter spacing
-          heading.style.fontFamily = "Nunito Sans, sans-serif"; // Set font family
-          heading.style.paddingLeft = "20px";
-          const formattedTargetDateMessage = `Hurry! This special offer is available until ${getFormattedDate(
-            currentDate
-          )}`;
-          heading.textContent = formattedTargetDateMessage;
+        wrapper.appendChild(editTextRolloverTools);
 
-          textLeft.appendChild(heading);
-          // textLeft.appendChild(paragraph);
-          leftColumn.appendChild(textLeft);
+        wrapper.addEventListener("mousedown", (e) => {
+          const boundingRect = wrapper.getBoundingClientRect();
+          const width = boundingRect.width;
+          const height = boundingRect.height;
+          const x = e.clientX - boundingRect.left;
+          const y = e.clientY - boundingRect.top;
 
-          const rightColumn = document.createElement("div");
-          // rightColumn.classList.add('col-md-3');
-          rightColumn.classList.add("col-12", "col-md-4"); // Span full width on small screens, and col-3 on medium and larger screens
+          // Calculate 80% width and height range
+          const minWidth = width * 0.1; // 10% from the left
+          const maxWidth = width * 0.9; // 10% from the right
+          const minHeight = height * 0.1; // 10% from the top
+          const maxHeight = height * 0.9; // 10% from the bottom
 
-          const countdownDiv = document.createElement("div");
-          countdownDiv.classList.add(
-            "de",
-            "elCountdown",
-            "de-editable",
-            "elAlign_center",
-            "elMargin0"
-          );
-          countdownDiv.setAttribute("id", `countdown-${Date.now()}`);
-          countdownDiv.setAttribute("data-de-type", "countdown");
-          countdownDiv.setAttribute("data-de-editing", "false");
-          countdownDiv.setAttribute("data-title", "Date Countdown 2.0");
-          countdownDiv.setAttribute("data-ce", "false");
-          countdownDiv.setAttribute("data-trigger", "none");
-          countdownDiv.setAttribute("data-animate", "fade");
-          countdownDiv.setAttribute("data-delay", "500");
-          countdownDiv.style.outline = "none";
-          countdownDiv.style.backgroundColor = "red";
-          countdownDiv.style.color = "yellow";
-          countdownDiv.style.border = "0px none";
-
-          const countdownElement = document.createElement("div");
-          countdownElement.classList.add(
-            "realcountdown",
-            "wideCountdownSize2",
-            "cdBlack",
-            "cdStyleTextOnly",
-            "clearfix",
-            "hide"
-          );
-
-          countdownElement.setAttribute("data-date", targetDateStr);
-          countdownElement.setAttribute("data-time", targetStamp);
-          countdownElement.setAttribute("data-tz", "America/New_York");
-          // countdownElement.setAttribute('data-tz', 'Europe/Vienna');
-          countdownElement.setAttribute("data-url", "#");
-          countdownElement.setAttribute("data-lang", "eng");
-          countdownElement.textContent = "";
-
-          const countdownDemo = document.createElement("div");
-          countdownDemo.classList.add(
-            "wideCountdown",
-            "wideCountdownSize2",
-            "cdBlack",
-            "cdStyleTextOnly",
-            "wideCountdown-demo",
-            "is-countdown",
-            "clearfix"
-          );
-
-          const timerDiv = document.createElement("div");
-          timerDiv.classList.add("timer");
-
-          const timerElements = [
-            {
-              number: "03",
-              word: "days",
-            },
-            {
-              number: "04",
-              word: "hrs",
-            },
-            {
-              number: "12",
-              word: "min",
-            },
-            {
-              number: "03",
-              word: "sec",
-            },
-          ];
-
-          timerElements.forEach((element) => {
-            const timerItem = document.createElement("div");
-            timerItem.style.display = "inline-block";
-            timerItem.style.marginRight = "10px";
-
-            const timerNumber = document.createElement("div");
-            timerNumber.classList.add("timer-number");
-            timerNumber.textContent = element.number;
-
-            const timerWord = document.createElement("div");
-            timerWord.classList.add("timer-word");
-            timerWord.textContent = element.word;
-
-            timerItem.appendChild(timerNumber);
-            timerItem.appendChild(timerWord);
-            timerDiv.appendChild(timerItem);
-          });
-
-          countdownElement.appendChild(timerDiv); // Nest the timer inside .realcountdown
-
-          countdownDiv.appendChild(countdownElement);
-          countdownDiv.appendChild(countdownDemo);
-
-          // Append columns to the countdown wrapper
-          containercountdownWrapper.appendChild(countdownWrapper);
-
-          countdownWrapper.appendChild(leftColumn);
-          countdownWrapper.appendChild(rightColumn);
-
-          rightColumn.appendChild(countdownDiv);
-
-          // countdownWrapper.appendChild(rolloverTools);
-
-          countdownWrapper.setAttribute("draggable", true);
-
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
-
-          // Append all the elements to the wrapper
-          containercountdownWrapper.appendChild(orangeRolloverTools);
-          containercountdownWrapper.appendChild(orangeArrowRolloverTools);
-
-          // Add event listeners to show/hide rollover tools
-
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          containercountdownWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            containercountdownWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            containercountdownWrapper.style.borderWidth = "1px";
-            containercountdownWrapper.style.position = "relative";
-            containercountdownWrapper.parentNode.parentNode.style.border =
-              "none";
+          // Check if the click position is within the 80% center part
+          if (
+            x >= minWidth &&
+            x <= maxWidth &&
+            y >= minHeight &&
+            y <= maxHeight
+          ) {
+            wrapper.style.border = "1px solid #777";
             for (let i = 0; i < 3; i++) {
-              containercountdownWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
+              wrapper.childNodes[1].childNodes[i].style.display = "none";
             }
+            for (let i = 0; i < 2; i++) {
+              wrapper.childNodes[2].childNodes[i].style.display = "none";
+            }
+            editTextRolloverTools.style.display = "block";
+            for (let i = 0; i < 8; i++) {
+              editTextRolloverTools.childNodes[i].style.display = "block";
+            }
+          }
+        });
+
+        elementToInsert = wrapper;
+        existingElement = false;
+
+        break;
+
+      case "subhead-field":
+        const subheadWrapper = document.createElement("div");
+        subheadWrapper.classList.add(
+          "draggable",
+          "de",
+          "elSubHeadlineWrapper",
+          "ui-droppable",
+          "de-editable"
+        );
+        subheadWrapper.setAttribute("id", `subhead-${Date.now()}`);
+        subheadWrapper.setAttribute("data-de-type", "subhead");
+        subheadWrapper.setAttribute("data-de-editing", "false");
+        subheadWrapper.setAttribute("data-title", "subhead");
+        subheadWrapper.setAttribute("data-ce", "true");
+        subheadWrapper.setAttribute("data-trigger", "none");
+        subheadWrapper.setAttribute("data-animate", "fade");
+        subheadWrapper.setAttribute("data-delay", "500");
+        // subheadWrapper.style.marginTop = '15px';
+        subheadWrapper.style.outline = "none";
+        subheadWrapper.style.cursor = "pointer";
+        subheadWrapper.setAttribute("aria-disabled", "false");
+        subheadWrapper.setAttribute("draggable", true);
+
+        const subheadElement = document.createElement("h3");
+        subheadElement.classList.add(
+          "ne",
+          "elSubHeadline",
+          "hsSize3",
+          "lh4",
+          "elMargin0",
+          "elBGStyle0",
+          "hsTextShadow0"
+        );
+        subheadElement.style.textAlign = "center";
+        subheadElement.style.fontSize = "28px";
+        subheadElement.dataset.bold = "inherit";
+        subheadElement.dataset.gramm = "false";
+        //subheadElement.setAttribute('contenteditable', 'false');
+
+        const subheadBElement = document.createElement("p");
+        subheadBElement.textContent =
+          "FREE: Brand New On-Demand Class Reveals ...";
+
+        subheadElement.appendChild(subheadBElement);
+        subheadElement.setAttribute("id", `field-${Date.now()}`);
+        subheadElement.setAttribute("placeholder", "Subhead Text");
+
+        // Add any additional styling or attributes for the subhead as needed
+
+        subheadWrapper.appendChild(subheadElement);
+
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+        // Append all the elements to the wrapper
+        subheadWrapper.appendChild(orangeRolloverTools);
+        subheadWrapper.appendChild(orangeArrowRolloverTools);
+
+        // Add event listeners to show/hide rollover tools
+
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        subheadWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          subheadWrapper.style.borderColor = "orange"; // Change border color on mouseover
+          subheadWrapper.style.borderWidth = "1px";
+          subheadWrapper.style.position = "relative";
+          subheadWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            subheadWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            subheadWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          subheadWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < subheadWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            subheadWrapper.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
+            if (
+              subheadWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
+            ) {
+              subheadWrapper.parentNode.parentNode.childNodes[
+                i
+              ].childNodes[0].style.display = "none";
+            }
+          }
+        });
+
+        subheadWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          subheadWrapper.style.borderColor = ""; // Reset border color on mouseout
+          subheadWrapper.style.borderWidth = "";
+          subheadWrapper.style.position = "unset";
+          subheadWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            subheadWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            subheadWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          subheadWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          editTextRolloverTools.style.display = "none";
+          for (let i = 0; i < 8; i++) {
+            editTextRolloverTools.childNodes[i].style.display = "none";
+          }
+          for (
+            let i = 4;
+            i < subheadWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            subheadWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              subheadWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
+            ) {
+              subheadWrapper.parentNode.parentNode.childNodes[
+                i - 1
+              ].childNodes[0].style.display = "block";
+            }
+          }
+        });
+
+        // Edit Text
+        var editTextRolloverTools = createEditTextRolloverTools();
+
+        subheadWrapper.appendChild(editTextRolloverTools);
+
+        subheadWrapper.addEventListener("mousedown", (e) => {
+          const boundingRect = subheadWrapper.getBoundingClientRect();
+          const width = boundingRect.width;
+          const height = boundingRect.height;
+          const x = e.clientX - boundingRect.left;
+          const y = e.clientY - boundingRect.top;
+
+          // Calculate 80% width and height range
+          const minWidth = width * 0.1; // 10% from the left
+          const maxWidth = width * 0.9; // 10% from the right
+          const minHeight = height * 0.1; // 10% from the top
+          const maxHeight = height * 0.9; // 10% from the bottom
+
+          // Check if the click position is within the 80% center part
+          if (
+            x >= minWidth &&
+            x <= maxWidth &&
+            y >= minHeight &&
+            y <= maxHeight
+          ) {
+            subheadWrapper.style.border = "1px solid #777";
             for (let i = 0; i < 3; i++) {
-              containercountdownWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
+              subheadWrapper.childNodes[1].childNodes[i].style.display = "none";
             }
-            containercountdownWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            for (let i = 0; i < 2; i++) {
+              subheadWrapper.childNodes[2].childNodes[i].style.display = "none";
+            }
+            editTextRolloverTools.style.display = "block";
+            for (let i = 0; i < 8; i++) {
+              editTextRolloverTools.childNodes[i].style.display = "block";
+            }
+          }
+        });
+
+        elementToInsert = subheadWrapper;
+        existingElement = false;
+        break;
+
+      case "paragraph-field":
+        const paragraphWrapper = document.createElement("div");
+        paragraphWrapper.classList.add(
+          "draggable",
+          "de",
+          "elparagraphWrapper",
+          "ui-droppable",
+          "de-editable"
+        );
+        paragraphWrapper.setAttribute("id", `text-${Date.now()}`);
+        paragraphWrapper.setAttribute("data-de-type", "text");
+        paragraphWrapper.setAttribute("data-de-editing", "false");
+        paragraphWrapper.setAttribute("data-title", "text");
+        paragraphWrapper.setAttribute("data-ce", "true");
+        paragraphWrapper.setAttribute("data-trigger", "none");
+        paragraphWrapper.setAttribute("data-animate", "fade");
+        paragraphWrapper.setAttribute("data-delay", "500");
+        // paragraphWrapper.style.marginTop = '15px';
+        paragraphWrapper.style.outline = "none";
+        paragraphWrapper.style.cursor = "pointer";
+        paragraphWrapper.setAttribute("aria-disabled", "false");
+        paragraphWrapper.setAttribute("draggable", true);
+
+        const textElement = document.createElement("p");
+        textElement.classList.add(
+          "ne",
+          "elText",
+          "hsSize3",
+          "lh4",
+          "elMargin0",
+          "elBGStyle0",
+          "hsTextShadow0"
+        );
+        // textElement.style.textAlign = 'center';
+        textElement.style.fontSize = "20px";
+        textElement.dataset.bold = "inherit";
+        textElement.dataset.gramm = "false";
+        // textElement.setAttribute('contenteditable', 'false');
+
+        // const textPElement = document.createElement('p');
+        textElement.textContent =
+          "This Class Is Available Instantly ...No Waiting.";
+
+        // textElement.appendChild(textPElement);
+        textElement.setAttribute("id", `field-${Date.now()}`);
+        textElement.setAttribute("placeholder", "Text");
+
+        // Add any additional styling or attributes for the text element as needed
+
+        paragraphWrapper.appendChild(textElement);
+
+        elementToInsert = paragraphWrapper;
+        existingElement = false;
+        addEventListenerForText(paragraphWrapper);
+        break;
+
+      case "image-field":
+        const imageWrapper = document.createElement("div");
+        imageWrapper.classList.add(
+          "draggable",
+          "de",
+          "elSubHeadlineWrapper",
+          "ui-droppable",
+          "de-editable"
+        );
+        imageWrapper.setAttribute("id", `image-${Date.now()}`);
+        imageWrapper.setAttribute("data-de-type", "image");
+        imageWrapper.setAttribute("data-de-editing", "false");
+        imageWrapper.setAttribute("data-title", "image");
+        imageWrapper.setAttribute("data-ce", "true");
+        imageWrapper.setAttribute("data-trigger", "none");
+        imageWrapper.setAttribute("data-animate", "fade");
+        imageWrapper.setAttribute("data-delay", "500");
+        // imageWrapper.style.marginTop = '15px';
+        imageWrapper.style.outline = "none";
+        imageWrapper.style.cursor = "pointer";
+        imageWrapper.setAttribute("aria-disabled", "false");
+        imageWrapper.setAttribute("draggable", true);
+        imageWrapper.innerHTML =
+          '<p style="display:flex; margin:auto; justify-content:center;">Image</p>';
+
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+        // Append all the elements to the wrapper
+        imageWrapper.appendChild(orangeRolloverTools);
+        imageWrapper.appendChild(orangeArrowRolloverTools);
+
+        // Add event listeners to show/hide rollover tools
+
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        imageWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          imageWrapper.style.borderColor = "orange"; // Change border color on mouseover
+          imageWrapper.style.borderWidth = "1px";
+          imageWrapper.style.position = "relative";
+          imageWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            imageWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            imageWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          imageWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < imageWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            imageWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
               "none";
-            for (
-              let i = 3;
-              i <
-              containercountdownWrapper.parentNode.parentNode.children.length;
-              i++
+            if (
+              imageWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
+            ) {
+              imageWrapper.parentNode.parentNode.childNodes[
+                i
+              ].childNodes[0].style.display = "none";
+            }
+          }
+        });
+
+        imageWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          imageWrapper.style.borderColor = ""; // Reset border color on mouseout
+          imageWrapper.style.borderWidth = "";
+          imageWrapper.style.position = "unset";
+          imageWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            imageWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            imageWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          imageWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < imageWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            imageWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              imageWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+                .className == "div-boundary"
+            ) {
+              imageWrapper.parentNode.parentNode.childNodes[
+                i - 1
+              ].childNodes[0].style.display = "block";
+            }
+          }
+        });
+        elementToInsert = imageWrapper;
+        existingElement = false;
+        break;
+
+      case "list-field":
+        const listWrapper = document.createElement("div");
+        listWrapper.classList.add(
+          "draggable",
+          "de",
+          "elSubHeadlineWrapper",
+          "ui-droppable",
+          "de-editable"
+        );
+        listWrapper.setAttribute("id", `image-${Date.now()}`);
+        listWrapper.setAttribute("data-de-type", "image");
+        listWrapper.setAttribute("data-de-editing", "false");
+        listWrapper.setAttribute("data-title", "image");
+        listWrapper.setAttribute("data-ce", "true");
+        listWrapper.setAttribute("data-trigger", "none");
+        listWrapper.setAttribute("data-animate", "fade");
+        listWrapper.setAttribute("data-delay", "500");
+        // listWrapper.style.marginTop = '15px';
+        listWrapper.style.outline = "none";
+        listWrapper.style.cursor = "pointer";
+        listWrapper.setAttribute("aria-disabled", "false");
+        listWrapper.setAttribute("draggable", true);
+        listWrapper.innerHTML =
+          '<p style="display:flex; margin:auto; justify-content:center;">Bullet List</p>';
+
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+        // Append all the elements to the wrapper
+        listWrapper.appendChild(orangeRolloverTools);
+        listWrapper.appendChild(orangeArrowRolloverTools);
+
+        // Add event listeners to show/hide rollover tools
+
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        listWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          listWrapper.style.borderColor = "orange"; // Change border color on mouseover
+          listWrapper.style.borderWidth = "1px";
+          listWrapper.style.position = "relative";
+          listWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            listWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            listWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          listWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < listWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            listWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
+              "none";
+            if (
+              listWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
+            ) {
+              listWrapper.parentNode.parentNode.childNodes[
+                i
+              ].childNodes[0].style.display = "none";
+            }
+          }
+        });
+
+        listWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          listWrapper.style.borderColor = ""; // Reset border color on mouseout
+          listWrapper.style.borderWidth = "";
+          listWrapper.style.position = "unset";
+          listWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            listWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            listWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          listWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < listWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            listWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              listWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+                .className == "div-boundary"
+            ) {
+              listWrapper.parentNode.parentNode.childNodes[
+                i - 1
+              ].childNodes[0].style.display = "block";
+            }
+          }
+        });
+        elementToInsert = listWrapper;
+        existingElement = false;
+        break;
+
+      case "button-field":
+        // Create the outer container
+        const buttonContainer = document.createElement("div");
+        buttonContainer.classList.add(
+          "draggable",
+          "de",
+          "elBTN",
+          "de-editable",
+          "elAlign_center",
+          "elMargin0"
+        );
+        buttonContainer.id = `tmp_button-${Date.now()}`;
+        buttonContainer.dataset.deType = "button";
+        buttonContainer.dataset.deEditing = "false";
+        buttonContainer.dataset.title = "button";
+        buttonContainer.dataset.ce = "false";
+        buttonContainer.dataset.trigger = "none";
+        buttonContainer.dataset.animate = "fade";
+        buttonContainer.dataset.delay = "500";
+        buttonContainer.style.outline = "none";
+        buttonContainer.style.textAlign = "center";
+        // buttonContainer.style.margin = '20px 30px';
+
+        // Create the <a> element
+        const linkElement = document.createElement("a");
+        linkElement.href = "#submit-form";
+        linkElement.id = `the_button-${Date.now()}`;
+        linkElement.classList.add(
+          "elSettings",
+          "elButton",
+          "elButtonSize1",
+          "elButtonColor1",
+          "elButtonRounded",
+          "elButtonPadding2",
+          "elBtnVP_10",
+          "elButtonCorner3",
+          "elButtonFluid",
+          "elBtnHP_25",
+          "elBTN_b_1",
+          "elButtonShadowN1",
+          "elButtonTxtColor1"
+        );
+        linkElement.style.color = "rgb(255, 255, 255)";
+        linkElement.style.fontWeight = "600";
+        linkElement.style.backgroundColor = "#ff0000";
+        linkElement.style.fontSize = "20px";
+        linkElement.rel = "noopener noreferrer";
+
+        // Create the main and sub spans
+        const mainSpan = document.createElement("span");
+        mainSpan.classList.add("elButtonMain");
+        mainSpan.textContent = "Let Me In!";
+
+        const subSpan = document.createElement("span");
+        subSpan.classList.add("elButtonSub");
+
+        // Append the main and sub spans to the <a> element
+        linkElement.appendChild(mainSpan);
+        linkElement.appendChild(subSpan);
+
+        // Append the <a> element to the button container
+        buttonContainer.appendChild(linkElement);
+
+        // Add rollover tools for the button (you should complete this part)
+
+        // Set the draggable attribute
+        elementToInsert = buttonContainer;
+        elementToInsert.setAttribute("draggable", true);
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+        // Append all the elements to the wrapper
+        buttonContainer.appendChild(orangeRolloverTools);
+        buttonContainer.appendChild(orangeArrowRolloverTools);
+
+        // Add event listeners to show/hide rollover tools
+
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        buttonContainer.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          buttonContainer.style.borderColor = "orange"; // Change border color on mouseover
+          buttonContainer.style.borderWidth = "1px";
+          buttonContainer.style.position = "relative";
+          buttonContainer.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            buttonContainer.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            buttonContainer.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          buttonContainer.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < buttonContainer.parentNode.parentNode.children.length;
+            i++
+          ) {
+            buttonContainer.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
+            if (
+              buttonContainer.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
+            ) {
+              buttonContainer.parentNode.parentNode.childNodes[
+                i
+              ].childNodes[0].style.display = "none";
+            }
+          }
+        });
+
+        buttonContainer.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          buttonContainer.style.borderColor = ""; // Reset border color on mouseout
+          buttonContainer.style.borderWidth = "";
+          buttonContainer.style.position = "unset";
+          buttonContainer.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            buttonContainer.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            buttonContainer.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          buttonContainer.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < buttonContainer.parentNode.parentNode.children.length;
+            i++
+          ) {
+            buttonContainer.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              buttonContainer.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
+            ) {
+              buttonContainer.parentNode.parentNode.childNodes[
+                i - 1
+              ].childNodes[0].style.display = "block";
+            }
+          }
+        });
+        elementToInsert = elementToInsert;
+        existingElement = false;
+        break;
+
+      case "countdown-field":
+        const currentDate = new Date();
+        const futureDate = new Date();
+
+        futureDate.setDate(currentDate.getDate() + 1); // Add 1 day
+        futureDate.setHours(currentDate.getHours() + 12); // Add 11 hours
+
+        // Construct the targetDateStr with the desired format, including hours, minutes, and seconds
+        const targetDateStr = `${futureDate.getFullYear()}-${(
+          futureDate.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, "0")}-${futureDate
+          .getDate()
+          .toString()
+          .padStart(2, "0")}T${futureDate
+          .getHours()
+          .toString()
+          .padStart(2, "0")}:${futureDate
+          .getMinutes()
+          .toString()
+          .padStart(2, "0")}:${futureDate
+          .getSeconds()
+          .toString()
+          .padStart(2, "0")}`;
+
+        const targetDate = new Date(targetDateStr);
+        const targetStamp = targetDate.getTime();
+
+        const containercountdownWrapper = document.createElement("div");
+        containercountdownWrapper.classList.add(
+          "container-fluid",
+          "draggable",
+          "de",
+          "elCountdownWrapper",
+          "ui-droppable",
+          "de-editable"
+        );
+
+        const countdownWrapper = document.createElement("div");
+        countdownWrapper.classList.add("row", "no-gutters");
+        // countdownWrapper.style.margin = 0;
+        countdownWrapper.style.backgroundColor = "red";
+        countdownWrapper.style.color = "yellow";
+        countdownWrapper.style.display = "flex"; // Enable Flexbox
+        countdownWrapper.style.alignItems = "center"; // Center content vertically
+
+        const leftColumn = document.createElement("div");
+        // leftColumn.classList.add('col-md-9');
+        leftColumn.classList.add("col-md-8", "d-none", "d-md-block"); // Hide on iPhones, show on medium and larger screens
+
+        const textLeft = document.createElement("div");
+        textLeft.classList.add("text-left");
+
+        function getFormattedDate(date) {
+          const options = {
+            weekday: "long",
+            hour: "numeric",
+            minute: "numeric",
+            timeZoneName: "short",
+            timeZone: "America/New_York",
+            // timeZone: 'Europe/Vienna'
+          };
+          return date.toLocaleString("en-US", options);
+        }
+
+        const heading = document.createElement("div");
+        // heading.style.fontSize = '24px'; // Set font size
+        heading.style.fontSize = "1.6vw"; // 3% of the viewport width
+
+        heading.style.fontWeight = "600"; // Set font weight
+        heading.style.letterSpacing = "letter-spacing: -0.5px;"; // Set letter spacing
+        heading.style.fontFamily = "Nunito Sans, sans-serif"; // Set font family
+        heading.style.paddingLeft = "20px";
+        const formattedTargetDateMessage = `Hurry! This special offer is available until ${getFormattedDate(
+          currentDate
+        )}`;
+        heading.textContent = formattedTargetDateMessage;
+
+        textLeft.appendChild(heading);
+        // textLeft.appendChild(paragraph);
+        leftColumn.appendChild(textLeft);
+
+        const rightColumn = document.createElement("div");
+        // rightColumn.classList.add('col-md-3');
+        rightColumn.classList.add("col-12", "col-md-4"); // Span full width on small screens, and col-3 on medium and larger screens
+
+        const countdownDiv = document.createElement("div");
+        countdownDiv.classList.add(
+          "de",
+          "elCountdown",
+          "de-editable",
+          "elAlign_center",
+          "elMargin0"
+        );
+        countdownDiv.setAttribute("id", `countdown-${Date.now()}`);
+        countdownDiv.setAttribute("data-de-type", "countdown");
+        countdownDiv.setAttribute("data-de-editing", "false");
+        countdownDiv.setAttribute("data-title", "Date Countdown 2.0");
+        countdownDiv.setAttribute("data-ce", "false");
+        countdownDiv.setAttribute("data-trigger", "none");
+        countdownDiv.setAttribute("data-animate", "fade");
+        countdownDiv.setAttribute("data-delay", "500");
+        countdownDiv.style.outline = "none";
+        countdownDiv.style.backgroundColor = "red";
+        countdownDiv.style.color = "yellow";
+        countdownDiv.style.border = "0px none";
+
+        const countdownElement = document.createElement("div");
+        countdownElement.classList.add(
+          "realcountdown",
+          "wideCountdownSize2",
+          "cdBlack",
+          "cdStyleTextOnly",
+          "clearfix",
+          "hide"
+        );
+
+        countdownElement.setAttribute("data-date", targetDateStr);
+        countdownElement.setAttribute("data-time", targetStamp);
+        countdownElement.setAttribute("data-tz", "America/New_York");
+        // countdownElement.setAttribute('data-tz', 'Europe/Vienna');
+        countdownElement.setAttribute("data-url", "#");
+        countdownElement.setAttribute("data-lang", "eng");
+        countdownElement.textContent = "";
+
+        const countdownDemo = document.createElement("div");
+        countdownDemo.classList.add(
+          "wideCountdown",
+          "wideCountdownSize2",
+          "cdBlack",
+          "cdStyleTextOnly",
+          "wideCountdown-demo",
+          "is-countdown",
+          "clearfix"
+        );
+
+        const timerDiv = document.createElement("div");
+        timerDiv.classList.add("timer");
+
+        const timerElements = [
+          {
+            number: "03",
+            word: "days",
+          },
+          {
+            number: "04",
+            word: "hrs",
+          },
+          {
+            number: "12",
+            word: "min",
+          },
+          {
+            number: "03",
+            word: "sec",
+          },
+        ];
+
+        timerElements.forEach((element) => {
+          const timerItem = document.createElement("div");
+          timerItem.style.display = "inline-block";
+          timerItem.style.marginRight = "10px";
+
+          const timerNumber = document.createElement("div");
+          timerNumber.classList.add("timer-number");
+          timerNumber.textContent = element.number;
+
+          const timerWord = document.createElement("div");
+          timerWord.classList.add("timer-word");
+          timerWord.textContent = element.word;
+
+          timerItem.appendChild(timerNumber);
+          timerItem.appendChild(timerWord);
+          timerDiv.appendChild(timerItem);
+        });
+
+        countdownElement.appendChild(timerDiv); // Nest the timer inside .realcountdown
+
+        countdownDiv.appendChild(countdownElement);
+        countdownDiv.appendChild(countdownDemo);
+
+        // Append columns to the countdown wrapper
+        containercountdownWrapper.appendChild(countdownWrapper);
+
+        countdownWrapper.appendChild(leftColumn);
+        countdownWrapper.appendChild(rightColumn);
+
+        rightColumn.appendChild(countdownDiv);
+
+        // countdownWrapper.appendChild(rolloverTools);
+
+        countdownWrapper.setAttribute("draggable", true);
+
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+        // Append all the elements to the wrapper
+        containercountdownWrapper.appendChild(orangeRolloverTools);
+        containercountdownWrapper.appendChild(orangeArrowRolloverTools);
+
+        // Add event listeners to show/hide rollover tools
+
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        containercountdownWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          containercountdownWrapper.style.borderColor = "orange"; // Change border color on mouseover
+          containercountdownWrapper.style.borderWidth = "1px";
+          containercountdownWrapper.style.position = "relative";
+          containercountdownWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            containercountdownWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            containercountdownWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          containercountdownWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < containercountdownWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            containercountdownWrapper.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
+            if (
+              containercountdownWrapper.parentNode.parentNode.childNodes[i]
+                .childNodes[0].className == "div-boundary"
             ) {
               containercountdownWrapper.parentNode.parentNode.childNodes[
                 i
-              ].style.borderRight = "none";
-              if (
-                containercountdownWrapper.parentNode.parentNode.childNodes[i]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                containercountdownWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
+              ].childNodes[0].style.display = "none";
             }
-          });
+          }
+        });
 
-          containercountdownWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            containercountdownWrapper.style.borderColor = ""; // Reset border color on mouseout
-            containercountdownWrapper.style.borderWidth = "";
-            containercountdownWrapper.style.position = "unset";
-            containercountdownWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              containercountdownWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              containercountdownWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            containercountdownWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i <
-              containercountdownWrapper.parentNode.parentNode.children.length;
-              i++
+        containercountdownWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          containercountdownWrapper.style.borderColor = ""; // Reset border color on mouseout
+          containercountdownWrapper.style.borderWidth = "";
+          containercountdownWrapper.style.position = "unset";
+          containercountdownWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            containercountdownWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            containercountdownWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          containercountdownWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < containercountdownWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            containercountdownWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              containercountdownWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
             ) {
               containercountdownWrapper.parentNode.parentNode.childNodes[
                 i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                containercountdownWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].className == "div-boundary"
-              ) {
-                containercountdownWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
+              ].childNodes[0].style.display = "block";
             }
-          });
-          this.elementToInsert = containercountdownWrapper;
-          this.existingElement = false;
+          }
+        });
+        elementToInsert = containercountdownWrapper;
+        existingElement = false;
 
-          break;
+        break;
 
-        case "input-field":
-          const inputWrapper = document.createElement("div");
-          inputWrapper.classList.add(
-            "draggable",
-            "de",
-            "elInputWrapper",
-            "de-editable",
-            "de-input-block",
-            "elAlign_center",
-            "elMargin0"
-          );
-          inputWrapper.setAttribute("id", `tmp_input-${Date.now()}`);
-          inputWrapper.setAttribute("data-de-type", "input");
-          inputWrapper.setAttribute("data-de-editing", "false");
-          inputWrapper.setAttribute("data-title", "input");
-          inputWrapper.setAttribute("data-ce", "false");
-          inputWrapper.setAttribute("data-trigger", "none");
-          inputWrapper.setAttribute("data-animate", "fade");
-          inputWrapper.setAttribute("data-delay", "500");
-          // inputWrapper.style.marginTop = "30px";
-          inputWrapper.style.outline = "none";
+      case "input-field":
+        const inputWrapper = document.createElement("div");
+        inputWrapper.classList.add(
+          "draggable",
+          "de",
+          "elInputWrapper",
+          "de-editable",
+          "de-input-block",
+          "elAlign_center",
+          "elMargin0"
+        );
+        inputWrapper.setAttribute("id", `tmp_input-${Date.now()}`);
+        inputWrapper.setAttribute("data-de-type", "input");
+        inputWrapper.setAttribute("data-de-editing", "false");
+        inputWrapper.setAttribute("data-title", "input");
+        inputWrapper.setAttribute("data-ce", "false");
+        inputWrapper.setAttribute("data-trigger", "none");
+        inputWrapper.setAttribute("data-animate", "fade");
+        inputWrapper.setAttribute("data-delay", "500");
+        // inputWrapper.style.marginTop = "30px";
+        inputWrapper.style.outline = "none";
 
-          const inputElement = document.createElement("input");
-          inputElement.type = "text";
+        const inputElement = document.createElement("input");
+        inputElement.type = "text";
 
-          inputElement.placeholder = "Your Name Here...";
-          inputElement.name = "name"; //not-set
-          inputElement.classList.add(
-            "elInput",
-            "elInput100",
-            "elAlign_left",
-            "elInputMid",
-            "elInputStyl0",
-            "elInputBG1",
-            "elInputBR5",
-            "elInputI0",
-            "elInputIBlack",
-            "elInputIRight",
-            "required0",
-            "ceoinput"
-          );
-          inputElement.dataset.type = "extra";
-          inputElement.style.width = "100%"; // This sets the input field to full width
+        inputElement.placeholder = "Your Name Here...";
+        inputElement.name = "name"; //not-set
+        inputElement.classList.add(
+          "elInput",
+          "elInput100",
+          "elAlign_left",
+          "elInputMid",
+          "elInputStyl0",
+          "elInputBG1",
+          "elInputBR5",
+          "elInputI0",
+          "elInputIBlack",
+          "elInputIRight",
+          "required0",
+          "ceoinput"
+        );
+        inputElement.dataset.type = "extra";
+        inputElement.style.width = "100%"; // This sets the input field to full width
 
-          // Create rollover tools div
-          // const rolloverTools = document.createElement('div');
-          // rolloverTools.classList.add('de-rollover-tools', 'smallWidthElementHover');
-          // rolloverTools.setAttribute('data-current-id', 'nill');
-          // rolloverTools.setAttribute('data-current-type', 'type');
-          // rolloverTools.style.display = 'none';
+        // Create rollover tools div
+        // const rolloverTools = document.createElement('div');
+        // rolloverTools.classList.add('de-rollover-tools', 'smallWidthElementHover');
+        // rolloverTools.setAttribute('data-current-id', 'nill');
+        // rolloverTools.setAttribute('data-current-type', 'type');
+        // rolloverTools.style.display = 'none';
 
-          // Add move, advance, clone, and remove buttons to rollover tools
-          moveButton = document.createElement("div");
-          moveButton.classList.add("de-rollover-move");
-          moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
+        // Add move, advance, clone, and remove buttons to rollover tools
+        moveButton = document.createElement("div");
+        moveButton.classList.add("de-rollover-move");
+        moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
 
-          advanceButton = document.createElement("div");
-          advanceButton.classList.add("de-rollover-advance");
-          advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
+        advanceButton = document.createElement("div");
+        advanceButton.classList.add("de-rollover-advance");
+        advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
 
-          cloneButton = document.createElement("div");
-          cloneButton.classList.add("de-rollover-clone");
-          cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
+        cloneButton = document.createElement("div");
+        cloneButton.classList.add("de-rollover-clone");
+        cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
 
-          removeButton = document.createElement("div");
-          removeButton.classList.add("de-rollover-remove");
-          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+        removeButton = document.createElement("div");
+        removeButton.classList.add("de-rollover-remove");
+        removeButton.innerHTML = '<i class="fa fa-trash"></i>';
 
-          // Append input and rollover tools to the wrapper
-          inputWrapper.appendChild(inputElement);
-          // inputWrapper.appendChild(rolloverTools);
+        // Append input and rollover tools to the wrapper
+        inputWrapper.appendChild(inputElement);
+        // inputWrapper.appendChild(rolloverTools);
 
-          // Create addElementFlyoutDOM
-          addElementFlyoutDOM = document.createElement("div");
-          addElementFlyoutDOM.classList.add("addElementFlyoutDOM");
-          addElementFlyoutDOM.style.display = "none";
-          addElementFlyoutDOM.style.left = "325px";
-          addElementFlyoutDOM.innerHTML = '<i class="fa fa-plus"></i>';
+        // Create addElementFlyoutDOM
+        addElementFlyoutDOM = document.createElement("div");
+        addElementFlyoutDOM.classList.add("addElementFlyoutDOM");
+        addElementFlyoutDOM.style.display = "none";
+        addElementFlyoutDOM.style.left = "325px";
+        addElementFlyoutDOM.innerHTML = '<i class="fa fa-plus"></i>';
 
-          inputWrapper.appendChild(addElementFlyoutDOM);
+        inputWrapper.appendChild(addElementFlyoutDOM);
 
-          // Set the draggable attribute
-          inputWrapper.setAttribute("draggable", true);
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+        // Set the draggable attribute
+        inputWrapper.setAttribute("draggable", true);
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
 
-          // Append all the elements to the wrapper
-          inputWrapper.appendChild(orangeRolloverTools);
-          inputWrapper.appendChild(orangeArrowRolloverTools);
+        // Append all the elements to the wrapper
+        inputWrapper.appendChild(orangeRolloverTools);
+        inputWrapper.appendChild(orangeArrowRolloverTools);
 
-          // Add event listeners to show/hide rollover tools
+        // Add event listeners to show/hide rollover tools
 
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          inputWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            inputWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            inputWrapper.style.borderWidth = "1px";
-            inputWrapper.style.position = "relative";
-            inputWrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              inputWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              inputWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            inputWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        inputWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          inputWrapper.style.borderColor = "orange"; // Change border color on mouseover
+          inputWrapper.style.borderWidth = "1px";
+          inputWrapper.style.position = "relative";
+          inputWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            inputWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            inputWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          inputWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < inputWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            inputWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
               "none";
-            for (
-              let i = 3;
-              i < inputWrapper.parentNode.parentNode.children.length;
-              i++
+            if (
+              inputWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
             ) {
               inputWrapper.parentNode.parentNode.childNodes[
                 i
-              ].style.borderRight = "none";
-              if (
-                inputWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                inputWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
+              ].childNodes[0].style.display = "none";
             }
-          });
+          }
+        });
 
-          inputWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            inputWrapper.style.borderColor = ""; // Reset border color on mouseout
-            inputWrapper.style.borderWidth = "";
-            inputWrapper.style.position = "unset";
-            inputWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              inputWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              inputWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            inputWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i < inputWrapper.parentNode.parentNode.children.length;
-              i++
+        inputWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          inputWrapper.style.borderColor = ""; // Reset border color on mouseout
+          inputWrapper.style.borderWidth = "";
+          inputWrapper.style.position = "unset";
+          inputWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            inputWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            inputWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          inputWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < inputWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            inputWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              inputWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+                .className == "div-boundary"
             ) {
               inputWrapper.parentNode.parentNode.childNodes[
                 i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                inputWrapper.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                inputWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
+              ].childNodes[0].style.display = "block";
             }
-          });
-          this.elementToInsert = inputWrapper;
-          this.existingElement = false;
-          break;
+          }
+        });
+        elementToInsert = inputWrapper;
+        existingElement = false;
+        break;
 
-        case "email-field":
-          const emailWrapper = document.createElement("div");
-          emailWrapper.classList.add(
-            "draggable",
-            "de",
-            "elemailWrapper",
-            "de-editable",
-            "de-input-block",
-            "elAlign_center",
-            "elMargin0"
-          );
-          emailWrapper.setAttribute("id", `tmp_input-${Date.now()}`);
-          emailWrapper.setAttribute("data-de-type", "input");
-          emailWrapper.setAttribute("data-de-editing", "false");
-          emailWrapper.setAttribute("data-title", "input");
-          emailWrapper.setAttribute("data-ce", "false");
-          emailWrapper.setAttribute("data-trigger", "none");
-          emailWrapper.setAttribute("data-animate", "fade");
-          emailWrapper.setAttribute("data-delay", "500");
-          // emailWrapper.style.marginTop = "30px";
-          emailWrapper.style.outline = "none";
+      case "email-field":
+        const emailWrapper = document.createElement("div");
+        emailWrapper.classList.add(
+          "draggable",
+          "de",
+          "elemailWrapper",
+          "de-editable",
+          "de-input-block",
+          "elAlign_center",
+          "elMargin0"
+        );
+        emailWrapper.setAttribute("id", `tmp_input-${Date.now()}`);
+        emailWrapper.setAttribute("data-de-type", "input");
+        emailWrapper.setAttribute("data-de-editing", "false");
+        emailWrapper.setAttribute("data-title", "input");
+        emailWrapper.setAttribute("data-ce", "false");
+        emailWrapper.setAttribute("data-trigger", "none");
+        emailWrapper.setAttribute("data-animate", "fade");
+        emailWrapper.setAttribute("data-delay", "500");
+        // emailWrapper.style.marginTop = "30px";
+        emailWrapper.style.outline = "none";
 
-          const emailElement = document.createElement("input");
-          emailElement.type = "text";
-          emailElement.placeholder = "Your Email Address Here...";
-          emailElement.name = "email";
-          emailElement.classList.add(
-            "elInput",
-            "elInput100",
-            "elAlign_left",
-            "elInputMid",
-            "elInputStyl0",
-            "elInputBG1",
-            "elInputBR5",
-            "elInputI0",
-            "elInputIBlack",
-            "elInputIRight",
-            "required0",
-            "ceoinput"
-          );
-          emailElement.dataset.type = "extra";
-          emailElement.style.width = "100%"; // This sets the input field to full width
+        const emailElement = document.createElement("input");
+        emailElement.type = "text";
+        emailElement.placeholder = "Your Email Address Here...";
+        emailElement.name = "email";
+        emailElement.classList.add(
+          "elInput",
+          "elInput100",
+          "elAlign_left",
+          "elInputMid",
+          "elInputStyl0",
+          "elInputBG1",
+          "elInputBR5",
+          "elInputI0",
+          "elInputIBlack",
+          "elInputIRight",
+          "required0",
+          "ceoinput"
+        );
+        emailElement.dataset.type = "extra";
+        emailElement.style.width = "100%"; // This sets the input field to full width
 
-          // Create rollover tools div
-          // const rolloverTools = document.createElement('div');
-          // rolloverTools.classList.add('de-rollover-tools', 'smallWidthElementHover');
-          // rolloverTools.setAttribute('data-current-id', 'nill');
-          // rolloverTools.setAttribute('data-current-type', 'type');
-          // rolloverTools.style.display = 'none';
+        // Create rollover tools div
+        // const rolloverTools = document.createElement('div');
+        // rolloverTools.classList.add('de-rollover-tools', 'smallWidthElementHover');
+        // rolloverTools.setAttribute('data-current-id', 'nill');
+        // rolloverTools.setAttribute('data-current-type', 'type');
+        // rolloverTools.style.display = 'none';
 
-          // Add move, advance, clone, and remove buttons to rollover tools
-          moveButton = document.createElement("div");
-          moveButton.classList.add("de-rollover-move");
-          moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
+        // Add move, advance, clone, and remove buttons to rollover tools
+        moveButton = document.createElement("div");
+        moveButton.classList.add("de-rollover-move");
+        moveButton.innerHTML = '<i class="fa fa-arrows"></i>';
 
-          advanceButton = document.createElement("div");
-          advanceButton.classList.add("de-rollover-advance");
-          advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
+        advanceButton = document.createElement("div");
+        advanceButton.classList.add("de-rollover-advance");
+        advanceButton.innerHTML = '<i class="fa fa-cog"></i>';
 
-          cloneButton = document.createElement("div");
-          cloneButton.classList.add("de-rollover-clone");
-          cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
+        cloneButton = document.createElement("div");
+        cloneButton.classList.add("de-rollover-clone");
+        cloneButton.innerHTML = '<i class="fa fa-copy"></i>';
 
-          removeButton = document.createElement("div");
-          removeButton.classList.add("de-rollover-remove");
-          removeButton.innerHTML = '<i class="fa fa-trash"></i>';
+        removeButton = document.createElement("div");
+        removeButton.classList.add("de-rollover-remove");
+        removeButton.innerHTML = '<i class="fa fa-trash"></i>';
 
-          // Append input and rollover tools to the wrapper
-          emailWrapper.appendChild(emailElement);
-          // emailWrapper.appendChild(rolloverTools);
+        // Append input and rollover tools to the wrapper
+        emailWrapper.appendChild(emailElement);
+        // emailWrapper.appendChild(rolloverTools);
 
-          // Create addElementFlyoutDOM
-          addElementFlyoutDOM = document.createElement("div");
-          addElementFlyoutDOM.classList.add("addElementFlyoutDOM");
-          addElementFlyoutDOM.style.display = "none";
-          addElementFlyoutDOM.style.left = "325px";
-          addElementFlyoutDOM.innerHTML = '<i class="fa fa-plus"></i>';
+        // Create addElementFlyoutDOM
+        addElementFlyoutDOM = document.createElement("div");
+        addElementFlyoutDOM.classList.add("addElementFlyoutDOM");
+        addElementFlyoutDOM.style.display = "none";
+        addElementFlyoutDOM.style.left = "325px";
+        addElementFlyoutDOM.innerHTML = '<i class="fa fa-plus"></i>';
 
-          emailWrapper.appendChild(addElementFlyoutDOM);
+        emailWrapper.appendChild(addElementFlyoutDOM);
 
-          // Set the draggable attribute
-          emailWrapper.setAttribute("draggable", true);
+        // Set the draggable attribute
+        emailWrapper.setAttribute("draggable", true);
 
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
 
-          // Append all the elements to the wrapper
-          emailWrapper.appendChild(orangeRolloverTools);
-          emailWrapper.appendChild(orangeArrowRolloverTools);
+        // Append all the elements to the wrapper
+        emailWrapper.appendChild(orangeRolloverTools);
+        emailWrapper.appendChild(orangeArrowRolloverTools);
 
-          // Add event listeners to show/hide rollover tools
+        // Add event listeners to show/hide rollover tools
 
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          emailWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            emailWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            emailWrapper.style.borderWidth = "1px";
-            emailWrapper.style.position = "relative";
-            emailWrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              emailWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              emailWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            emailWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        emailWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          emailWrapper.style.borderColor = "orange"; // Change border color on mouseover
+          emailWrapper.style.borderWidth = "1px";
+          emailWrapper.style.position = "relative";
+          emailWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            emailWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            emailWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          emailWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < emailWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            emailWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
               "none";
-            for (
-              let i = 3;
-              i < emailWrapper.parentNode.parentNode.children.length;
-              i++
+            if (
+              emailWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
             ) {
               emailWrapper.parentNode.parentNode.childNodes[
                 i
-              ].style.borderRight = "none";
-              if (
-                emailWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                emailWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
+              ].childNodes[0].style.display = "none";
             }
-          });
+          }
+        });
 
-          emailWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            emailWrapper.style.borderColor = ""; // Reset border color on mouseout
-            emailWrapper.style.borderWidth = "";
-            emailWrapper.style.position = "unset";
-            emailWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              emailWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              emailWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            emailWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i < emailWrapper.parentNode.parentNode.children.length;
-              i++
+        emailWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          emailWrapper.style.borderColor = ""; // Reset border color on mouseout
+          emailWrapper.style.borderWidth = "";
+          emailWrapper.style.position = "unset";
+          emailWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            emailWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            emailWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          emailWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < emailWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            emailWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              emailWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+                .className == "div-boundary"
             ) {
               emailWrapper.parentNode.parentNode.childNodes[
                 i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                emailWrapper.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                emailWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
+              ].childNodes[0].style.display = "block";
             }
-          });
-          this.elementToInsert = emailWrapper;
-          this.existingElement = false;
-          break;
+          }
+        });
+        elementToInsert = emailWrapper;
+        existingElement = false;
+        break;
 
-        //* beginning of the NEW CODE
-        case "2step-combo":
-          const comboWrapper = document.createElement("div");
-          comboWrapper.classList.add("container-fluid");
-          comboWrapper.setAttribute("data-de-type", "combo");          
-          comboWrapper.setAttribute("id", `combo-${Date.now()}`);
-          // comboWrapper.id = "2step-form1";
+      //* beginning of the NEW CODE
+      case "2step-combo":
+        const comboWrapper = document.createElement("div");
+        comboWrapper.classList.add("container-fluid");
+        comboWrapper.setAttribute("data-de-type", "combo");
+        comboWrapper.setAttribute("id", `combo-${Date.now()}`);
+        // comboWrapper.id = "2step-form1";
 
-          const card = document.createElement("div");
-          card.classList.add(
-            "card",
-            "px-5",
-            "pb-5",
-            "col-12",
-            "col-lg-8",
-            "mx-auto"
-          );
+        const card = document.createElement("div");
+        card.classList.add(
+          "card",
+          "px-5",
+          "pb-5",
+          "col-12",
+          "col-lg-8",
+          "mx-auto"
+        );
 
-          const container = document.createElement("div");
-          container.classList.add("container", "mt-3");
+        const container = document.createElement("div");
+        container.classList.add("container", "mt-3");
 
-          const form = document.createElement("form");
-          form.id = "two-step-order-form";
-          form.classList.add("container-order-form-two-step");
+        const form = document.createElement("form");
+        form.id = "two-step-order-form";
+        form.classList.add("container-order-form-two-step");
 
-          const formTitle = document.createElement("div");
-          formTitle.classList.add("form-title");
+        const formTitle = document.createElement("div");
+        formTitle.classList.add("form-title");
 
-          const row = document.createElement("div");
-          row.classList.add("row");
+        const row = document.createElement("div");
+        row.classList.add("row");
 
-          const colMd6Step1 = createFormStep("Your profile", "Contact details");
-          const colMd6Step2 = createFormStep(
-            "Normally $297. Use coupon code FAP to get 90% OFF",
-            "Billing details"
-          );
+        const colMd6Step1 = createFormStep("Your profile", "Contact details");
+        const colMd6Step2 = createFormStep(
+          "Normally $297. Use coupon code FAP to get 90% OFF",
+          "Billing details"
+        );
 
-          row.appendChild(colMd6Step1);
-          row.appendChild(colMd6Step2);
+        row.appendChild(colMd6Step1);
+        row.appendChild(colMd6Step2);
 
-          formTitle.appendChild(row);
+        formTitle.appendChild(row);
 
-          const dividerForm = document.createElement("div");
-          dividerForm.classList.add("divider-form");
-          dividerForm.innerHTML = '<i class="fas fa-caret-up caret-up"></i>';
+        const dividerForm = document.createElement("div");
+        dividerForm.classList.add("divider-form");
+        dividerForm.innerHTML = '<i class="fas fa-caret-up caret-up"></i>';
 
-          const formBody = document.createElement("div");
-          formBody.classList.add("form-body", "pt-4");
-          formBody.id = `formBody-${Date.now()}`;
+        const formBody = document.createElement("div");
+        formBody.classList.add("form-body", "pt-4");
+        formBody.id = `formBody-${Date.now()}`;
 
-          const sectionInfo = document.createElement("section");
-          sectionInfo.classList.add("info");
+        const sectionInfo = document.createElement("section");
+        sectionInfo.classList.add("info");
 
-          const inputs1 = [
-            "Company Name..",
-            "Full Name...",
-            "Email Address...",
-            "Phone Number...",
-          ];
-          inputs1.forEach((placeholder) => {
-            const input = createInput("text", placeholder);
-            sectionInfo.appendChild(input);
-          });
+        const inputs1 = [
+          "Company Name..",
+          "Full Name...",
+          "Email Address...",
+          "Phone Number...",
+        ];
+        inputs1.forEach((placeholder) => {
+          const input = createInput("text", placeholder);
+          sectionInfo.appendChild(input);
+        });
 
-          const sectionShipping = document.createElement("section");
-          sectionShipping.classList.add("shipping");
+        const sectionShipping = document.createElement("section");
+        sectionShipping.classList.add("shipping");
 
-          const inputs2 = [
-            "Full Address...",
-            "City Name...",
-            "State / Province...",
-            "Zip Code...",
-          ];
-          inputs2.forEach((placeholder) => {
-            const input = createInput("text", placeholder);
-            sectionShipping.appendChild(input);
-          });
+        const inputs2 = [
+          "Full Address...",
+          "City Name...",
+          "State / Province...",
+          "Zip Code...",
+        ];
+        inputs2.forEach((placeholder) => {
+          const input = createInput("text", placeholder);
+          sectionShipping.appendChild(input);
+        });
 
-          const select = document.createElement("select");
-          select.classList.add("form-select", "mb-3");
-          select.value = "";
-          select.name = "country";
+        const select = document.createElement("select");
+        select.classList.add("form-select", "mb-3");
+        select.value = "";
+        select.name = "country";
 
-          const option = document.createElement("option");
-          option.disabled = true;
-          option.value = "";
-          option.textContent = "Select Country";
-          select.appendChild(option);
+        const option = document.createElement("option");
+        option.disabled = true;
+        option.value = "";
+        option.textContent = "Select Country";
+        select.appendChild(option);
 
-          const countryOption = document.createElement("option");
-          countryOption.value = "US";
-          countryOption.textContent = "United Kingdom";
-          select.appendChild(countryOption);
+        const countryOption = document.createElement("option");
+        countryOption.value = "US";
+        countryOption.textContent = "United Kingdom";
+        select.appendChild(countryOption);
 
-          sectionShipping.appendChild(select);
+        sectionShipping.appendChild(select);
 
-          const sectionButton = document.createElement("section");
+        const sectionButton = document.createElement("section");
 
-          const button = document.createElement("button");
-          button.classList.add("btn", "btn-success", "w-100", "p-2");
-          button.type = "button";
-          button.onclick = () => showForm(form, formBody2.id);
-          button.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
+        const button = document.createElement("button");
+        button.classList.add("btn", "btn-success", "w-100", "p-2");
+        button.type = "button";
+        button.onclick = () => showForm(form, formBody2.id);
+        button.innerHTML = `<i class="fas fa-arrow-right fs-5"></i>
                       <span class="main-text fs-4" style="font-weight: 600;"> &nbsp; Go To Step #2 </span><br>
                       <span class="sub-text"></span>`;
 
-          sectionButton.appendChild(button);
+        sectionButton.appendChild(button);
 
-          const orderFormFooter = document.createElement("section");
-          orderFormFooter.classList.add("order-form-footer");
-          orderFormFooter.innerHTML =
-            "<span>We Respect Your Privacy &amp; Information.</span>";
+        const orderFormFooter = document.createElement("section");
+        orderFormFooter.classList.add("order-form-footer");
+        orderFormFooter.innerHTML =
+          "<span>We Respect Your Privacy &amp; Information.</span>";
 
-          formBody.appendChild(sectionInfo);
-          formBody.appendChild(sectionShipping);
-          formBody.appendChild(sectionButton);
-          formBody.appendChild(orderFormFooter);
+        formBody.appendChild(sectionInfo);
+        formBody.appendChild(sectionShipping);
+        formBody.appendChild(sectionButton);
+        formBody.appendChild(orderFormFooter);
 
-          // Second part for 2 Step Combo
-          const formBody2 = document.createElement("div");
-          formBody2.classList.add("form-body", "pt-4", "hidden");          
-          formBody2.id = `formBody2-${Date.now()}`;
+        // Second part for 2 Step Combo
+        const formBody2 = document.createElement("div");
+        formBody2.classList.add("form-body", "pt-4", "hidden");
+        formBody2.id = `formBody2-${Date.now()}`;
 
-          const sectionDetail = document.createElement("section");
-          sectionDetail.classList.add("product-detail");
-          sectionDetail.id = "ctwo-setp-order";
+        const sectionDetail = document.createElement("section");
+        sectionDetail.classList.add("product-detail");
+        sectionDetail.id = "ctwo-setp-order";
 
-          const productTitle = document.createElement("div");
-          productTitle.classList.add("product-title");
-          productTitle.innerHTML = `
+        const productTitle = document.createElement("div");
+        productTitle.classList.add("product-title");
+        productTitle.innerHTML = `
               <span class="item">Item</span>
               <span class="item text-center">Quantity</span>
               <span class="item">Price</span>
           `;
 
-          const dividerProduct = document.createElement("div");
-          dividerProduct.classList.add("divider-product");
+        const dividerProduct = document.createElement("div");
+        dividerProduct.classList.add("divider-product");
 
-          const productDescription = document.createElement("div");
-          productDescription.id = "659d9244637b7ce094361944";
-          productDescription.classList.add("product-description");
-          productDescription.innerHTML = `
+        const productDescription = document.createElement("div");
+        productDescription.id = "659d9244637b7ce094361944";
+        productDescription.classList.add("product-description");
+        productDescription.innerHTML = `
               <div class="d-flex">
                   <div class="d-flex radioBtn">
                       <input id="checkbox-ctwo-setp-order-659d9244637b7ce094361944" type="checkbox" value="659d9244637b7ce094361944">
@@ -4791,50 +3332,50 @@ function CustomDragAndDrop(container) {
               <span class="item item-price">$29.00</span>
           `;
 
-          sectionDetail.appendChild(productTitle);
-          sectionDetail.appendChild(dividerProduct);
-          sectionDetail.appendChild(productDescription);
+        sectionDetail.appendChild(productTitle);
+        sectionDetail.appendChild(dividerProduct);
+        sectionDetail.appendChild(productDescription);
 
-          // Create main container
-          const bpContainer = document.createElement("section");
-          bpContainer.classList.add("bp-container");
+        // Create main container
+        const bpContainer = document.createElement("section");
+        bpContainer.classList.add("bp-container");
 
-          // Create product bump divider
-          const productBumpDivider = document.createElement("div");
-          productBumpDivider.classList.add("product-bump-divider");
+        // Create product bump divider
+        const productBumpDivider = document.createElement("div");
+        productBumpDivider.classList.add("product-bump-divider");
 
-          // Create order bump container
-          const orderBumpContainer = document.createElement("section");
-          orderBumpContainer.classList.add("order-bump-container");
+        // Create order bump container
+        const orderBumpContainer = document.createElement("section");
+        orderBumpContainer.classList.add("order-bump-container");
 
-          // Create main section within order bump container
-          const mainSection = document.createElement("div");
-          mainSection.classList.add("main-section");
-          mainSection.innerHTML = `
+        // Create main section within order bump container
+        const mainSection = document.createElement("div");
+        mainSection.classList.add("main-section");
+        mainSection.innerHTML = `
             <img src="data:image/webp;base64,UklGRsYBAABXRUJQVlA4WAoAAAASAAAAGwAAEAAAQU5JTQYAAAAAAAAAAABBTk1GsgAAAAAAAAAAABsAABAAAA4BAANWUDhMmgAAAC8bAAQQH8GgbSRHx59rL/8/ys/gmH/FbSQ19F8pvxwHBs1/FIG/ppDrB1yyELIAuslyFqb4AEKWNQHOIiSbiaij+ADg3QGyESEADttIUqQ+Zmaeu84/y/v/mY8gov8TgH+eYwt5et+AvCoLck3eJuoOgQWlcQzIPbMgJ4uz0Ls7D2pLBKAefnxejhyqQlJaF2pjCG3ZUuiX+BpBTk1GJgAAAAAAAAAAAAAAAAAAAOYAAABWUDhMDQAAAC8AAAAQBxAREYiI/gcAQU5NRrIAAAAAAAAAAAAbAAAQAABGAAAAVlA4TJoAAAAvGwAEEB/BoG0kR8efay//P8rP4Jh/xW0kNfRfKb8cBwbNfxSBv6aQ6wdcshCyALrJcham+ABCljUBziIkm4moo/gA4N0BshEhAA7bSFKkPmZmnrvOP8v7/5mPIKL/E4B/nmMLeXrfgLwqC3JN3ibqDoEFpXEMyD2zICeLs9C7Ow9qSwSgHn58Xo4cqkJSWhdqYwht2VLol/ga" class="bump--flashing-arrow">
             <input type="checkbox" name="order-bump" class="bump--checkbox">
             <span class="headline bump-headline">YES! Add the "Advanced Ads Scaling Q&amp;A" for just $29!</span>
           `;
 
-          // Create paragraph within order bump container
-          const paragraph = document.createElement("p");
-          paragraph.innerHTML = `
+        // Create paragraph within order bump container
+        const paragraph = document.createElement("p");
+        paragraph.innerHTML = `
             <span class="oto-headline">Advanced Ads Scaling Q&amp;A Session</span>
             <span> Get a recording of one of our live monthly calls! Our media buyer who has run ads for Frank Kern, Agora, Dean Graziosi, Jeff Lerner (and more!) not only shows how to launch and SCALE campaigns but also answers the TOP questions most people when trying to scale ads! This is "Behind Closed Doors" information for pennies!</span>
           `;
 
-          orderBumpContainer.appendChild(mainSection);
-          orderBumpContainer.appendChild(paragraph);
+        orderBumpContainer.appendChild(mainSection);
+        orderBumpContainer.appendChild(paragraph);
 
-          // Create separator for order summary
-          const separator = document.createElement("div");
-          separator.classList.add("separator");
-          separator.textContent = "Order Summary";
+        // Create separator for order summary
+        const separator = document.createElement("div");
+        separator.classList.add("separator");
+        separator.textContent = "Order Summary";
 
-          // Create product cost total section
-          const productCostTotal = document.createElement("section");
-          productCostTotal.classList.add("product-cost-total");
-          productCostTotal.innerHTML = `
+        // Create product cost total section
+        const productCostTotal = document.createElement("section");
+        productCostTotal.classList.add("product-cost-total");
+        productCostTotal.innerHTML = `
             <div class="product-title">
                 <span class="item">item</span>
                 <span class="item text-center">Quantity</span>
@@ -4856,670 +3397,645 @@ function CustomDragAndDrop(container) {
             </div>
           `;
 
-          // Append all elements to the main container
-          bpContainer.appendChild(productBumpDivider);
-          bpContainer.appendChild(orderBumpContainer);
-          bpContainer.appendChild(separator);
-          bpContainer.appendChild(productCostTotal);
+        // Append all elements to the main container
+        bpContainer.appendChild(productBumpDivider);
+        bpContainer.appendChild(orderBumpContainer);
+        bpContainer.appendChild(separator);
+        bpContainer.appendChild(productCostTotal);
 
-          // Create billing form section
-          const billingSection = document.createElement("section");
-          billingSection.classList.add("billing");
+        // Create billing form section
+        const billingSection = document.createElement("section");
+        billingSection.classList.add("billing");
 
-          // Create credit card input elements
-          const creditCardContainer = document.createElement("div");
-          creditCardContainer.classList.add("ghl-payment-element", "pb-4");
+        // Create credit card input elements
+        const creditCardContainer = document.createElement("div");
+        creditCardContainer.classList.add("ghl-payment-element", "pb-4");
 
-          const inlineCreditCardContainer = document.createElement("div");
-          inlineCreditCardContainer.classList.add(
-            "inline-credit-card-container"
-          );
+        const inlineCreditCardContainer = document.createElement("div");
+        inlineCreditCardContainer.classList.add("inline-credit-card-container");
 
-          const rowDiv = document.createElement("div");
-          rowDiv.classList.add("row");
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("row");
 
-          const colMd6Div1 = document.createElement("div");
-          colMd6Div1.classList.add("col-md-6");
+        const colMd6Div1 = document.createElement("div");
+        colMd6Div1.classList.add("col-md-6");
 
-          const cardNumberLabel = document.createElement("label");
-          cardNumberLabel.setAttribute("for", "cardNumber");
-          cardNumberLabel.classList.add("card-input-label", "d-block");
-          cardNumberLabel.textContent = "Card Number";
+        const cardNumberLabel = document.createElement("label");
+        cardNumberLabel.setAttribute("for", "cardNumber");
+        cardNumberLabel.classList.add("card-input-label", "d-block");
+        cardNumberLabel.textContent = "Card Number";
 
-          const cardNumberInput = document.createElement("input");
-          cardNumberInput.setAttribute("type", "text");
-          cardNumberInput.setAttribute("name", "cc");
-          cardNumberInput.setAttribute(
-            "id",
-            "cc-ctwo-setp-order-payment-element"
-          );
-          cardNumberInput.setAttribute("placeholder", "1234 1234 1234 1234");
-          cardNumberInput.classList.add("card-input");
+        const cardNumberInput = document.createElement("input");
+        cardNumberInput.setAttribute("type", "text");
+        cardNumberInput.setAttribute("name", "cc");
+        cardNumberInput.setAttribute(
+          "id",
+          "cc-ctwo-setp-order-payment-element"
+        );
+        cardNumberInput.setAttribute("placeholder", "1234 1234 1234 1234");
+        cardNumberInput.classList.add("card-input");
 
-          colMd6Div1.appendChild(cardNumberLabel);
-          colMd6Div1.appendChild(cardNumberInput);
+        colMd6Div1.appendChild(cardNumberLabel);
+        colMd6Div1.appendChild(cardNumberInput);
 
-          const colMd6Div2 = document.createElement("div");
-          colMd6Div2.classList.add("col-md-6");
+        const colMd6Div2 = document.createElement("div");
+        colMd6Div2.classList.add("col-md-6");
 
-          const creditCardSubContainer = document.createElement("div");
-          creditCardSubContainer.classList.add("credit-card-sub-container");
+        const creditCardSubContainer = document.createElement("div");
+        creditCardSubContainer.classList.add("credit-card-sub-container");
 
-          const rowDiv2 = document.createElement("div");
-          rowDiv2.classList.add("row");
+        const rowDiv2 = document.createElement("div");
+        rowDiv2.classList.add("row");
 
-          const colMd6Div3 = document.createElement("div");
-          colMd6Div3.classList.add("col-md-6");
+        const colMd6Div3 = document.createElement("div");
+        colMd6Div3.classList.add("col-md-6");
 
-          const expirationLabel = document.createElement("label");
-          expirationLabel.setAttribute("for", "cardExpiration");
-          expirationLabel.classList.add("card-input-label");
-          expirationLabel.textContent = "Expiration";
+        const expirationLabel = document.createElement("label");
+        expirationLabel.setAttribute("for", "cardExpiration");
+        expirationLabel.classList.add("card-input-label");
+        expirationLabel.textContent = "Expiration";
 
-          const expirationInput = document.createElement("input");
-          expirationInput.setAttribute("type", "text");
-          expirationInput.setAttribute("name", "card-expiration");
-          expirationInput.setAttribute(
-            "id",
-            "card-expiration-ctwo-setp-order-payment-element"
-          );
-          expirationInput.setAttribute("maxlength", "5");
-          expirationInput.setAttribute("placeholder", "MM / YY");
-          expirationInput.classList.add("card-input");
+        const expirationInput = document.createElement("input");
+        expirationInput.setAttribute("type", "text");
+        expirationInput.setAttribute("name", "card-expiration");
+        expirationInput.setAttribute(
+          "id",
+          "card-expiration-ctwo-setp-order-payment-element"
+        );
+        expirationInput.setAttribute("maxlength", "5");
+        expirationInput.setAttribute("placeholder", "MM / YY");
+        expirationInput.classList.add("card-input");
 
-          colMd6Div3.appendChild(expirationLabel);
-          colMd6Div3.appendChild(expirationInput);
+        colMd6Div3.appendChild(expirationLabel);
+        colMd6Div3.appendChild(expirationInput);
 
-          const colMd6Div4 = document.createElement("div");
-          colMd6Div4.classList.add("col-md-6");
+        const colMd6Div4 = document.createElement("div");
+        colMd6Div4.classList.add("col-md-6");
 
-          const cvcLabel = document.createElement("label");
-          cvcLabel.setAttribute("for", "cardCvc");
-          cvcLabel.classList.add("card-input-label");
-          cvcLabel.textContent = "CVC";
+        const cvcLabel = document.createElement("label");
+        cvcLabel.setAttribute("for", "cardCvc");
+        cvcLabel.classList.add("card-input-label");
+        cvcLabel.textContent = "CVC";
 
-          const cvcInput = document.createElement("input");
-          cvcInput.setAttribute("type", "text");
-          cvcInput.setAttribute("name", "card-cvc");
-          cvcInput.setAttribute(
-            "id",
-            "card-cvc-ctwo-setp-order-payment-element"
-          );
-          cvcInput.setAttribute("maxlength", "3");
-          cvcInput.setAttribute("placeholder", "CVC");
-          cvcInput.classList.add("card-input");
+        const cvcInput = document.createElement("input");
+        cvcInput.setAttribute("type", "text");
+        cvcInput.setAttribute("name", "card-cvc");
+        cvcInput.setAttribute("id", "card-cvc-ctwo-setp-order-payment-element");
+        cvcInput.setAttribute("maxlength", "3");
+        cvcInput.setAttribute("placeholder", "CVC");
+        cvcInput.classList.add("card-input");
 
-          colMd6Div4.appendChild(cvcLabel);
-          colMd6Div4.appendChild(cvcInput);
+        colMd6Div4.appendChild(cvcLabel);
+        colMd6Div4.appendChild(cvcInput);
 
-          rowDiv2.appendChild(colMd6Div3);
-          rowDiv2.appendChild(colMd6Div4);
+        rowDiv2.appendChild(colMd6Div3);
+        rowDiv2.appendChild(colMd6Div4);
 
-          creditCardSubContainer.appendChild(rowDiv2);
+        creditCardSubContainer.appendChild(rowDiv2);
 
-          colMd6Div2.appendChild(creditCardSubContainer);
+        colMd6Div2.appendChild(creditCardSubContainer);
 
-          rowDiv.appendChild(colMd6Div1);
-          rowDiv.appendChild(colMd6Div2);
+        rowDiv.appendChild(colMd6Div1);
+        rowDiv.appendChild(colMd6Div2);
 
-          inlineCreditCardContainer.appendChild(rowDiv);
+        inlineCreditCardContainer.appendChild(rowDiv);
 
-          creditCardContainer.appendChild(inlineCreditCardContainer);
+        creditCardContainer.appendChild(inlineCreditCardContainer);
 
-          // Create order button
-          const orderButton = document.createElement("button");
-          orderButton.classList.add("btn", "btn-success", "w-100", "p-2");
-          orderButton.onclick = () => showForm(form, formBody.id);
+        // Create order button
+        const orderButton = document.createElement("button");
+        orderButton.classList.add("btn", "btn-success", "w-100", "p-2");
+        orderButton.onclick = () => showForm(form, formBody.id);
 
-          const icon = document.createElement("i");
-          icon.classList.add("fas", "fa-arrow-right", "fs-5");
+        const icon = document.createElement("i");
+        icon.classList.add("fas", "fa-arrow-right", "fs-5");
 
-          const mainText = document.createElement("span");
-          mainText.classList.add("main-text", "fs-4");
-          mainText.setAttribute("style", "font-weight: 600;");
-          mainText.innerHTML = "&nbsp; Complete Order";
+        const mainText = document.createElement("span");
+        mainText.classList.add("main-text", "fs-4");
+        mainText.setAttribute("style", "font-weight: 600;");
+        mainText.innerHTML = "&nbsp; Complete Order";
 
-          const subText = document.createElement("span");
-          subText.classList.add("sub-text");
+        const subText = document.createElement("span");
+        subText.classList.add("sub-text");
 
-          orderButton.appendChild(icon);
-          orderButton.appendChild(mainText);
-          orderButton.appendChild(document.createElement("br"));
-          orderButton.appendChild(subText);
+        orderButton.appendChild(icon);
+        orderButton.appendChild(mainText);
+        orderButton.appendChild(document.createElement("br"));
+        orderButton.appendChild(subText);
 
-          // Create order form footer section
-          const orderFormFooter2 = document.createElement("section");
-          orderFormFooter2.classList.add("order-form-footer");
-          orderFormFooter2.innerHTML =
-            "<span>* 100% Secure & Safe Payments *</span>";
+        // Create order form footer section
+        const orderFormFooter2 = document.createElement("section");
+        orderFormFooter2.classList.add("order-form-footer");
+        orderFormFooter2.innerHTML =
+          "<span>* 100% Secure & Safe Payments *</span>";
 
-          // Append elements to the billing section
-          billingSection.appendChild(creditCardContainer);
-          billingSection.appendChild(orderButton);
-          billingSection.appendChild(orderFormFooter2);
+        // Append elements to the billing section
+        billingSection.appendChild(creditCardContainer);
+        billingSection.appendChild(orderButton);
+        billingSection.appendChild(orderFormFooter2);
 
-          formBody2.appendChild(sectionDetail);
-          formBody2.appendChild(bpContainer);
-          formBody2.appendChild(billingSection);
+        formBody2.appendChild(sectionDetail);
+        formBody2.appendChild(bpContainer);
+        formBody2.appendChild(billingSection);
 
-          form.appendChild(formTitle);
-          form.appendChild(dividerForm);
-          form.appendChild(formBody);
-          form.appendChild(formBody2);
+        form.appendChild(formTitle);
+        form.appendChild(dividerForm);
+        form.appendChild(formBody);
+        form.appendChild(formBody2);
 
-          container.appendChild(form);
-          card.appendChild(container);
-          comboWrapper.appendChild(card);
+        container.appendChild(form);
+        card.appendChild(container);
+        comboWrapper.appendChild(card);
 
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
 
-          // Append all the elements to the wrapper
-          comboWrapper.appendChild(orangeRolloverTools);
-          comboWrapper.appendChild(orangeArrowRolloverTools);
+        // Append all the elements to the wrapper
+        comboWrapper.appendChild(orangeRolloverTools);
+        comboWrapper.appendChild(orangeArrowRolloverTools);
 
-          // Add event listeners to show/hide rollover tools
+        // Add event listeners to show/hide rollover tools
 
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          comboWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            comboWrapper.style.border = "1px solid orange"; // Change border color on mouseover
-            comboWrapper.style.position = "relative";
-            comboWrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              comboWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              comboWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            comboWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        comboWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          comboWrapper.style.border = "1px solid orange"; // Change border color on mouseover
+          comboWrapper.style.position = "relative";
+          comboWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            comboWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            comboWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          comboWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < comboWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            comboWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
               "none";
-            for (
-              let i = 3;
-              i < comboWrapper.parentNode.parentNode.children.length;
-              i++
+            if (
+              comboWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
             ) {
               comboWrapper.parentNode.parentNode.childNodes[
                 i
-              ].style.borderRight = "none";
-              if (
-                comboWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                comboWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
+              ].childNodes[0].style.display = "none";
             }
-          });
+          }
+        });
 
-          comboWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            comboWrapper.style.border = "none"; // Reset border color on mouseout
-            comboWrapper.style.position = "unset";
-            comboWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              comboWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              comboWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            comboWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i < comboWrapper.parentNode.parentNode.children.length;
-              i++
+        comboWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          comboWrapper.style.border = "none"; // Reset border color on mouseout
+          comboWrapper.style.position = "unset";
+          comboWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            comboWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            comboWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          comboWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < comboWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            comboWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              comboWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+                .className == "div-boundary"
             ) {
               comboWrapper.parentNode.parentNode.childNodes[
                 i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                comboWrapper.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                comboWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
+              ].childNodes[0].style.display = "block";
             }
-          });
+          }
+        });
 
-          this.elementToInsert = comboWrapper;
-          this.existingElement = false;
-          break;
+        elementToInsert = comboWrapper;
+        existingElement = false;
+        break;
 
-        //* the end of NEW CODE
+      //* the end of NEW CODE
 
-        case "text-field":
-          elementToInsert = document.createElement("input");
-          elementToInsert.classList.add("draggable");
-          elementToInsert.setAttribute("draggable", true);
-          elementToInsert.setAttribute("placeholder", "Text");
-          elementToInsert.setAttribute("disabled", true);
-          elementToInsert.setAttribute("id", `field-${Date.now()}`);
-          this.elementToInsert = elementToInsert;
-          this.existingElement = false;
-          break;
+      case "text-field":
+        elementToInsert = document.createElement("input");
+        elementToInsert.classList.add("draggable");
+        elementToInsert.setAttribute("draggable", true);
+        elementToInsert.setAttribute("placeholder", "Text");
+        elementToInsert.setAttribute("disabled", true);
+        elementToInsert.setAttribute("id", `field-${Date.now()}`);
+        elementToInsert = elementToInsert;
+        existingElement = false;
+        break;
 
-        case "email-field":
-          elementToInsert = document.createElement("input");
-          elementToInsert.classList.add("draggable");
-          elementToInsert.setAttribute("draggable", true);
-          elementToInsert.setAttribute("placeholder", "Email");
-          elementToInsert.setAttribute("disabled", true);
-          elementToInsert.setAttribute("id", `field-${Date.now()}`);
-          this.elementToInsert = elementToInsert;
-          this.existingElement = false;
-          break;
+      case "email-field":
+        elementToInsert = document.createElement("input");
+        elementToInsert.classList.add("draggable");
+        elementToInsert.setAttribute("draggable", true);
+        elementToInsert.setAttribute("placeholder", "Email");
+        elementToInsert.setAttribute("disabled", true);
+        elementToInsert.setAttribute("id", `field-${Date.now()}`);
+        elementToInsert = elementToInsert;
+        existingElement = false;
+        break;
 
-        case "phone-field":
-          const phoneWrapper = document.createElement("div");
-          phoneWrapper.classList.add(
-            "draggable",
-            "de",
-            "elSubHeadlineWrapper",
-            "ui-droppable",
-            "de-editable"
-          );
-          phoneWrapper.setAttribute("id", `phone-${Date.now()}`);
-          phoneWrapper.setAttribute("data-de-type", "phone");
-          phoneWrapper.setAttribute("data-de-editing", "false");
-          phoneWrapper.setAttribute("data-title", "phone");
-          phoneWrapper.setAttribute("data-ce", "true");
-          phoneWrapper.setAttribute("data-trigger", "none");
-          phoneWrapper.setAttribute("data-animate", "fade");
-          phoneWrapper.setAttribute("data-delay", "500");
-          phoneWrapper.style.outline = "none";
-          phoneWrapper.style.cursor = "pointer";
-          phoneWrapper.setAttribute("aria-disabled", "false");
-          phoneWrapper.setAttribute("draggable", true);
-          phoneWrapper.innerHTML =
-            '<p style="display:flex; margin:auto; justify-content:center;">Phone</p>';
-          var orangeRolloverTools = createOrangeRolloverTools();
-          var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+      case "phone-field":
+        const phoneWrapper = document.createElement("div");
+        phoneWrapper.classList.add(
+          "draggable",
+          "de",
+          "elSubHeadlineWrapper",
+          "ui-droppable",
+          "de-editable"
+        );
+        phoneWrapper.setAttribute("id", `phone-${Date.now()}`);
+        phoneWrapper.setAttribute("data-de-type", "phone");
+        phoneWrapper.setAttribute("data-de-editing", "false");
+        phoneWrapper.setAttribute("data-title", "phone");
+        phoneWrapper.setAttribute("data-ce", "true");
+        phoneWrapper.setAttribute("data-trigger", "none");
+        phoneWrapper.setAttribute("data-animate", "fade");
+        phoneWrapper.setAttribute("data-delay", "500");
+        phoneWrapper.style.outline = "none";
+        phoneWrapper.style.cursor = "pointer";
+        phoneWrapper.setAttribute("aria-disabled", "false");
+        phoneWrapper.setAttribute("draggable", true);
+        phoneWrapper.innerHTML =
+          '<p style="display:flex; margin:auto; justify-content:center;">Phone</p>';
+        var orangeRolloverTools = createOrangeRolloverTools();
+        var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
 
-          // Append all the elements to the wrapper
-          phoneWrapper.appendChild(orangeRolloverTools);
-          phoneWrapper.appendChild(orangeArrowRolloverTools);
+        // Append all the elements to the wrapper
+        phoneWrapper.appendChild(orangeRolloverTools);
+        phoneWrapper.appendChild(orangeArrowRolloverTools);
 
-          // Add event listeners to show/hide rollover tools
+        // Add event listeners to show/hide rollover tools
 
-          // Add event listeners to show/hide rollover tools and change border color on mouseover
-          phoneWrapper.addEventListener("mouseenter", () => {
-            orangeRolloverTools.style.display = "block";
-            orangeArrowRolloverTools.style.display = "block";
-            orangeRolloverTools.childNodes[0].style.display = "block";
-            orangeRolloverTools.childNodes[1].style.display = "block";
-            orangeRolloverTools.childNodes[2].style.display = "block";
-            orangeArrowRolloverTools.childNodes[0].style.display = "block";
-            orangeArrowRolloverTools.childNodes[1].style.display = "block";
-            phoneWrapper.style.borderColor = "orange"; // Change border color on mouseover
-            phoneWrapper.style.borderWidth = "1px";
-            phoneWrapper.style.position = "relative";
-            phoneWrapper.parentNode.parentNode.style.border = "none";
-            for (let i = 0; i < 3; i++) {
-              phoneWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "none";
-            }
-            for (let i = 0; i < 3; i++) {
-              phoneWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "none";
-            }
-            phoneWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+        // Add event listeners to show/hide rollover tools and change border color on mouseover
+        phoneWrapper.addEventListener("mouseenter", () => {
+          orangeRolloverTools.style.display = "block";
+          orangeArrowRolloverTools.style.display = "block";
+          orangeRolloverTools.childNodes[0].style.display = "block";
+          orangeRolloverTools.childNodes[1].style.display = "block";
+          orangeRolloverTools.childNodes[2].style.display = "block";
+          orangeArrowRolloverTools.childNodes[0].style.display = "block";
+          orangeArrowRolloverTools.childNodes[1].style.display = "block";
+          phoneWrapper.style.borderColor = "orange"; // Change border color on mouseover
+          phoneWrapper.style.borderWidth = "1px";
+          phoneWrapper.style.position = "relative";
+          phoneWrapper.parentNode.parentNode.style.border = "none";
+          for (let i = 0; i < 3; i++) {
+            phoneWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "none";
+          }
+          for (let i = 0; i < 3; i++) {
+            phoneWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "none";
+          }
+          phoneWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "none";
+          for (
+            let i = 3;
+            i < phoneWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            phoneWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
               "none";
-            for (
-              let i = 3;
-              i < phoneWrapper.parentNode.parentNode.children.length;
-              i++
+            if (
+              phoneWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+                .className == "div-boundary"
             ) {
               phoneWrapper.parentNode.parentNode.childNodes[
                 i
-              ].style.borderRight = "none";
-              if (
-                phoneWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                  .className == "div-boundary"
-              ) {
-                phoneWrapper.parentNode.parentNode.childNodes[
-                  i
-                ].childNodes[0].style.display = "none";
-              }
+              ].childNodes[0].style.display = "none";
             }
-          });
+          }
+        });
 
-          phoneWrapper.addEventListener("mouseleave", () => {
-            orangeRolloverTools.style.display = "none";
-            orangeArrowRolloverTools.style.display = "none";
-            orangeRolloverTools.childNodes[0].style.display = "none";
-            orangeRolloverTools.childNodes[1].style.display = "none";
-            orangeRolloverTools.childNodes[2].style.display = "none";
-            orangeArrowRolloverTools.childNodes[0].style.display = "none";
-            orangeArrowRolloverTools.childNodes[1].style.display = "none";
-            phoneWrapper.style.borderColor = ""; // Reset border color on mouseout
-            phoneWrapper.style.borderWidth = "";
-            phoneWrapper.style.position = "unset";
-            phoneWrapper.parentNode.parentNode.style.border =
-              "1px solid rgb(58, 133, 255)";
-            for (let i = 0; i < 3; i++) {
-              phoneWrapper.parentNode.parentNode.childNodes[0].childNodes[
-                i
-              ].style.display = "block";
-            }
-            for (let i = 0; i < 3; i++) {
-              phoneWrapper.parentNode.parentNode.childNodes[1].childNodes[
-                i
-              ].style.display = "block";
-            }
-            phoneWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-              "block";
-            for (
-              let i = 4;
-              i < phoneWrapper.parentNode.parentNode.children.length;
-              i++
+        phoneWrapper.addEventListener("mouseleave", () => {
+          orangeRolloverTools.style.display = "none";
+          orangeArrowRolloverTools.style.display = "none";
+          orangeRolloverTools.childNodes[0].style.display = "none";
+          orangeRolloverTools.childNodes[1].style.display = "none";
+          orangeRolloverTools.childNodes[2].style.display = "none";
+          orangeArrowRolloverTools.childNodes[0].style.display = "none";
+          orangeArrowRolloverTools.childNodes[1].style.display = "none";
+          phoneWrapper.style.borderColor = ""; // Reset border color on mouseout
+          phoneWrapper.style.borderWidth = "";
+          phoneWrapper.style.position = "unset";
+          phoneWrapper.parentNode.parentNode.style.border =
+            "1px solid rgb(58, 133, 255)";
+          for (let i = 0; i < 3; i++) {
+            phoneWrapper.parentNode.parentNode.childNodes[0].childNodes[
+              i
+            ].style.display = "block";
+          }
+          for (let i = 0; i < 3; i++) {
+            phoneWrapper.parentNode.parentNode.childNodes[1].childNodes[
+              i
+            ].style.display = "block";
+          }
+          phoneWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+            "block";
+          for (
+            let i = 4;
+            i < phoneWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            phoneWrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+            if (
+              phoneWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+                .className == "div-boundary"
             ) {
               phoneWrapper.parentNode.parentNode.childNodes[
                 i - 1
-              ].style.borderRight = "1px dotted rgb(58, 133, 255)";
-              if (
-                phoneWrapper.parentNode.parentNode.childNodes[i - 1]
-                  .childNodes[0].className == "div-boundary"
-              ) {
-                phoneWrapper.parentNode.parentNode.childNodes[
-                  i - 1
-                ].childNodes[0].style.display = "block";
-              }
+              ].childNodes[0].style.display = "block";
             }
-          });
-          this.elementToInsert = phoneWrapper;
-          this.existingElement = false;
-          break;
-        default:
-          this.elementToInsert = draggable;
-          this.existingElement = true;
-          break;
+          }
+        });
+        elementToInsert = phoneWrapper;
+        existingElement = false;
+        break;
+      default:
+        elementToInsert = draggable;
+        existingElement = true;
+        break;
+    }
+  } else {
+    existingElement = true;
+    elementToInsert = draggable;
+  }
+  placeholder.setAttribute("id", `placeholder-${Date.now()}`);
+  draggable.classList.add("dragging");
+};
+
+function onDragEnd(e, draggable) {
+  draggable.classList.remove("dragging");
+  updateTextareaFromContainer(
+    "da-main-container",
+    "step[large_html_blob_content]"
+  );
+  updateTextareaFromContainer(
+    "da-popup-container",
+    "step[popup_html_blob_content]"
+  );
+
+  var settingsSidebar = document.getElementById("settingsSidebar");
+  var anchor = elementToInsert.querySelector("a.elSettings"); // Find the anchor element within 'this'
+
+  if (anchor) {
+    anchor.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent the default behavior
+
+      if (settingsSidebar.style.right === "0px") {
+        closeSidebar();
+        // console.log('closing inside');
+      } else {
+        openSidebar(anchor);
+        // console.log('opening inside');
       }
-    } else {
-      this.existingElement = true;
-      this.elementToInsert = draggable;
-    }
-    this.placeholder.setAttribute("id", `placeholder-${Date.now()}`);
-    draggable.classList.add("dragging");
-  };
-
-  this.onDragEnd = function (e, draggable) {
-    //update the main conatiner and popup container so it can be saved
-    draggable.classList.remove("dragging");
-    updateTextareaFromContainer(
-      "da-main-container",
-      "step[large_html_blob_content]"
-    );
-    updateTextareaFromContainer(
-      "da-popup-container",
-      "step[popup_html_blob_content]"
-    );
-
-    console.log("drag end", this.elementToInsert);
-
-    // Add a click event listener for settings sidebar
-
-    console.log("adding elSettings");
-    var settingsSidebar = document.getElementById("settingsSidebar");
-    var anchor = this.elementToInsert.querySelector("a.elSettings"); // Find the anchor element within 'this'
-
-    if (anchor) {
-      anchor.addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent the default behavior
-
-        if (settingsSidebar.style.right === "0px") {
-          closeSidebar();
-          // console.log('closing inside');
-        } else {
-          openSidebar(this);
-          // console.log('opening inside');
-        }
-      });
-    }
-
-    if (!this.existingElement) {
-      this.addEventListenerForDraggableItem(this.elementToInsert);
-      this.updateDraggables("draggables");
-    } else {
-      console.log("existing ele", this.elementToInsert);
-      this.elementToInsert.classList.remove("dragging");
-    }
-  };
-
-  this.addEventListenerForDraggableItem = function (element) {
-    console.log("ele", element);
-    element.addEventListener("dragstart", (e) => this.onDragStart(e, element));
-    element.addEventListener("dragend", (e) => this.onDragEnd(e, element));
-
-    const elHeadlineElements = element.querySelectorAll(
-      ".elHeadline, .elText, .elSubHeadline"
-    ); // Select .elHeadline elements inside the div
-
-    console.log(elHeadlineElements, "here is elment of headlines");
-
-    // Add click event listener for content editing to each .elHeadline element
-    elHeadlineElements.forEach((elHeadlineElement) => {
-      elHeadlineElement.addEventListener("mousedown", function () {
-        console.log("clicked to edit");
-        elHeadlineElement.setAttribute("contenteditable", "true");
-        elHeadlineElement.style.cursor = "text";
-      });
     });
-  };
+  }
 
-  this.addEventListenersForContainer = function (container) {
-    container.addEventListener("dragover", (e) =>
-      this.onDragHover(e, container, false)
-    );
+  if (!existingElement) {
+    addEventListenerForDraggableItem(elementToInsert);
+    updateDraggables("draggables");
+  } else {
+    console.log("existing ele", elementToInsert);
+    elementToInsert.classList.remove("dragging");
+  }
+}
 
-    console.log("here is listener of drop and drag", container);
-    container.addEventListener("drop", (e) => this.onDragDrop(e), false);
-    container.addEventListener("dragleave", (e) => this.onDragLeave(e), false);
-    container.addEventListener("dragenter", (e) => this.onDragEnter(e), false);
-  };
+function addEventListenerForDraggableItem(element) {
+  console.log("ele", element);
+  element.addEventListener("dragstart", (e) => onDragStart(e, element));
+  element.addEventListener("dragend", (e) => onDragEnd(e, element));
 
-  // Text section
-  this.addEventListenerForText = function (textElement) {
-    var orangeRolloverTools = createOrangeRolloverTools();
-    var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+  const elHeadlineElements = element.querySelectorAll(
+    ".elHeadline, .elText, .elSubHeadline"
+  ); // Select .elHeadline elements inside the div
 
-    textElement.appendChild(orangeRolloverTools);
-    textElement.appendChild(orangeArrowRolloverTools);
-    textElement.style.padding = "1.5rem 1rem 0.5rem 1rem";
+  // Add click event listener for content editing to each .elHeadline element
+  elHeadlineElements.forEach((elHeadlineElement) => {
+    elHeadlineElement.addEventListener("mousedown", function () {
+      elHeadlineElement.setAttribute("contenteditable", "true");
+      elHeadlineElement.style.cursor = "text";
+    });
+  });
+}
 
-    textElement.addEventListener("mouseenter", (e) => {
-      orangeRolloverTools.style.display = "block";
-      orangeArrowRolloverTools.style.display = "block";
-      orangeRolloverTools.childNodes[0].style.display = "block";
-      orangeRolloverTools.childNodes[1].style.display = "block";
-      orangeRolloverTools.childNodes[2].style.display = "block";
-      orangeArrowRolloverTools.childNodes[0].style.display = "block";
-      orangeArrowRolloverTools.childNodes[1].style.display = "block";
-      textElement.style.border = "1px solid orange";
-      textElement.style.position = "relative";
-      textElement.parentNode.parentNode.style.border = "none";
-      for (let i = 0; i < 3; i++) {
-        textElement.parentNode.parentNode.childNodes[0].childNodes[
-          i
-        ].style.display = "none";
-      }
-      for (let i = 0; i < 3; i++) {
-        textElement.parentNode.parentNode.childNodes[1].childNodes[
-          i
-        ].style.display = "none";
-      }
-      textElement.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+function addEventListenersForContainer(container) {
+  container.addEventListener("dragover", (e) =>
+    onDragHover(e, container, false)
+  );
+  container.addEventListener("drop", (e) => onDragDrop(e), false);
+  container.addEventListener("dragleave", (e) => onDragLeave(e), false);
+  container.addEventListener("dragenter", (e) => onDragEnter(e), false);
+}
+
+// Text section
+function addEventListenerForText(textElement) {
+  var orangeRolloverTools = createOrangeRolloverTools();
+  var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+  textElement.appendChild(orangeRolloverTools);
+  textElement.appendChild(orangeArrowRolloverTools);
+  textElement.style.padding = "1.5rem 1rem 0.5rem 1rem";
+
+  textElement.addEventListener("mouseenter", (e) => {
+    orangeRolloverTools.style.display = "block";
+    orangeArrowRolloverTools.style.display = "block";
+    orangeRolloverTools.childNodes[0].style.display = "block";
+    orangeRolloverTools.childNodes[1].style.display = "block";
+    orangeRolloverTools.childNodes[2].style.display = "block";
+    orangeArrowRolloverTools.childNodes[0].style.display = "block";
+    orangeArrowRolloverTools.childNodes[1].style.display = "block";
+    textElement.style.border = "1px solid orange";
+    textElement.style.position = "relative";
+    textElement.parentNode.parentNode.style.border = "none";
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[0].childNodes[
+        i
+      ].style.display = "none";
+    }
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[1].childNodes[
+        i
+      ].style.display = "none";
+    }
+    textElement.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+      "none";
+    for (
+      let i = 3;
+      i < textElement.parentNode.parentNode.children.length;
+      i++
+    ) {
+      textElement.parentNode.parentNode.childNodes[i].style.borderRight =
         "none";
-      for (
-        let i = 3;
-        i < textElement.parentNode.parentNode.children.length;
-        i++
+      if (
+        textElement.parentNode.parentNode.childNodes[i].childNodes[0]
+          .className == "div-boundary"
       ) {
-        textElement.parentNode.parentNode.childNodes[i].style.borderRight =
-          "none";
-        if (
-          textElement.parentNode.parentNode.childNodes[i].childNodes[0]
-            .className == "div-boundary"
-        ) {
-          textElement.parentNode.parentNode.childNodes[
-            i
-          ].childNodes[0].style.display = "none";
-        }
-      }
-    });
-    textElement.addEventListener("mouseleave", (e) => {
-      orangeRolloverTools.style.display = "none";
-      orangeArrowRolloverTools.style.display = "none";
-      orangeRolloverTools.childNodes[0].style.display = "none";
-      orangeRolloverTools.childNodes[1].style.display = "none";
-      orangeRolloverTools.childNodes[2].style.display = "none";
-      orangeArrowRolloverTools.childNodes[0].style.display = "none";
-      orangeArrowRolloverTools.childNodes[1].style.display = "none";
-      textElement.style.position = "unset";
-      textElement.style.border = "none";
-      textElement.parentNode.parentNode.style.border =
-        "1px solid rgb(58, 133, 255)";
-      for (let i = 0; i < 3; i++) {
-        textElement.parentNode.parentNode.childNodes[0].childNodes[
+        textElement.parentNode.parentNode.childNodes[
           i
-        ].style.display = "block";
+        ].childNodes[0].style.display = "none";
       }
-      for (let i = 0; i < 3; i++) {
-        textElement.parentNode.parentNode.childNodes[1].childNodes[
-          i
-        ].style.display = "block";
-      }
-      textElement.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-        "block";
-      editTextRolloverTools.style.display = "none";
-      for (let i = 0; i < 8; i++) {
-        editTextRolloverTools.childNodes[i].style.display = "none";
-      }
-      for (
-        let i = 4;
-        i < textElement.parentNode.parentNode.children.length;
-        i++
+    }
+  });
+  textElement.addEventListener("mouseleave", (e) => {
+    orangeRolloverTools.style.display = "none";
+    orangeArrowRolloverTools.style.display = "none";
+    orangeRolloverTools.childNodes[0].style.display = "none";
+    orangeRolloverTools.childNodes[1].style.display = "none";
+    orangeRolloverTools.childNodes[2].style.display = "none";
+    orangeArrowRolloverTools.childNodes[0].style.display = "none";
+    orangeArrowRolloverTools.childNodes[1].style.display = "none";
+    textElement.style.position = "unset";
+    textElement.style.border = "none";
+    textElement.parentNode.parentNode.style.border =
+      "1px solid rgb(58, 133, 255)";
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[0].childNodes[
+        i
+      ].style.display = "block";
+    }
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[1].childNodes[
+        i
+      ].style.display = "block";
+    }
+    textElement.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+      "block";
+    editTextRolloverTools.style.display = "none";
+    for (let i = 0; i < 8; i++) {
+      editTextRolloverTools.childNodes[i].style.display = "none";
+    }
+    for (
+      let i = 4;
+      i < textElement.parentNode.parentNode.children.length;
+      i++
+    ) {
+      textElement.parentNode.parentNode.childNodes[i - 1].style.borderRight =
+        "1px dotted rgb(58, 133, 255)";
+      if (
+        textElement.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+          .className == "div-boundary"
       ) {
-        textElement.parentNode.parentNode.childNodes[i - 1].style.borderRight =
-          "1px dotted rgb(58, 133, 255)";
-        if (
-          textElement.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-            .className == "div-boundary"
-        ) {
-          textElement.parentNode.parentNode.childNodes[
-            i - 1
-          ].childNodes[0].style.display = "block";
-        }
+        textElement.parentNode.parentNode.childNodes[
+          i - 1
+        ].childNodes[0].style.display = "block";
       }
-      editTextRolloverTools.style.display = "none";
+    }
+    editTextRolloverTools.style.display = "none";
+    for (let i = 0; i < 8; i++) {
+      editTextRolloverTools.childNodes[i].style.display = "none";
+    }
+  });
+
+  // Edit Text
+  var editTextRolloverTools = createEditTextRolloverTools();
+
+  textElement.appendChild(editTextRolloverTools);
+
+  textElement.addEventListener("mousedown", (e) => {
+    const boundingRect = textElement.getBoundingClientRect();
+    const width = boundingRect.width;
+    const height = boundingRect.height;
+    const x = e.clientX - boundingRect.left;
+    const y = e.clientY - boundingRect.top;
+
+    // Calculate 80% width and height range
+    const minWidth = width * 0.1; // 10% from the left
+    const maxWidth = width * 0.9; // 10% from the right
+    const minHeight = height * 0.1; // 10% from the top
+    const maxHeight = height * 0.9; // 10% from the bottom
+
+    // Check if the click position is within the 80% center part
+    if (x >= minWidth && x <= maxWidth && y >= minHeight && y <= maxHeight) {
+      textElement.style.border = "1px solid #777";
+      for (let i = 0; i < 3; i++) {
+        textElement.childNodes[1].childNodes[i].style.display = "none";
+      }
+      for (let i = 0; i < 2; i++) {
+        textElement.childNodes[2].childNodes[i].style.display = "none";
+      }
+      editTextRolloverTools.style.display = "block";
       for (let i = 0; i < 8; i++) {
-        editTextRolloverTools.childNodes[i].style.display = "none";
+        editTextRolloverTools.childNodes[i].style.display = "block";
       }
-    });
-
-    // Edit Text
-    var editTextRolloverTools = createEditTextRolloverTools();
-
-    textElement.appendChild(editTextRolloverTools);
-
-    textElement.addEventListener("mousedown", (e) => {
-      const boundingRect = textElement.getBoundingClientRect();
-      const width = boundingRect.width;
-      const height = boundingRect.height;
-      const x = e.clientX - boundingRect.left;
-      const y = e.clientY - boundingRect.top;
-
-      // Calculate 80% width and height range
-      const minWidth = width * 0.1; // 10% from the left
-      const maxWidth = width * 0.9; // 10% from the right
-      const minHeight = height * 0.1; // 10% from the top
-      const maxHeight = height * 0.9; // 10% from the bottom
-
-      // Check if the click position is within the 80% center part
-      if (x >= minWidth && x <= maxWidth && y >= minHeight && y <= maxHeight) {
-        textElement.style.border = "1px solid #777";
-        for (let i = 0; i < 3; i++) {
-          textElement.childNodes[1].childNodes[i].style.display = "none";
-        }
-        for (let i = 0; i < 2; i++) {
-          textElement.childNodes[2].childNodes[i].style.display = "none";
-        }
-        editTextRolloverTools.style.display = "block";
-        for (let i = 0; i < 8; i++) {
-          editTextRolloverTools.childNodes[i].style.display = "block";
-        }
-      }
-    });
-  };
-
-  this.onDragHover = function (e, container) {
-    e.preventDefault();
-    this.afterElement = this.getDragAfterElement(container, e.clientY);
-
-    // console.log("here is insert drag element into col-div", this.placeholder);
-    if (this.afterElement == null) {
-      container.appendChild(this.placeholder);
-    } else {
-      container.insertBefore(this.placeholder, this.afterElement);
     }
-  };
-  this.onDragEnter = function (e) {
-    e.preventDefault();
-  };
-  this.onDragLeave = function (e) {
-    e.preventDefault();
-  };
+  });
+}
 
-  this.onDragDrop = function (e) {
-    e.preventDefault();
+function onDragHover(e, container) {
+  e.preventDefault();
+  afterElement = getDragAfterElement(container, e.clientY);
 
-    console.log(
-      "here is replace with element insert and this.place holder,",
-      this.elementToInsert,
-      this.placeholder
-    );
-    // let data = e.dataTransfer.getData("elementid");
-    this.placeholder.replaceWith(this.elementToInsert);
-  };
+  if (afterElement == null) {
+    container.appendChild(placeholder);
+  } else {
+    container.insertBefore(placeholder, afterElement);
+  }
+}
 
-  this.init = function () {
-    try {
-      this.mainContainer = document.getElementById("da-main-container");
-      this.popupContainer = document.getElementById("da-popup-container");
-      this.updateContainers();
-      this.updateDraggables();
-      this.addEventListeners();
-      this.createPlaceHolder();
-    } catch (e) {
-      console.log(e);
-    }
-  };
+function onDragEnter(e) {
+  e.preventDefault();
+}
+
+function onDragLeave(e) {
+  e.preventDefault();
+}
+
+function onDragDrop(e) {
+  e.preventDefault();
+  placeholder.replaceWith(elementToInsert);
+}
+
+function init() {
+  try {
+    mainContainer = document.getElementById("da-main-container");
+    popupContainer = document.getElementById("da-popup-container");
+    // updateContainers();
+    updateDraggables();
+    addEventListeners();
+    createPlaceHolder();
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 //* BEGINNING FOR THE 2PART FORM
@@ -5749,7 +4265,6 @@ function showForm(form, formId) {
   if (currentForm) {
     currentForm.classList.remove("hidden");
   }
-  
 }
 
 function appendElements(parent, elements) {
@@ -5764,13 +4279,6 @@ function updateTextareaFromContainer(containerId, textareaName) {
   const mainContainer = document.getElementById(containerId);
   const textarea = document.querySelector(`textarea[name="${textareaName}"]`);
 
-  // textarea.addEventListener("mouseenter", () => {
-  //   textarea.style.border = "3px solid #37ca37";
-  // });
-  // textarea.addEventListener("mouseleave", () => {
-  //   textarea.style.border = "none";
-  // });
-
   if (mainContainer && textarea) {
     textarea.value = mainContainer.innerHTML;
   } else {
@@ -5783,31 +4291,208 @@ function isPopupOpen() {
   return popup.classList.contains("open"); // Or check the display style
 }
 
-// document.addEventListener('turbolinks:load', () => {
-//   const customDragnDrop = new CustomDragAndDrop();
-//   customDragnDrop.init();
-//   customDragnDrop.loadSections();
-// });
-
-// $(document).ready(function () { // This one seems to work when it just loads the page 1st time but the rest of the times it works when loads under in $(document).off().on('ready turbolinks:load'
-//   let customDragnDrop = new CustomDragAndDrop();
-//   customDragnDrop.init();
-//   customDragnDrop.loadSections(); // this one should load again
-// });
-
 // * MAIN CODE SECTION ------------------------------------------------------------------
 
 var customDragnDropInitialized = false;
 
+function loadSections() {
+  var newContainer = document.getElementById(id);
+
+  console.log(newContainer, "======loadsection");
+
+  var allContainers = newContainer.querySelectorAll(".col-div");
+
+  if (allContainers.length > 0) {
+    allContainers.forEach((container) => {
+      var condition = container.getAttribute("data-dragetted");
+      if (!condition) {
+        container.setAttribute("data-dragetted", "true");
+        addEventListenersForContainer(container);
+      }
+    });
+    // updateContainers();
+  } else {
+    // Handle the case when no elements with the class .editor-container are found.
+    // You can choose to display an error message or take appropriate action here.
+  }
+}
+
+function addEventListenersForContainer(container) {
+  container.addEventListener("dragover", (e) =>
+    onDragHover(e, container, false)
+  );
+  container.addEventListener("drop", (e) => onDragDrop(e), false);
+  container.addEventListener("dragleave", (e) => onDragLeave(e), false);
+  container.addEventListener("dragenter", (e) => onDragEnter(e), false);
+}
+
+addEventListenerForText = function (textElement) {
+  var orangeRolloverTools = createOrangeRolloverTools();
+  var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
+
+  textElement.appendChild(orangeRolloverTools);
+  textElement.appendChild(orangeArrowRolloverTools);
+  textElement.style.padding = "1.5rem 1rem 0.5rem 1rem";
+
+  textElement.addEventListener("mouseenter", (e) => {
+    orangeRolloverTools.style.display = "block";
+    orangeArrowRolloverTools.style.display = "block";
+    orangeRolloverTools.childNodes[0].style.display = "block";
+    orangeRolloverTools.childNodes[1].style.display = "block";
+    orangeRolloverTools.childNodes[2].style.display = "block";
+    orangeArrowRolloverTools.childNodes[0].style.display = "block";
+    orangeArrowRolloverTools.childNodes[1].style.display = "block";
+    textElement.style.border = "1px solid orange";
+    textElement.style.position = "relative";
+    textElement.parentNode.parentNode.style.border = "none";
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[0].childNodes[
+        i
+      ].style.display = "none";
+    }
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[1].childNodes[
+        i
+      ].style.display = "none";
+    }
+    textElement.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+      "none";
+    for (
+      let i = 3;
+      i < textElement.parentNode.parentNode.children.length;
+      i++
+    ) {
+      textElement.parentNode.parentNode.childNodes[i].style.borderRight =
+        "none";
+      if (
+        textElement.parentNode.parentNode.childNodes[i].childNodes[0]
+          .className == "div-boundary"
+      ) {
+        textElement.parentNode.parentNode.childNodes[
+          i
+        ].childNodes[0].style.display = "none";
+      }
+    }
+  });
+  textElement.addEventListener("mouseleave", (e) => {
+    orangeRolloverTools.style.display = "none";
+    orangeArrowRolloverTools.style.display = "none";
+    orangeRolloverTools.childNodes[0].style.display = "none";
+    orangeRolloverTools.childNodes[1].style.display = "none";
+    orangeRolloverTools.childNodes[2].style.display = "none";
+    orangeArrowRolloverTools.childNodes[0].style.display = "none";
+    orangeArrowRolloverTools.childNodes[1].style.display = "none";
+    textElement.style.position = "unset";
+    textElement.style.border = "none";
+    textElement.parentNode.parentNode.style.border =
+      "1px solid rgb(58, 133, 255)";
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[0].childNodes[
+        i
+      ].style.display = "block";
+    }
+    for (let i = 0; i < 3; i++) {
+      textElement.parentNode.parentNode.childNodes[1].childNodes[
+        i
+      ].style.display = "block";
+    }
+    textElement.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
+      "block";
+    editTextRolloverTools.style.display = "none";
+    for (let i = 0; i < 8; i++) {
+      editTextRolloverTools.childNodes[i].style.display = "none";
+    }
+    for (
+      let i = 4;
+      i < textElement.parentNode.parentNode.children.length;
+      i++
+    ) {
+      textElement.parentNode.parentNode.childNodes[i - 1].style.borderRight =
+        "1px dotted rgb(58, 133, 255)";
+      if (
+        textElement.parentNode.parentNode.childNodes[i - 1].childNodes[0]
+          .className == "div-boundary"
+      ) {
+        textElement.parentNode.parentNode.childNodes[
+          i - 1
+        ].childNodes[0].style.display = "block";
+      }
+    }
+    editTextRolloverTools.style.display = "none";
+    for (let i = 0; i < 8; i++) {
+      editTextRolloverTools.childNodes[i].style.display = "none";
+    }
+  });
+
+  // Edit Text
+  var editTextRolloverTools = createEditTextRolloverTools();
+
+  textElement.appendChild(editTextRolloverTools);
+
+  textElement.addEventListener("mousedown", (e) => {
+    const boundingRect = textElement.getBoundingClientRect();
+    const width = boundingRect.width;
+    const height = boundingRect.height;
+    const x = e.clientX - boundingRect.left;
+    const y = e.clientY - boundingRect.top;
+
+    // Calculate 80% width and height range
+    const minWidth = width * 0.1; // 10% from the left
+    const maxWidth = width * 0.9; // 10% from the right
+    const minHeight = height * 0.1; // 10% from the top
+    const maxHeight = height * 0.9; // 10% from the bottom
+
+    // Check if the click position is within the 80% center part
+    if (x >= minWidth && x <= maxWidth && y >= minHeight && y <= maxHeight) {
+      textElement.style.border = "1px solid #777";
+      for (let i = 0; i < 3; i++) {
+        textElement.childNodes[1].childNodes[i].style.display = "none";
+      }
+      for (let i = 0; i < 2; i++) {
+        textElement.childNodes[2].childNodes[i].style.display = "none";
+      }
+      editTextRolloverTools.style.display = "block";
+      for (let i = 0; i < 8; i++) {
+        editTextRolloverTools.childNodes[i].style.display = "block";
+      }
+    }
+  });
+};
+
+function onDragHover(e, container) {
+  e.preventDefault();
+  afterElement = getDragAfterElement(container, e.clientY);
+
+  if (afterElement == null) {
+    container.appendChild(placeholder);
+  } else {
+    container.insertBefore(placeholder, afterElement);
+  }
+}
+function onDragEnter(e) {
+  e.preventDefault();
+}
+
+function onDragLeave(e) {
+  e.preventDefault();
+}
+
+function onDragDrop(e) {
+  e.preventDefault();
+  placeholder.replaceWith(elementToInsert);
+}
+
 // document.addEventListener('turbolinks:load', () => {
 document.addEventListener("DOMContentLoaded", function (e) {
   if (!customDragnDropInitialized) {
-    const custompPopUpDragAndDrop = new CustompPopUpDragAndDrop();
-    custompPopUpDragAndDrop.init();
+    // const custompPopUpDragAndDrop = new CustompPopUpDragAndDrop();
+    // custompPopUpDragAndDrop.init();
     console.log("customDragnDropInitialized=true");
-    custompPopUpDragAndDrop.loadSections();
+    // custompPopUpDragAndDrop.loadSections();
     console.log("we loaded the Sections");
-    customDragnDropInitialized = true;
+    // configDragDrop()
+    init();
+    // loadSections()
     // Add a click event listener to the button
     const addSectionButton = document.getElementById("add-section-button");
     if (addSectionButton) {
@@ -5824,17 +4509,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
   }
 });
 
-// here we will add the listener to apply settings to the 2-step combo
-// const comboButton = document.getElementById("2step-section-button");
-// comboButton.addEventListener("click", function () {
-//   if (headlineSidebar.style.right === "0px") {
-//     headlineSidebar.style.right = "-420px"; // Slide out the popup
-//   } else {
-//     headlineSidebar.style.right = "0px"; // Slide in the popup
-//   }
-// });
-
-const openElementsPanel = document.getElementById("add-element-button");
 openElementsPanel.addEventListener("click", function () {
   if (leftSlidingPopup.classList.contains("hidden")) {
     leftSlidingPopup.classList.remove("hidden");
@@ -5878,7 +4552,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // The popup START
 const openPopupButton = document.getElementById("open-popup");
 const closePopupButton = document.getElementById("close-popup");
-const popupContainer = document.querySelector(".popup-container");
+// const popupContainer = document.querySelector(".popup-container");
 const thebody = document.querySelector("body");
 const damaincontainer = document.getElementById("da-main-container");
 
@@ -5912,20 +4586,26 @@ var elSettingsAnchors = document.querySelectorAll("a.elSettings");
 var settingsSidebar = document.getElementById("settingsSidebar");
 console.log(elSettingsAnchors);
 function openSidebar(element) {
-  selectedElSettings = element.id; // Store the clicked element's ID
-  settingsSidebar.style.right = "0";
+  selectedElSettings = element.id; // Store the clicked element's ID  
+  if (settingsSidebar.style.right === "0px") {
+    closeSidebar();
+  } else {
+    settingsSidebar.style.right = "0px";
+    console.log("open");
+  }
+  ;
   loadPresetButtonSettings(element);
 }
 
 function closeSidebar() {
+    console.log("close");
   selectedElSettings = null;
-  // settingsSidebar.style.left = "-100%";
   settingsSidebar.style.right = "-420px";
 }
 
 // Attach the click event to each anchor element within "elSettings" buttons
 elSettingsAnchors.forEach(function (anchor) {
-  anchor.addEventListener("click", function (event) {
+  anchor.addEventListener("click", (event) => {
     event.preventDefault(); // Prevent the default behavior
     if (settingsSidebar.style.right === "0px") {
       closeSidebar();
@@ -6023,7 +4703,7 @@ function loadPresetButtonSettings(element) {
     if (selectedElSettings) {
       // Apply the font size to the selected .elSettings element
       const targetElement = document.getElementById(selectedElSettings);
-      const fontSize = this.value;
+      const fontSize = value;
       targetElement.style.fontSize = fontSize + "px";
     }
   });
@@ -6036,7 +4716,7 @@ function loadPresetButtonSettings(element) {
   buttonTextInput.addEventListener("input", function () {
     if (selectedElSettings) {
       const targetElement = document.getElementById(selectedElSettings);
-      targetElement.innerHTML = this.value;
+      targetElement.innerHTML = value;
     }
   });
 
@@ -6057,7 +4737,7 @@ function loadPresetButtonSettings(element) {
 
 // Add event listener to the search panel for elements input
 document.querySelector(".search-panel").addEventListener("input", function () {
-  const searchKeyword = this.value.toLowerCase();
+  const searchKeyword = value.toLowerCase();
   const elementPanels = document.querySelectorAll(".element-panel");
 
   // Loop through each element panel and check if it matches the search keyword
@@ -6088,14 +4768,13 @@ function greenGearElement(id) {
   }
   loadPresetGreenSettings(id);
 }
-const sectionSettingClose = document.getElementById("popup4-close");
-sectionSettingClose.addEventListener("click", function () {
+const greenSettingClose = document.getElementById("popup4-close");
+greenSettingClose.addEventListener("click", function () {
   selectedGreenSection = null;
-  slidingPopup4.style.right = "-420px"; // Slide out the popup  
+  slidingPopup4.style.right = "-420px"; // Slide out the popup
 });
 function loadPresetGreenSettings(id) {
   const editorComponent = document.getElementById(id);
-
   // Background color setting for Green Section
   const greenBackColor = document.getElementById("green-back-color");
   const greenBackColorIcon = document.getElementById("green-back-color-icon");
@@ -6109,7 +4788,7 @@ function loadPresetGreenSettings(id) {
 
   // // Background Image upload
   // const inputPanel = document.getElementById
-};
+}
 
 // General and Advanced tab panel for Green Section
 const greenGeneralTab = document.getElementById("green-general-tab");
@@ -6174,6 +4853,7 @@ blueSettingClose.addEventListener("click", function () {
   selectedBlueSection = null;
   slidingPopup5.style.right = "-420px"; // Slide out the popup
 });
+
 function loadPresetBlueSettings(id) {
   const blueComponent = document.getElementById(id);
 
@@ -6213,10 +4893,10 @@ function loadPresetBlueSettings(id) {
   // Width range change for blue Section
   const blueWidthSlider = document.getElementById("blue-width-slider");
   const blueWidthValue = document.getElementById("blue-width-value");
-  if (blueComponent.style.width) {    
+  if (blueComponent.style.width) {
     blueWidthSlider.value = parseInt(blueComponent.style.width);
     blueWidthValue.value = parseInt(blueComponent.style.width);
-  } else {    
+  } else {
     blueWidthSlider.value = 100;
     blueWidthValue.value = 100;
   }
@@ -6229,11 +4909,11 @@ function loadPresetBlueSettings(id) {
     let parsedValue = parseInt(blueWidthValue.value);
     if (parsedValue >= 0 && parsedValue <= 100) {
       blueWidthSlider.value = parsedValue;
-    }    
+    }
     const blueComponent = document.getElementById(selectedBlueSection);
     blueComponent.style.width = `${parsedValue}%`;
   });
-};
+}
 
 // General and Advanced tab panel for Blue Section
 const blueGeneralTab = document.getElementById("blue-general-tab");
@@ -6252,7 +4932,6 @@ blueAdvancedTab.addEventListener("click", function () {
   blueAdvancedContent.classList.add("active");
   blueAdvancedTab.classList.add("active");
 });
-
 
 // General and Advanced tab panel for Orange Section
 const orangeGeneralTab = document.getElementById("orange-general-tab");
@@ -6276,8 +4955,10 @@ orangeAdvancedTab.addEventListener("click", function () {
 
 // Settings for headline element
 let selectedHeadlineElement = null;
+let selectedHeadlineContainer = null;
 function headlineGearElement(parentWrapper) {
   selectedHeadlineElement = parentWrapper.firstChild.id;
+  selectedHeadlineContainer = parentWrapper.id;
   if (headlineSidebar.style.right === "0px") {
     headlineSidebar.style.right = "-420px"; // Slide out the popup
   } else {
@@ -6288,6 +4969,7 @@ function headlineGearElement(parentWrapper) {
 const headlineSettingClose = document.getElementById("headline-close");
 headlineSettingClose.addEventListener("click", function () {
   selectedHeadlineElement = null;
+  selectedHeadlineContainer = null;
   headlineSidebar.style.right = "-420px"; // Slide out the popup
 });
 function loadPresetHeadlineSettings(parentWrapper) {
@@ -6295,8 +4977,9 @@ function loadPresetHeadlineSettings(parentWrapper) {
   const headlineComponent = document.getElementById(
     parentWrapper.firstChild.id
   );
-  const headlineOpacitySelect = document.getElementById("headline-opacity-select");
-
+  const headlineOpacitySelect = document.getElementById(
+    "headline-opacity-select"
+  );
   // Background color setting for Headline Element
   const headlineBackColor = document.getElementById("headline-back-color");
   const headlineBackColorIcon = document.getElementById(
@@ -6306,52 +4989,56 @@ function loadPresetHeadlineSettings(parentWrapper) {
   headlineBackColorIcon.style.color = headlineContainer.style.backgroundColor;
   headlineBackColor.addEventListener("input", function () {
     headlineBackColorIcon.style.color = headlineBackColor.value;
-    const headlineContainer = document.getElementById(parentWrapper.id);
+    const headlineContainer = document.getElementById(
+      selectedHeadlineContainer
+    );
     headlineContainer.style.backgroundColor = headlineBackColor.value;
     headlineOpacitySelect.value = "1.0";
   });
 
   // Background color opacity for Headline Element
-  headlineOpacitySelect.addEventListener("change", function () {  
+  headlineOpacitySelect.addEventListener("change", function () {
     const headlineContainer = document.getElementById(parentWrapper.id);
     let rgbColor = headlineContainer.style.backgroundColor;
     if (headlineContainer.style.backgroundColor.includes("rgba")) {
       rgbColor =
         headlineContainer.style.backgroundColor.replace(/, [\d\.]+\)$/, "") +
         ")";
-    } 
+    }
     let convertedRGBA = rgbColor.replace(
       ")",
       `, ${headlineOpacitySelect.value})`
     );
     headlineContainer.style.backgroundColor = convertedRGBA;
-  })
+  });
 
   // Text Alignment for Headline Element
-  const headlineAlignButtons = document.querySelectorAll('.align-button');
-  headlineAlignButtons.forEach(function(button) {
-    button.addEventListener('click', function () {
-      const headlineComponent = document.getElementById(selectedHeadlineElement);
-      
+  const headlineAlignButtons = document.querySelectorAll(".align-button");
+  headlineAlignButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const headlineComponent = document.getElementById(
+        selectedHeadlineElement
+      );
+
       headlineComponent.style.textAlign = "";
       headlineAlignButtons.forEach(function (btn) {
         btn.classList.remove("selected-button");
       });
-      if (this.querySelector('i').classList.contains('bi-text-left')) {
+      if (this.querySelector("i").classList.contains("bi-text-left")) {
         headlineComponent.style.textAlign = "left";
-        this.classList.add('selected-button');
-      } else if (this.querySelector('i').classList.contains('bi-text-center')) {
+        this.classList.add("selected-button");
+      } else if (querySelector("i").classList.contains("bi-text-center")) {
         headlineComponent.style.textAlign = "center";
         this.classList.add("selected-button");
-      } else if (this.querySelector('i').classList.contains('bi-text-right')) {
+      } else if (querySelector("i").classList.contains("bi-text-right")) {
         headlineComponent.style.textAlign = "right";
         this.classList.add("selected-button");
-      } else if (this.querySelector('i').classList.contains('bi-justify')) {
+      } else if (querySelector("i").classList.contains("bi-justify")) {
         headlineComponent.style.textAlign = "justify";
         this.classList.add("selected-button");
       }
-    })
-  })
+    });
+  });
 
   // Font size setting for Headline Element
   const headlineFontSlider = document.getElementById("headline-font-slider");
@@ -6382,12 +5069,12 @@ function loadPresetHeadlineSettings(parentWrapper) {
     const headlineComponent = document.getElementById(selectedHeadlineElement);
     headlineComponent.style.color = headlineColor.value;
   });
-};
+}
 
 // Settings for 2 Step Combo Element
 let selectedComboElement = null;
 function twoStepGearElement(parentWrapper) {
-  selectedComboElement = parentWrapper.firstChild.id;
+  selectedComboElement = parentWrapper.id;
   if (slidingPopup3.style.right === "0px") {
     slidingPopup3.style.right = "-420px"; // Slide out the popup
   } else {
@@ -6401,7 +5088,7 @@ comboSettingClose.addEventListener("click", function () {
   slidingPopup3.style.right = "-420px"; // Slide out the popup
 });
 
-function loadPresetComboSettings(parentContainer) {  
+function loadPresetComboSettings(parentContainer) {
   const firstForm = parentContainer.firstChild.childNodes[2];
   const secondForm = parentContainer.firstChild.childNodes[3];
 
@@ -6444,7 +5131,7 @@ function loadPresetComboSettings(parentContainer) {
     eyeIcon2.classList.add("bi-eye");
     showForm(parentContainer.firstChild, secondForm.id);
   });
-};
+}
 
 // Button & Button Text & Input Background color pickers
 const btnColor = document.getElementById("btn-color");
@@ -6481,4 +5168,68 @@ advancedTab.addEventListener("click", function () {
   generalTab.classList.remove("active");
   advancedContent.classList.add("active");
   advancedTab.classList.add("active");
+});
+
+// Close Popups when I click outside
+document.addEventListener("click", function (event) {
+  const orangeGearButton = document.getElementById("orange-gear-button");
+
+  const greenGearButtons = document.querySelectorAll("[id*='greenButton']");
+  const isOutsidePopup4 =
+    event.target !== slidingPopup4 && !slidingPopup4.contains(event.target);
+  const isGreenGearButton = Array.from(greenGearButtons).some((button) =>
+    button.contains(event.target)
+  );
+  if (isOutsidePopup4 && !isGreenGearButton) {
+    if (selectedGreenSection) {
+      selectedGreenSection = null;
+      slidingPopup4.style.right = "-420px"; // Slide out the popup
+    }
+  }
+
+  const blueGearButtons = document.querySelectorAll("[id*='blueButton']");
+  const isOutsidePopup5 =
+    event.target !== slidingPopup5 && !slidingPopup5.contains(event.target);
+  const isBlueGearButton = Array.from(blueGearButtons).some((button) =>
+    button.contains(event.target)
+  );
+  if (isOutsidePopup5 && !isBlueGearButton) {
+    if (selectedBlueSection) {
+      selectedBlueSection = null;
+      slidingPopup5.style.right = "-420px"; // Slide out the popup
+    }
+  }
+
+  const orangeGearButtons = document.querySelectorAll("[id*='orangeButton']");
+  const isOutsideHeadlinePopup =
+    event.target !== headlineSidebar && !headlineSidebar.contains(event.target);
+  const isOrangeGearButton = Array.from(orangeGearButtons).some((button) =>
+    button.contains(event.target)
+  );
+  if (isOutsideHeadlinePopup && !isOrangeGearButton) {
+    if (selectedHeadlineElement) {
+      selectedHeadlineElement = null;
+      selectedHeadlineContainer = null;
+      headlineSidebar.style.right = "-420px"; // Slide out the popup
+    }
+  }
+  const isOutsideComboPopup =
+    event.target !== slidingPopup3 && !slidingPopup3.contains(event.target);
+  if (isOutsideComboPopup && !isOrangeGearButton) {
+    if (selectedComboElement) {
+      selectedComboElement = null;
+      slidingPopup3.style.right = "-420px"; // Slide out the popup
+    }
+  }
+  const buttonElements = document.querySelectorAll("[id*='the_button']");
+  const isButtonElement = Array.from(buttonElements).some((button) =>
+    button.contains(event.target)
+  );
+  const isOutsideButtonPopup =
+    event.target !== settingsSidebar && !settingsSidebar.contains(event.target);
+  if (isOutsideButtonPopup && !isOrangeGearButton && !isButtonElement) {
+    if (selectedElSettings) {
+      closeSidebar();
+    }
+  }
 });
