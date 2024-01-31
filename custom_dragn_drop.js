@@ -116,7 +116,7 @@ function createContainer(width) {
   greenAdvanceButton.style.backgroundColor = "#37ca37";
   greenAdvanceButton.style.display = "none";
   greenAdvanceButton.setAttribute("type", "button");
-  greenAdvanceButton.setAttribute("id", `greenButton-${Date.now()}`);
+  greenAdvanceButton.setAttribute("id", `green_advanced-${Date.now()}`);
   greenAdvanceButton.innerHTML = '<i class="fa fa-cog"></i>';
   greenAdvanceButton.setAttribute(
     "onclick",
@@ -315,6 +315,8 @@ function createRowSection() {
   bluePlusRolloverTools.setAttribute("data-current-type", "type");
   bluePlusRolloverTools.style.display = "none";
 
+
+
   var blueMoveButton = document.createElement("div");
   blueMoveButton.classList.add("de-rollover-move");
   blueMoveButton.style.backgroundColor = "#3a85ff";
@@ -374,11 +376,9 @@ function createRowSection() {
   blueGearButton.style.display = "none";
   blueGearButton.innerHTML = '<i class="fa fa-cog"></i>';
   blueGearButton.setAttribute("type", "button");
-  blueGearButton.setAttribute("id", `blueButton-${Date.now()}`);
-  blueGearButton.setAttribute(
-    "onclick",
-    "blueGearElement(parentElement.parentElement.id)"
-  );
+  blueGearButton.setAttribute("id", `blue_gear-${Date.now()}`);
+  blueGearButton.setAttribute("id", `blue_gear-${Date.now()}`);
+  blueGearButton.setAttribute("onclick", "blueGearElement(parentElement.parentElement.id)");
 
   var bluePlusCircle = document.createElement("div");
   bluePlusCircle.classList.add("de-rollover-plus-circle");
@@ -392,6 +392,8 @@ function createRowSection() {
   bluePlusCircle.setAttribute("type", "button");
   bluePlusCircle.setAttribute("onclick", "openSlidingPopup2()");
 
+
+
   rowSection.appendChild(blueRolloverTools);
   rowSection.appendChild(blueArrowRolloverTools);
   rowSection.appendChild(bluePlusRolloverTools);
@@ -403,6 +405,7 @@ function createRowSection() {
   blueArrowRolloverTools.appendChild(blueArrowDownButton);
   blueArrowRolloverTools.appendChild(blueGearButton);
   bluePlusRolloverTools.appendChild(bluePlusCircle);
+
 
   rowSection.addEventListener("mouseenter", (e) => {
     for (let i = 0; i < 4; i++) {
@@ -525,20 +528,21 @@ function addElement() {
   blueAddElementRolloverTools.style.display = "none";
 
   var blueAddElementButton = document.createElement("div");
-  blueAddElementButton.innerHTML =
-    '<button class="add-element"> + Add Element</button>';
+  blueAddElementButton.innerHTML = '<button class="add-element"> + Add Element</button>';
   blueAddElementButton.style.backgroundColor = "rgb(58, 133, 255)";
   blueAddElementButton.style.borderRadius = "3px";
   blueAddElementButton.style.display = "none";
+  blueAddElementButton.setAttribute("id", `blue_add-${Date.now()}`);
 
   blueAddElementRolloverTools.appendChild(blueAddElementButton);
 
-  blueAddElementButton.addEventListener("click", function () {
+  blueAddElementButton.addEventListener('click', function () {
     console.log("blue add element button clicked");
     openElementsPanel.click();
-  });
+  })
   return blueAddElementRolloverTools;
 }
+
 
 //Add Row Setting
 settingRow1.addEventListener("click", function (e) {
@@ -565,7 +569,7 @@ settingRow1.addEventListener("click", function (e) {
     blueAddElementRolloverTools.style.display = "none";
     blueAddElementRolloverTools.childNodes[0].style.display = "none";
   });
-  loadSections();
+  loadSections()
 });
 settingRow2.addEventListener("click", function (e) {
   e.preventDefault();
@@ -647,7 +651,7 @@ settingRow2.addEventListener("click", function (e) {
     divCol2_1.style.width = columnNumber2 * columnSize + "px";
   });
   // configDragDrop();
-  loadSections();
+  loadSections()
 });
 settingRow3.addEventListener("click", function (e) {
   e.preventDefault();
@@ -765,7 +769,7 @@ settingRow3.addEventListener("click", function (e) {
     divCol3_2.style.width = columnNumber3 * columnSize + "px";
   });
   // configDragDrop();
-  loadSections();
+  loadSections()
 });
 settingRow4.addEventListener("click", function (e) {
   e.preventDefault();
@@ -838,10 +842,10 @@ settingRow4.addEventListener("click", function (e) {
     blueAddElementRolloverTools1.style.display = "none";
     blueAddElementRolloverTools2.style.display = "none";
     blueAddElementRolloverTools3.style.display = "none";
-    blueAddElementRolloverTools.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -914,7 +918,8 @@ settingRow4.addEventListener("click", function (e) {
   });
 
   // configDragDrop();
-  loadSections();
+  loadSections()
+
 });
 settingRow5.addEventListener("click", function (e) {
   e.preventDefault();
@@ -1004,11 +1009,11 @@ settingRow5.addEventListener("click", function (e) {
     blueAddElementRolloverTools2.style.display = "none";
     blueAddElementRolloverTools3.style.display = "none";
     blueAddElementRolloverTools4.style.display = "none";
-    blueAddElementRolloverTools.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools4.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools4.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -1098,7 +1103,8 @@ settingRow5.addEventListener("click", function (e) {
   });
 
   // configDragDrop();
-  loadSections();
+  loadSections()
+
 });
 settingRow6.addEventListener("click", function (e) {
   e.preventDefault();
@@ -1203,12 +1209,12 @@ settingRow6.addEventListener("click", function (e) {
     blueAddElementRolloverTools3.style.display = "none";
     blueAddElementRolloverTools4.style.display = "none";
     blueAddElementRolloverTools5.style.display = "none";
-    blueAddElementRolloverTools.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools4.childNodes[0].style.display = "none";
-    blueAddElementRolloverTools5.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools4.childNodes[0].style.display = "none";
+      blueAddElementRolloverTools5.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -1315,7 +1321,8 @@ settingRow6.addEventListener("click", function (e) {
   });
 
   // configDragDrop();
-  loadSections();
+  loadSections()
+
 });
 
 function setFormat(command) {
@@ -1363,6 +1370,14 @@ function removeElement(element) {
 }
 function greenClone(width) {
   createContainer(width);
+}
+
+function buttonGearElement() {
+  if (settingsSidebar.style.right === "0px") {
+    settingsSidebar.style.right = "-420px"; // Slide out the popup
+  } else {
+    settingsSidebar.style.right = "0px"; // Slide in the popup
+  }
 }
 
 function createEditTextRolloverTools() {
@@ -1452,7 +1467,7 @@ function createOrangeRolloverTools() {
   orangeGearButton.style.padding = "0 5px";
   orangeGearButton.innerHTML = '<i class="fa fa-cog"></i>';
   orangeGearButton.setAttribute("type", "button");
-  orangeGearButton.setAttribute("id", `orangeButton-${Date.now()}`);
+  orangeGearButton.setAttribute("id", `orange_gear-${Date.now()}`);
 
   var orangeRemoveButton = document.createElement("div");
   orangeRemoveButton.classList.add("de-rollover-remove");
@@ -1529,7 +1544,9 @@ function createOrangeArrowRolloverTools() {
   return orangeArrowRolloverTools;
 }
 
+
 // function CustomDragAndDrop (container) {
+
 
 loadSections = function () {
   var newContainer = document.getElementById(id);
@@ -1617,12 +1634,15 @@ onDragStart = function (e, draggable) {
   console.log("drag start", draggable);
 
   if (draggable && draggable.getAttribute("name")) {
-    console.log(placeholder, "name=============================");
+    console.log(placeholder, 'name=============================')
     let element = draggable.getAttribute("name");
 
     // Create rollover tools div
     var rolloverTools = document.createElement("div");
-    rolloverTools.classList.add("de-rollover-tools", "smallWidthElementHover");
+    rolloverTools.classList.add(
+      "de-rollover-tools",
+      "smallWidthElementHover"
+    );
     rolloverTools.setAttribute("data-current-id", "nill");
     rolloverTools.setAttribute("data-current-type", "type");
     rolloverTools.style.display = "none";
@@ -1749,12 +1769,12 @@ onDragStart = function (e, draggable) {
             wrapper.parentNode.parentNode.childNodes[i].style.borderRight =
               "none";
             if (
-              wrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+              wrapper.parentNode.parentNode.childNodes[i].childNodes[1]
                 .className == "div-boundary"
             ) {
               wrapper.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -1794,8 +1814,9 @@ onDragStart = function (e, draggable) {
             i < wrapper.parentNode.parentNode.children.length;
             i++
           ) {
-            wrapper.parentNode.parentNode.childNodes[i - 1].style.borderRight =
-              "1px dotted rgb(58, 133, 255)";
+            wrapper.parentNode.parentNode.childNodes[
+              i - 1
+            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
               wrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
                 .className == "div-boundary"
@@ -1925,32 +1946,16 @@ onDragStart = function (e, draggable) {
           subheadWrapper.style.position = "relative";
           subheadWrapper.parentNode.parentNode.style.border = "none";
           for (let i = 0; i < 3; i++) {
-            subheadWrapper.parentNode.parentNode.childNodes[0].childNodes[
-              i
-            ].style.display = "none";
+            subheadWrapper.parentNode.parentNode.childNodes[0].childNodes[i].style.display = "none";
           }
           for (let i = 0; i < 3; i++) {
-            subheadWrapper.parentNode.parentNode.childNodes[1].childNodes[
-              i
-            ].style.display = "none";
+            subheadWrapper.parentNode.parentNode.childNodes[1].childNodes[i].style.display = "none";
           }
-          subheadWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
-            "none";
-          for (
-            let i = 3;
-            i < subheadWrapper.parentNode.parentNode.children.length;
-            i++
-          ) {
-            subheadWrapper.parentNode.parentNode.childNodes[
-              i
-            ].style.borderRight = "none";
-            if (
-              subheadWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                .className == "div-boundary"
-            ) {
-              subheadWrapper.parentNode.parentNode.childNodes[
-                i
-              ].childNodes[0].style.display = "none";
+          subheadWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display = "none";
+          for (let i = 3; i < subheadWrapper.parentNode.parentNode.children.length; i++) {
+            subheadWrapper.parentNode.parentNode.childNodes[i].style.borderRight = "none";
+            if (subheadWrapper.parentNode.parentNode.childNodes[i].childNodes[1].className == "div-boundary") {
+              subheadWrapper.parentNode.parentNode.childNodes[i].childNodes[1].style.display = "none";
             }
           }
         });
@@ -2030,10 +2035,12 @@ onDragStart = function (e, draggable) {
           ) {
             subheadWrapper.style.border = "1px solid #777";
             for (let i = 0; i < 3; i++) {
-              subheadWrapper.childNodes[1].childNodes[i].style.display = "none";
+              subheadWrapper.childNodes[1].childNodes[i].style.display =
+                "none";
             }
             for (let i = 0; i < 2; i++) {
-              subheadWrapper.childNodes[2].childNodes[i].style.display = "none";
+              subheadWrapper.childNodes[2].childNodes[i].style.display =
+                "none";
             }
             editTextRolloverTools.style.display = "block";
             for (let i = 0; i < 8; i++) {
@@ -2097,6 +2104,25 @@ onDragStart = function (e, draggable) {
 
         paragraphWrapper.appendChild(textElement);
 
+        paragraphWrapper.addEventListener("mouseenter", (e) => {
+          for (
+            let i = 3;
+            i < paragraphWrapper.parentNode.parentNode.children.length;
+            i++
+          ) {
+            paragraphWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
+              "none";
+            if (
+              paragraphWrapper.parentNode.parentNode.childNodes[i].childNodes[1]
+                .className == "div-boundary"
+            ) {
+              paragraphWrapper.parentNode.parentNode.childNodes[
+                i
+              ].childNodes[1].style.display = "none";
+            }
+          }
+        });
+
         elementToInsert = paragraphWrapper;
         existingElement = false;
         addEventListenerForText(paragraphWrapper);
@@ -2124,8 +2150,7 @@ onDragStart = function (e, draggable) {
         imageWrapper.style.cursor = "pointer";
         imageWrapper.setAttribute("aria-disabled", "false");
         imageWrapper.setAttribute("draggable", true);
-        imageWrapper.innerHTML =
-          '<p style="display:flex; margin:auto; justify-content:center;">Image</p>';
+        imageWrapper.innerHTML = `<p id="field-${Date.now()}" style="display:flex; margin:auto; justify-content:center;">Image</p>`;
 
         var orangeRolloverTools = createOrangeRolloverTools();
         var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
@@ -2166,15 +2191,16 @@ onDragStart = function (e, draggable) {
             i < imageWrapper.parentNode.parentNode.children.length;
             i++
           ) {
-            imageWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
-              "none";
+            imageWrapper.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
             if (
-              imageWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+              imageWrapper.parentNode.parentNode.childNodes[i].childNodes[1]
                 .className == "div-boundary"
             ) {
               imageWrapper.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -2213,8 +2239,8 @@ onDragStart = function (e, draggable) {
               i - 1
             ].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
-              imageWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-                .className == "div-boundary"
+              imageWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
             ) {
               imageWrapper.parentNode.parentNode.childNodes[
                 i - 1
@@ -2249,7 +2275,7 @@ onDragStart = function (e, draggable) {
         listWrapper.setAttribute("aria-disabled", "false");
         listWrapper.setAttribute("draggable", true);
         listWrapper.innerHTML =
-          '<p style="display:flex; margin:auto; justify-content:center;">Bullet List</p>';
+          `<p id="field-${Date.now()}" style="display:flex; margin:auto; justify-content:center;">Bullet List</p>`;
 
         var orangeRolloverTools = createOrangeRolloverTools();
         var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
@@ -2274,31 +2300,17 @@ onDragStart = function (e, draggable) {
           listWrapper.style.position = "relative";
           listWrapper.parentNode.parentNode.style.border = "none";
           for (let i = 0; i < 3; i++) {
-            listWrapper.parentNode.parentNode.childNodes[0].childNodes[
-              i
-            ].style.display = "none";
+            listWrapper.parentNode.parentNode.childNodes[0].childNodes[i].style.display = "none";
           }
           for (let i = 0; i < 3; i++) {
-            listWrapper.parentNode.parentNode.childNodes[1].childNodes[
-              i
-            ].style.display = "none";
+            listWrapper.parentNode.parentNode.childNodes[1].childNodes[i].style.display = "none";
           }
           listWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
             "none";
-          for (
-            let i = 3;
-            i < listWrapper.parentNode.parentNode.children.length;
-            i++
-          ) {
-            listWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
-              "none";
-            if (
-              listWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
-                .className == "div-boundary"
-            ) {
-              listWrapper.parentNode.parentNode.childNodes[
-                i
-              ].childNodes[0].style.display = "none";
+          for (let i = 3; i < listWrapper.parentNode.parentNode.children.length; i++) {
+            listWrapper.parentNode.parentNode.childNodes[i].style.borderRight = "none";
+            if (listWrapper.parentNode.parentNode.childNodes[i].childNodes[1].className == "div-boundary") {
+              listWrapper.parentNode.parentNode.childNodes[i].childNodes[1].style.display = "none";
             }
           }
         });
@@ -2317,32 +2329,20 @@ onDragStart = function (e, draggable) {
           listWrapper.parentNode.parentNode.style.border =
             "1px solid rgb(58, 133, 255)";
           for (let i = 0; i < 3; i++) {
-            listWrapper.parentNode.parentNode.childNodes[0].childNodes[
-              i
-            ].style.display = "block";
+            listWrapper.parentNode.parentNode.childNodes[0].childNodes[i].style.display = "block";
           }
           for (let i = 0; i < 3; i++) {
-            listWrapper.parentNode.parentNode.childNodes[1].childNodes[
-              i
-            ].style.display = "block";
+            listWrapper.parentNode.parentNode.childNodes[1].childNodes[i].style.display = "block";
           }
           listWrapper.parentNode.parentNode.childNodes[2].childNodes[0].style.display =
             "block";
-          for (
-            let i = 4;
-            i < listWrapper.parentNode.parentNode.children.length;
-            i++
-          ) {
-            listWrapper.parentNode.parentNode.childNodes[
-              i - 1
-            ].style.borderRight = "1px dotted rgb(58, 133, 255)";
+          for (let i = 4; i < listWrapper.parentNode.parentNode.children.length; i++) {
+            listWrapper.parentNode.parentNode.childNodes[i - 1].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
-              listWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-                .className == "div-boundary"
+              listWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
             ) {
-              listWrapper.parentNode.parentNode.childNodes[
-                i - 1
-              ].childNodes[0].style.display = "block";
+              listWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0].style.display = "block";
             }
           }
         });
@@ -2461,12 +2461,12 @@ onDragStart = function (e, draggable) {
               i
             ].style.borderRight = "none";
             if (
-              buttonContainer.parentNode.parentNode.childNodes[i].childNodes[0]
-                .className == "div-boundary"
+              buttonContainer.parentNode.parentNode.childNodes[i]
+                .childNodes[1].className == "div-boundary"
             ) {
               buttonContainer.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -2531,18 +2531,18 @@ onDragStart = function (e, draggable) {
         )
           .toString()
           .padStart(2, "0")}-${futureDate
-          .getDate()
-          .toString()
-          .padStart(2, "0")}T${futureDate
-          .getHours()
-          .toString()
-          .padStart(2, "0")}:${futureDate
-          .getMinutes()
-          .toString()
-          .padStart(2, "0")}:${futureDate
-          .getSeconds()
-          .toString()
-          .padStart(2, "0")}`;
+            .getDate()
+            .toString()
+            .padStart(2, "0")}T${futureDate
+              .getHours()
+              .toString()
+              .padStart(2, "0")}:${futureDate
+                .getMinutes()
+                .toString()
+                .padStart(2, "0")}:${futureDate
+                  .getSeconds()
+                  .toString()
+                  .padStart(2, "0")}`;
 
         const targetDate = new Date(targetDateStr);
         const targetStamp = targetDate.getTime();
@@ -2559,6 +2559,7 @@ onDragStart = function (e, draggable) {
 
         const countdownWrapper = document.createElement("div");
         countdownWrapper.classList.add("row", "no-gutters");
+        countdownWrapper.setAttribute("id", `field-${Date.now()}`);
         // countdownWrapper.style.margin = 0;
         countdownWrapper.style.backgroundColor = "red";
         countdownWrapper.style.color = "yellow";
@@ -2733,7 +2734,8 @@ onDragStart = function (e, draggable) {
           containercountdownWrapper.style.borderColor = "orange"; // Change border color on mouseover
           containercountdownWrapper.style.borderWidth = "1px";
           containercountdownWrapper.style.position = "relative";
-          containercountdownWrapper.parentNode.parentNode.style.border = "none";
+          containercountdownWrapper.parentNode.parentNode.style.border =
+            "none";
           for (let i = 0; i < 3; i++) {
             containercountdownWrapper.parentNode.parentNode.childNodes[0].childNodes[
               i
@@ -2748,7 +2750,8 @@ onDragStart = function (e, draggable) {
             "none";
           for (
             let i = 3;
-            i < containercountdownWrapper.parentNode.parentNode.children.length;
+            i <
+            containercountdownWrapper.parentNode.parentNode.children.length;
             i++
           ) {
             containercountdownWrapper.parentNode.parentNode.childNodes[
@@ -2756,11 +2759,11 @@ onDragStart = function (e, draggable) {
             ].style.borderRight = "none";
             if (
               containercountdownWrapper.parentNode.parentNode.childNodes[i]
-                .childNodes[0].className == "div-boundary"
+                .childNodes[1].className == "div-boundary"
             ) {
               containercountdownWrapper.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -2792,15 +2795,17 @@ onDragStart = function (e, draggable) {
             "block";
           for (
             let i = 4;
-            i < containercountdownWrapper.parentNode.parentNode.children.length;
+            i <
+            containercountdownWrapper.parentNode.parentNode.children.length;
             i++
           ) {
             containercountdownWrapper.parentNode.parentNode.childNodes[
               i - 1
             ].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
-              containercountdownWrapper.parentNode.parentNode.childNodes[i - 1]
-                .childNodes[0].className == "div-boundary"
+              containercountdownWrapper.parentNode.parentNode.childNodes[
+                i - 1
+              ].childNodes[0].className == "div-boundary"
             ) {
               containercountdownWrapper.parentNode.parentNode.childNodes[
                 i - 1
@@ -2837,7 +2842,7 @@ onDragStart = function (e, draggable) {
 
         const inputElement = document.createElement("input");
         inputElement.type = "text";
-
+        inputElement.setAttribute("id", `field-${Date.now()}`);
         inputElement.placeholder = "Your Name Here...";
         inputElement.name = "name"; //not-set
         inputElement.classList.add(
@@ -2935,15 +2940,16 @@ onDragStart = function (e, draggable) {
             i < inputWrapper.parentNode.parentNode.children.length;
             i++
           ) {
-            inputWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
-              "none";
+            inputWrapper.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
             if (
-              inputWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+              inputWrapper.parentNode.parentNode.childNodes[i].childNodes[1]
                 .className == "div-boundary"
             ) {
               inputWrapper.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -2982,8 +2988,8 @@ onDragStart = function (e, draggable) {
               i - 1
             ].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
-              inputWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-                .className == "div-boundary"
+              inputWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
             ) {
               inputWrapper.parentNode.parentNode.childNodes[
                 i - 1
@@ -3021,6 +3027,7 @@ onDragStart = function (e, draggable) {
         emailElement.type = "text";
         emailElement.placeholder = "Your Email Address Here...";
         emailElement.name = "email";
+        emailElement.setAttribute("id", `field-${Date.now()}`);
         emailElement.classList.add(
           "elInput",
           "elInput100",
@@ -3117,15 +3124,16 @@ onDragStart = function (e, draggable) {
             i < emailWrapper.parentNode.parentNode.children.length;
             i++
           ) {
-            emailWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
-              "none";
+            emailWrapper.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
             if (
-              emailWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+              emailWrapper.parentNode.parentNode.childNodes[i].childNodes[1]
                 .className == "div-boundary"
             ) {
               emailWrapper.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -3164,8 +3172,8 @@ onDragStart = function (e, draggable) {
               i - 1
             ].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
-              emailWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-                .className == "div-boundary"
+              emailWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
             ) {
               emailWrapper.parentNode.parentNode.childNodes[
                 i - 1
@@ -3177,7 +3185,6 @@ onDragStart = function (e, draggable) {
         existingElement = false;
         break;
 
-      //* beginning of the NEW CODE
       case "2step-combo":
         const comboWrapper = document.createElement("div");
         comboWrapper.classList.add("container-fluid");
@@ -3412,7 +3419,9 @@ onDragStart = function (e, draggable) {
         creditCardContainer.classList.add("ghl-payment-element", "pb-4");
 
         const inlineCreditCardContainer = document.createElement("div");
-        inlineCreditCardContainer.classList.add("inline-credit-card-container");
+        inlineCreditCardContainer.classList.add(
+          "inline-credit-card-container"
+        );
 
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("row");
@@ -3480,7 +3489,10 @@ onDragStart = function (e, draggable) {
         const cvcInput = document.createElement("input");
         cvcInput.setAttribute("type", "text");
         cvcInput.setAttribute("name", "card-cvc");
-        cvcInput.setAttribute("id", "card-cvc-ctwo-setp-order-payment-element");
+        cvcInput.setAttribute(
+          "id",
+          "card-cvc-ctwo-setp-order-payment-element"
+        );
         cvcInput.setAttribute("maxlength", "3");
         cvcInput.setAttribute("placeholder", "CVC");
         cvcInput.classList.add("card-input");
@@ -3585,15 +3597,16 @@ onDragStart = function (e, draggable) {
             i < comboWrapper.parentNode.parentNode.children.length;
             i++
           ) {
-            comboWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
-              "none";
+            comboWrapper.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
             if (
-              comboWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+              comboWrapper.parentNode.parentNode.childNodes[i].childNodes[1]
                 .className == "div-boundary"
             ) {
               comboWrapper.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -3631,8 +3644,8 @@ onDragStart = function (e, draggable) {
               i - 1
             ].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
-              comboWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-                .className == "div-boundary"
+              comboWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
             ) {
               comboWrapper.parentNode.parentNode.childNodes[
                 i - 1
@@ -3642,30 +3655,6 @@ onDragStart = function (e, draggable) {
         });
 
         elementToInsert = comboWrapper;
-        existingElement = false;
-        break;
-
-      //* the end of NEW CODE
-
-      case "text-field":
-        elementToInsert = document.createElement("input");
-        elementToInsert.classList.add("draggable");
-        elementToInsert.setAttribute("draggable", true);
-        elementToInsert.setAttribute("placeholder", "Text");
-        elementToInsert.setAttribute("disabled", true);
-        elementToInsert.setAttribute("id", `field-${Date.now()}`);
-        elementToInsert = elementToInsert;
-        existingElement = false;
-        break;
-
-      case "email-field":
-        elementToInsert = document.createElement("input");
-        elementToInsert.classList.add("draggable");
-        elementToInsert.setAttribute("draggable", true);
-        elementToInsert.setAttribute("placeholder", "Email");
-        elementToInsert.setAttribute("disabled", true);
-        elementToInsert.setAttribute("id", `field-${Date.now()}`);
-        elementToInsert = elementToInsert;
         existingElement = false;
         break;
 
@@ -3691,7 +3680,7 @@ onDragStart = function (e, draggable) {
         phoneWrapper.setAttribute("aria-disabled", "false");
         phoneWrapper.setAttribute("draggable", true);
         phoneWrapper.innerHTML =
-          '<p style="display:flex; margin:auto; justify-content:center;">Phone</p>';
+          `<p id=field-${Date.now()}" style="display:flex; margin:auto; justify-content:center;">Phone</p>`;
         var orangeRolloverTools = createOrangeRolloverTools();
         var orangeArrowRolloverTools = createOrangeArrowRolloverTools();
 
@@ -3731,15 +3720,16 @@ onDragStart = function (e, draggable) {
             i < phoneWrapper.parentNode.parentNode.children.length;
             i++
           ) {
-            phoneWrapper.parentNode.parentNode.childNodes[i].style.borderRight =
-              "none";
+            phoneWrapper.parentNode.parentNode.childNodes[
+              i
+            ].style.borderRight = "none";
             if (
-              phoneWrapper.parentNode.parentNode.childNodes[i].childNodes[0]
+              phoneWrapper.parentNode.parentNode.childNodes[i].childNodes[1]
                 .className == "div-boundary"
             ) {
               phoneWrapper.parentNode.parentNode.childNodes[
                 i
-              ].childNodes[0].style.display = "none";
+              ].childNodes[1].style.display = "none";
             }
           }
         });
@@ -3778,8 +3768,8 @@ onDragStart = function (e, draggable) {
               i - 1
             ].style.borderRight = "1px dotted rgb(58, 133, 255)";
             if (
-              phoneWrapper.parentNode.parentNode.childNodes[i - 1].childNodes[0]
-                .className == "div-boundary"
+              phoneWrapper.parentNode.parentNode.childNodes[i - 1]
+                .childNodes[0].className == "div-boundary"
             ) {
               phoneWrapper.parentNode.parentNode.childNodes[
                 i - 1
@@ -3818,7 +3808,7 @@ function onDragEnd(e, draggable) {
   var anchor = elementToInsert.querySelector("a.elSettings"); // Find the anchor element within 'this'
 
   if (anchor) {
-    anchor.addEventListener("click", (event) => {
+    anchor.addEventListener("click", function (event) {
       event.preventDefault(); // Prevent the default behavior
 
       if (settingsSidebar.style.right === "0px") {
@@ -3838,7 +3828,7 @@ function onDragEnd(e, draggable) {
     console.log("existing ele", elementToInsert);
     elementToInsert.classList.remove("dragging");
   }
-}
+};
 
 function addEventListenerForDraggableItem(element) {
   console.log("ele", element);
@@ -3849,6 +3839,7 @@ function addEventListenerForDraggableItem(element) {
     ".elHeadline, .elText, .elSubHeadline"
   ); // Select .elHeadline elements inside the div
 
+
   // Add click event listener for content editing to each .elHeadline element
   elHeadlineElements.forEach((elHeadlineElement) => {
     elHeadlineElement.addEventListener("mousedown", function () {
@@ -3856,16 +3847,14 @@ function addEventListenerForDraggableItem(element) {
       elHeadlineElement.style.cursor = "text";
     });
   });
-}
+};
 
 function addEventListenersForContainer(container) {
-  container.addEventListener("dragover", (e) =>
-    onDragHover(e, container, false)
-  );
+  container.addEventListener("dragover", (e) => onDragHover(e, container, false));
   container.addEventListener("drop", (e) => onDragDrop(e), false);
   container.addEventListener("dragleave", (e) => onDragLeave(e), false);
   container.addEventListener("dragenter", (e) => onDragEnter(e), false);
-}
+};
 
 // Text section
 function addEventListenerForText(textElement) {
@@ -3907,12 +3896,12 @@ function addEventListenerForText(textElement) {
       textElement.parentNode.parentNode.childNodes[i].style.borderRight =
         "none";
       if (
-        textElement.parentNode.parentNode.childNodes[i].childNodes[0]
+        textElement.parentNode.parentNode.childNodes[i].childNodes[1]
           .className == "div-boundary"
       ) {
         textElement.parentNode.parentNode.childNodes[
           i
-        ].childNodes[0].style.display = "none";
+        ].childNodes[1].style.display = "none";
       }
     }
   });
@@ -3999,7 +3988,7 @@ function addEventListenerForText(textElement) {
       }
     }
   });
-}
+};
 
 function onDragHover(e, container) {
   e.preventDefault();
@@ -4010,20 +3999,20 @@ function onDragHover(e, container) {
   } else {
     container.insertBefore(placeholder, afterElement);
   }
-}
+};
 
 function onDragEnter(e) {
   e.preventDefault();
-}
+};
 
 function onDragLeave(e) {
   e.preventDefault();
-}
+};
 
 function onDragDrop(e) {
   e.preventDefault();
   placeholder.replaceWith(elementToInsert);
-}
+};
 
 function init() {
   try {
@@ -4036,7 +4025,8 @@ function init() {
   } catch (e) {
     console.log(e);
   }
-}
+};
+
 
 //* BEGINNING FOR THE 2PART FORM
 
@@ -4265,6 +4255,7 @@ function showForm(form, formId) {
   if (currentForm) {
     currentForm.classList.remove("hidden");
   }
+
 }
 
 function appendElements(parent, elements) {
@@ -4296,9 +4287,10 @@ function isPopupOpen() {
 var customDragnDropInitialized = false;
 
 function loadSections() {
+
   var newContainer = document.getElementById(id);
 
-  console.log(newContainer, "======loadsection");
+  console.log(newContainer, '======loadsection')
 
   var allContainers = newContainer.querySelectorAll(".col-div");
 
@@ -4315,16 +4307,15 @@ function loadSections() {
     // Handle the case when no elements with the class .editor-container are found.
     // You can choose to display an error message or take appropriate action here.
   }
-}
+};
 
 function addEventListenersForContainer(container) {
-  container.addEventListener("dragover", (e) =>
-    onDragHover(e, container, false)
-  );
+  container.addEventListener("dragover", (e) => onDragHover(e, container, false));
   container.addEventListener("drop", (e) => onDragDrop(e), false);
   container.addEventListener("dragleave", (e) => onDragLeave(e), false);
   container.addEventListener("dragenter", (e) => onDragEnter(e), false);
-}
+};
+
 
 addEventListenerForText = function (textElement) {
   var orangeRolloverTools = createOrangeRolloverTools();
@@ -4468,19 +4459,19 @@ function onDragHover(e, container) {
   } else {
     container.insertBefore(placeholder, afterElement);
   }
-}
+};
 function onDragEnter(e) {
   e.preventDefault();
-}
+};
 
 function onDragLeave(e) {
   e.preventDefault();
-}
+};
 
 function onDragDrop(e) {
   e.preventDefault();
   placeholder.replaceWith(elementToInsert);
-}
+};
 
 // document.addEventListener('turbolinks:load', () => {
 document.addEventListener("DOMContentLoaded", function (e) {
@@ -4491,7 +4482,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
     // custompPopUpDragAndDrop.loadSections();
     console.log("we loaded the Sections");
     // configDragDrop()
-    init();
+    init()
     // loadSections()
     // Add a click event listener to the button
     const addSectionButton = document.getElementById("add-section-button");
@@ -4516,12 +4507,15 @@ openElementsPanel.addEventListener("click", function () {
     basicContainerSection.classList.add("col-md-9");
     basicContainerSection.style.marginLeft = "25%";
   } else {
-    leftSlidingPopup.classList.add("hidden");
-    basicContainerSection.classList.remove("col-md-9");
-    basicContainerSection.classList.add("col-md-12");
-    basicContainerSection.style.marginLeft = "0%";
+    closeElementsPanel();
   }
 });
+function closeElementsPanel() {
+  leftSlidingPopup.classList.add("hidden");
+  basicContainerSection.classList.remove("col-md-9");
+  basicContainerSection.classList.add("col-md-12");
+  basicContainerSection.style.marginLeft = "0%";
+}
 
 //here we will add the listener to save the HTML before they submit the form
 document.addEventListener("DOMContentLoaded", function () {
@@ -4572,6 +4566,7 @@ closePopupButton.addEventListener("click", function (event) {
   event.preventDefault();
   popupContainer.classList.remove("open");
   popupContainer.style.display = "none";
+
   damaincontainer.style.display = "block"; // Set the background color to red
 });
 // The popup END
@@ -4584,35 +4579,33 @@ let selectedElSettings = null; // Global variable to store the selected .elSetti
 // Select all anchor elements within elements with class "elSettings"
 var elSettingsAnchors = document.querySelectorAll("a.elSettings");
 var settingsSidebar = document.getElementById("settingsSidebar");
-console.log(elSettingsAnchors);
+
 function openSidebar(element) {
-  selectedElSettings = element.id; // Store the clicked element's ID  
+  selectedElSettings = element.id; // Store the clicked element's ID
   if (settingsSidebar.style.right === "0px") {
     closeSidebar();
   } else {
     settingsSidebar.style.right = "0px";
     console.log("open");
   }
-  ;
   loadPresetButtonSettings(element);
 }
 
 function closeSidebar() {
-    console.log("close");
   selectedElSettings = null;
   settingsSidebar.style.right = "-420px";
 }
 
 // Attach the click event to each anchor element within "elSettings" buttons
 elSettingsAnchors.forEach(function (anchor) {
-  anchor.addEventListener("click", (event) => {
+  anchor.addEventListener("click", function (event) {
     event.preventDefault(); // Prevent the default behavior
     if (settingsSidebar.style.right === "0px") {
       closeSidebar();
       // console.log('closing outside');
     } else {
       // console.log('opening outside');
-      openSidebar(this);
+      openSidebar(anchor);
     }
   });
 });
@@ -4771,7 +4764,7 @@ function greenGearElement(id) {
 const greenSettingClose = document.getElementById("popup4-close");
 greenSettingClose.addEventListener("click", function () {
   selectedGreenSection = null;
-  slidingPopup4.style.right = "-420px"; // Slide out the popup
+  slidingPopup4.style.right = "-420px"; // Slide out the popup  
 });
 function loadPresetGreenSettings(id) {
   const editorComponent = document.getElementById(id);
@@ -4788,7 +4781,7 @@ function loadPresetGreenSettings(id) {
 
   // // Background Image upload
   // const inputPanel = document.getElementById
-}
+};
 
 // General and Advanced tab panel for Green Section
 const greenGeneralTab = document.getElementById("green-general-tab");
@@ -4913,7 +4906,7 @@ function loadPresetBlueSettings(id) {
     const blueComponent = document.getElementById(selectedBlueSection);
     blueComponent.style.width = `${parsedValue}%`;
   });
-}
+};
 
 // General and Advanced tab panel for Blue Section
 const blueGeneralTab = document.getElementById("blue-general-tab");
@@ -4932,6 +4925,7 @@ blueAdvancedTab.addEventListener("click", function () {
   blueAdvancedContent.classList.add("active");
   blueAdvancedTab.classList.add("active");
 });
+
 
 // General and Advanced tab panel for Orange Section
 const orangeGeneralTab = document.getElementById("orange-general-tab");
@@ -4977,9 +4971,7 @@ function loadPresetHeadlineSettings(parentWrapper) {
   const headlineComponent = document.getElementById(
     parentWrapper.firstChild.id
   );
-  const headlineOpacitySelect = document.getElementById(
-    "headline-opacity-select"
-  );
+  const headlineOpacitySelect = document.getElementById("headline-opacity-select");
   // Background color setting for Headline Element
   const headlineBackColor = document.getElementById("headline-back-color");
   const headlineBackColorIcon = document.getElementById(
@@ -5001,44 +4993,37 @@ function loadPresetHeadlineSettings(parentWrapper) {
     const headlineContainer = document.getElementById(parentWrapper.id);
     let rgbColor = headlineContainer.style.backgroundColor;
     if (headlineContainer.style.backgroundColor.includes("rgba")) {
-      rgbColor =
-        headlineContainer.style.backgroundColor.replace(/, [\d\.]+\)$/, "") +
-        ")";
+      rgbColor = headlineContainer.style.backgroundColor.replace(/, [\d\.]+\)$/, "") + ")";
     }
-    let convertedRGBA = rgbColor.replace(
-      ")",
-      `, ${headlineOpacitySelect.value})`
-    );
+    let convertedRGBA = rgbColor.replace(")", `, ${headlineOpacitySelect.value})`);
     headlineContainer.style.backgroundColor = convertedRGBA;
-  });
+  })
 
   // Text Alignment for Headline Element
-  const headlineAlignButtons = document.querySelectorAll(".align-button");
+  const headlineAlignButtons = document.querySelectorAll('.align-button');
   headlineAlignButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      const headlineComponent = document.getElementById(
-        selectedHeadlineElement
-      );
+    button.addEventListener('click', function () {
+      const headlineComponent = document.getElementById(selectedHeadlineElement);
 
       headlineComponent.style.textAlign = "";
       headlineAlignButtons.forEach(function (btn) {
         btn.classList.remove("selected-button");
       });
-      if (this.querySelector("i").classList.contains("bi-text-left")) {
+      if (this.querySelector('i').classList.contains('bi-text-left')) {
         headlineComponent.style.textAlign = "left";
-        this.classList.add("selected-button");
-      } else if (querySelector("i").classList.contains("bi-text-center")) {
+        this.classList.add('selected-button');
+      } else if (querySelector('i').classList.contains('bi-text-center')) {
         headlineComponent.style.textAlign = "center";
         this.classList.add("selected-button");
-      } else if (querySelector("i").classList.contains("bi-text-right")) {
+      } else if (querySelector('i').classList.contains('bi-text-right')) {
         headlineComponent.style.textAlign = "right";
         this.classList.add("selected-button");
-      } else if (querySelector("i").classList.contains("bi-justify")) {
+      } else if (querySelector('i').classList.contains('bi-justify')) {
         headlineComponent.style.textAlign = "justify";
         this.classList.add("selected-button");
       }
-    });
-  });
+    })
+  })
 
   // Font size setting for Headline Element
   const headlineFontSlider = document.getElementById("headline-font-slider");
@@ -5069,7 +5054,7 @@ function loadPresetHeadlineSettings(parentWrapper) {
     const headlineComponent = document.getElementById(selectedHeadlineElement);
     headlineComponent.style.color = headlineColor.value;
   });
-}
+};
 
 // Settings for 2 Step Combo Element
 let selectedComboElement = null;
@@ -5131,7 +5116,7 @@ function loadPresetComboSettings(parentContainer) {
     eyeIcon2.classList.add("bi-eye");
     showForm(parentContainer.firstChild, secondForm.id);
   });
-}
+};
 
 // Button & Button Text & Input Background color pickers
 const btnColor = document.getElementById("btn-color");
@@ -5172,9 +5157,7 @@ advancedTab.addEventListener("click", function () {
 
 // Close Popups when I click outside
 document.addEventListener("click", function (event) {
-  const orangeGearButton = document.getElementById("orange-gear-button");
-
-  const greenGearButtons = document.querySelectorAll("[id*='greenButton']");
+  const greenGearButtons = document.querySelectorAll("[id*='green_advanced']");
   const isOutsidePopup4 =
     event.target !== slidingPopup4 && !slidingPopup4.contains(event.target);
   const isGreenGearButton = Array.from(greenGearButtons).some((button) =>
@@ -5187,7 +5170,7 @@ document.addEventListener("click", function (event) {
     }
   }
 
-  const blueGearButtons = document.querySelectorAll("[id*='blueButton']");
+  const blueGearButtons = document.querySelectorAll("[id*='blue_gear']");
   const isOutsidePopup5 =
     event.target !== slidingPopup5 && !slidingPopup5.contains(event.target);
   const isBlueGearButton = Array.from(blueGearButtons).some((button) =>
@@ -5200,19 +5183,21 @@ document.addEventListener("click", function (event) {
     }
   }
 
-  const orangeGearButtons = document.querySelectorAll("[id*='orangeButton']");
+  const orangeGearButtons = document.querySelectorAll("[id*='orange_gear']");
   const isOutsideHeadlinePopup =
     event.target !== headlineSidebar && !headlineSidebar.contains(event.target);
   const isOrangeGearButton = Array.from(orangeGearButtons).some((button) =>
     button.contains(event.target)
   );
   if (isOutsideHeadlinePopup && !isOrangeGearButton) {
+    console.log(selectedHeadlineElement);
     if (selectedHeadlineElement) {
       selectedHeadlineElement = null;
       selectedHeadlineContainer = null;
       headlineSidebar.style.right = "-420px"; // Slide out the popup
     }
   }
+
   const isOutsideComboPopup =
     event.target !== slidingPopup3 && !slidingPopup3.contains(event.target);
   if (isOutsideComboPopup && !isOrangeGearButton) {
@@ -5221,15 +5206,30 @@ document.addEventListener("click", function (event) {
       slidingPopup3.style.right = "-420px"; // Slide out the popup
     }
   }
+
   const buttonElements = document.querySelectorAll("[id*='the_button']");
   const isButtonElement = Array.from(buttonElements).some((button) =>
     button.contains(event.target)
   );
   const isOutsideButtonPopup =
-    event.target !== settingsSidebar && !settingsSidebar.contains(event.target);
+    event.target !== settingsSidebar &&
+    !settingsSidebar.contains(event.target);
   if (isOutsideButtonPopup && !isOrangeGearButton && !isButtonElement) {
     if (selectedElSettings) {
       closeSidebar();
     }
+  }
+  
+  const blueAddButtons = document.querySelectorAll("[id*='blue_add']");
+  const isBlueAddButton = Array.from(blueAddButtons).some((button) =>
+    button.contains(event.target)
+  );
+  const addElementButton = document.getElementById("add-element-button");
+  const isAddElementButton = addElementButton.contains(event.target);
+  const isOutsideElementsPopup =
+    event.target !== leftSlidingPopup &&
+    !leftSlidingPopup.contains(event.target);
+  if (isOutsideElementsPopup && !isAddElementButton && !isBlueAddButton) {
+    if (!leftSlidingPopup.classList.contains("hidden")) closeElementsPanel();
   }
 });
