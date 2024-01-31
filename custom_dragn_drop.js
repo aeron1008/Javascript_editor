@@ -842,10 +842,10 @@ settingRow4.addEventListener("click", function (e) {
     blueAddElementRolloverTools1.style.display = "none";
     blueAddElementRolloverTools2.style.display = "none";
     blueAddElementRolloverTools3.style.display = "none";
-      blueAddElementRolloverTools.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -1009,11 +1009,11 @@ settingRow5.addEventListener("click", function (e) {
     blueAddElementRolloverTools2.style.display = "none";
     blueAddElementRolloverTools3.style.display = "none";
     blueAddElementRolloverTools4.style.display = "none";
-      blueAddElementRolloverTools.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools4.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools4.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -1209,12 +1209,12 @@ settingRow6.addEventListener("click", function (e) {
     blueAddElementRolloverTools3.style.display = "none";
     blueAddElementRolloverTools4.style.display = "none";
     blueAddElementRolloverTools5.style.display = "none";
-      blueAddElementRolloverTools.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools1.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools2.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools3.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools4.childNodes[0].style.display = "none";
-      blueAddElementRolloverTools5.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools1.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools2.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools3.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools4.childNodes[0].style.display = "none";
+    blueAddElementRolloverTools5.childNodes[0].style.display = "none";
   });
 
   // setting resize
@@ -1567,12 +1567,23 @@ loadSections = function () {
   }
 };
 
-addSection = function () {
+function configPopup() {
+  let container = document.createElement("div");
+  container.classList.add("editor-container", "new-section"); //p-3
+  container.style.minHeight = "250px";
+  container.style.backgroundColor = "#ffffff";
+
   let section = document.createElement("div");
   container.appendChild(section);
-  mainContainer.appendChild(container);
-  addEventListenersForContainer(container);
-  // updateContainers();
+  // popupContainer.appendChild(container);
+  var allContainers = document.querySelectorAll(".editor-container");
+
+  if (allContainers.length > 0) {
+    allContainers.forEach((container) => {
+    addEventListenersForContainer(container);
+    });
+  } else {
+  }
 };
 
 updateDraggables = function () {
@@ -4018,6 +4029,8 @@ function init() {
   try {
     mainContainer = document.getElementById("da-main-container");
     popupContainer = document.getElementById("da-popup-container");
+    configPopup()
+
     // updateContainers();
     updateDraggables();
     addEventListeners();
@@ -4289,9 +4302,6 @@ var customDragnDropInitialized = false;
 function loadSections() {
 
   var newContainer = document.getElementById(id);
-
-  console.log(newContainer, '======loadsection')
-
   var allContainers = newContainer.querySelectorAll(".col-div");
 
   if (allContainers.length > 0) {
@@ -4476,19 +4486,12 @@ function onDragDrop(e) {
 // document.addEventListener('turbolinks:load', () => {
 document.addEventListener("DOMContentLoaded", function (e) {
   if (!customDragnDropInitialized) {
-    // const custompPopUpDragAndDrop = new CustompPopUpDragAndDrop();
-    // custompPopUpDragAndDrop.init();
-    console.log("customDragnDropInitialized=true");
-    // custompPopUpDragAndDrop.loadSections();
-    console.log("we loaded the Sections");
-    // configDragDrop()
     init()
-    // loadSections()
-    // Add a click event listener to the button
+
     const addSectionButton = document.getElementById("add-section-button");
     if (addSectionButton) {
       addSectionButton.addEventListener("click", () => {
-        // customDragnDrop.addSection();
+
         if (slidingPopup1.style.right === "0px") {
           slidingPopup1.style.right = "-420px"; // Slide out the popup
         } else {
@@ -4546,17 +4549,19 @@ document.addEventListener("DOMContentLoaded", function () {
 // The popup START
 const openPopupButton = document.getElementById("open-popup");
 const closePopupButton = document.getElementById("close-popup");
-// const popupContainer = document.querySelector(".popup-container");
+const popup = document.querySelector(".popup-container");
 const thebody = document.querySelector("body");
 const damaincontainer = document.getElementById("da-main-container");
 
 openPopupButton.addEventListener("click", function (event) {
   event.preventDefault();
 
-  // Display the popup
-  popupContainer.classList.add("open");
+  console.log(popupContainer, 'here is popup container')
 
-  popupContainer.style.display = "block";
+  // Display the popup
+  popup.classList.add("open");
+
+  popup.style.display = "block";
   thebody.style.backgroundColor = "rgba(100, 100, 100, 0.1)"; // Red with 50% opacity
   // damaincontainer.style.opacity = 0.5;
   damaincontainer.style.display = "none"; // Set the background color to red
@@ -4564,8 +4569,8 @@ openPopupButton.addEventListener("click", function (event) {
 
 closePopupButton.addEventListener("click", function (event) {
   event.preventDefault();
-  popupContainer.classList.remove("open");
-  popupContainer.style.display = "none";
+  popup.classList.remove("open");
+  popup.style.display = "none";
 
   damaincontainer.style.display = "block"; // Set the background color to red
 });
@@ -4730,9 +4735,10 @@ function loadPresetButtonSettings(element) {
 
 // Add event listener to the search panel for elements input
 document.querySelector(".search-panel").addEventListener("input", function () {
-  const searchKeyword = value.toLowerCase();
+  const searchKeyword = this.value.toLowerCase();
   const elementPanels = document.querySelectorAll(".element-panel");
 
+  console.log(searchKeyword);
   // Loop through each element panel and check if it matches the search keyword
   elementPanels.forEach(function (panel) {
     const panelText = panel.textContent.toLowerCase();
@@ -5190,7 +5196,6 @@ document.addEventListener("click", function (event) {
     button.contains(event.target)
   );
   if (isOutsideHeadlinePopup && !isOrangeGearButton) {
-    console.log(selectedHeadlineElement);
     if (selectedHeadlineElement) {
       selectedHeadlineElement = null;
       selectedHeadlineContainer = null;
@@ -5219,7 +5224,7 @@ document.addEventListener("click", function (event) {
       closeSidebar();
     }
   }
-  
+
   const blueAddButtons = document.querySelectorAll("[id*='blue_add']");
   const isBlueAddButton = Array.from(blueAddButtons).some((button) =>
     button.contains(event.target)
