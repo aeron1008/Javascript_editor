@@ -1488,17 +1488,17 @@ function createOrangeRolloverTools() {
     var parentType = parentWrapper.getAttribute("data-de-type");
     var firstChild = parentWrapper.firstChild;
     if (parentType === "headline") {
-      headlineGearElement(parentWrapper);
+      headlineGearElement(parentWrapper, parentType);
     } else if (parentType === "subhead") {
-      headlineGearElement(parentWrapper);
+      headlineGearElement(parentWrapper, parentType);
     } else if (parentType === "text") {
-      headlineGearElement(parentWrapper);
+      headlineGearElement(parentWrapper, parentType);
     } else if (parentType === "button") {
       openSidebar(firstChild);
     } else if (parentType === "combo") {
       twoStepGearElement(parentWrapper);
     } else {
-      headlineGearElement(parentWrapper);
+      headlineGearElement(parentWrapper, parentType);
     }
   });
 
@@ -1642,7 +1642,7 @@ getDragAfterElement = function (container, y) {
 onDragStart = function (e, draggable) {
   e.stopPropagation();
 
-  console.log("drag start", draggable);
+  // console.log("drag start", draggable);
 
   if (draggable && draggable.getAttribute("name")) {
     console.log(placeholder, 'name=============================')
@@ -1893,7 +1893,7 @@ onDragStart = function (e, draggable) {
           "de-editable"
         );
         subheadWrapper.setAttribute("id", `subhead-${Date.now()}`);
-        subheadWrapper.setAttribute("data-de-type", "subhead");
+        subheadWrapper.setAttribute("data-de-type", "sub-headline");
         subheadWrapper.setAttribute("data-de-editing", "false");
         subheadWrapper.setAttribute("data-title", "subhead");
         subheadWrapper.setAttribute("data-ce", "true");
@@ -2272,10 +2272,10 @@ onDragStart = function (e, draggable) {
           "ui-droppable",
           "de-editable"
         );
-        listWrapper.setAttribute("id", `image-${Date.now()}`);
-        listWrapper.setAttribute("data-de-type", "image");
+        listWrapper.setAttribute("id", `list-${Date.now()}`);
+        listWrapper.setAttribute("data-de-type", "Bullet List");
         listWrapper.setAttribute("data-de-editing", "false");
-        listWrapper.setAttribute("data-title", "image");
+        listWrapper.setAttribute("data-title", "list");
         listWrapper.setAttribute("data-ce", "true");
         listWrapper.setAttribute("data-trigger", "none");
         listWrapper.setAttribute("data-animate", "fade");
@@ -2567,6 +2567,7 @@ onDragStart = function (e, draggable) {
           "ui-droppable",
           "de-editable"
         );
+        containercountdownWrapper.setAttribute("data-de-type", "CountDown");
 
         const countdownWrapper = document.createElement("div");
         countdownWrapper.classList.add("row", "no-gutters");
@@ -2626,7 +2627,6 @@ onDragStart = function (e, draggable) {
           "elMargin0"
         );
         countdownDiv.setAttribute("id", `countdown-${Date.now()}`);
-        countdownDiv.setAttribute("data-de-type", "countdown");
         countdownDiv.setAttribute("data-de-editing", "false");
         countdownDiv.setAttribute("data-title", "Date Countdown 2.0");
         countdownDiv.setAttribute("data-ce", "false");
@@ -3679,7 +3679,7 @@ onDragStart = function (e, draggable) {
           "de-editable"
         );
         phoneWrapper.setAttribute("id", `phone-${Date.now()}`);
-        phoneWrapper.setAttribute("data-de-type", "phone");
+        phoneWrapper.setAttribute("data-de-type", "Phone Field");
         phoneWrapper.setAttribute("data-de-editing", "false");
         phoneWrapper.setAttribute("data-title", "phone");
         phoneWrapper.setAttribute("data-ce", "true");
@@ -3842,7 +3842,7 @@ function onDragEnd(e, draggable) {
 };
 
 function addEventListenerForDraggableItem(element) {
-  console.log("ele", element);
+  // console.log("ele", element);
   element.addEventListener("dragstart", (e) => onDragStart(e, element));
   element.addEventListener("dragend", (e) => onDragEnd(e, element));
 
@@ -4956,9 +4956,12 @@ orangeAdvancedTab.addEventListener("click", function () {
 // Settings for headline element
 let selectedHeadlineElement = null;
 let selectedHeadlineContainer = null;
-function headlineGearElement(parentWrapper) {
+function headlineGearElement(parentWrapper, parentType) {
   selectedHeadlineElement = parentWrapper.firstChild.id;
   selectedHeadlineContainer = parentWrapper.id;
+  const titleComponent = document.getElementById("orange-title");
+  titleComponent.textContent =
+    parentType.charAt(0).toUpperCase() + parentType.slice(1);
   if (headlineSidebar.style.right === "0px") {
     headlineSidebar.style.right = "-420px"; // Slide out the popup
   } else {
@@ -5010,7 +5013,6 @@ function loadPresetHeadlineSettings(parentWrapper) {
   headlineAlignButtons.forEach(function (button) {
     button.addEventListener('click', function () {
       const headlineComponent = document.getElementById(selectedHeadlineElement);
-
       headlineComponent.style.textAlign = "";
       headlineAlignButtons.forEach(function (btn) {
         btn.classList.remove("selected-button");
@@ -5018,16 +5020,17 @@ function loadPresetHeadlineSettings(parentWrapper) {
       if (this.querySelector('i').classList.contains('bi-text-left')) {
         headlineComponent.style.textAlign = "left";
         this.classList.add('selected-button');
-      } else if (querySelector('i').classList.contains('bi-text-center')) {
+      } else if (this.querySelector("i").classList.contains("bi-text-center")) {
         headlineComponent.style.textAlign = "center";
         this.classList.add("selected-button");
-      } else if (querySelector('i').classList.contains('bi-text-right')) {
+      } else if (this.querySelector("i").classList.contains("bi-text-right")) {
         headlineComponent.style.textAlign = "right";
         this.classList.add("selected-button");
-      } else if (querySelector('i').classList.contains('bi-justify')) {
+      } else if (this.querySelector("i").classList.contains("bi-justify")) {
         headlineComponent.style.textAlign = "justify";
         this.classList.add("selected-button");
       }
+      
     })
   })
 
